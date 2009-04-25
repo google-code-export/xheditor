@@ -626,7 +626,7 @@ $.xhEditor=function(textarea,options)
 		}
 		bHtml=!bHtml
 		_jTools.find('[name=Html]').toggleClass('xhEdtActive');
-		_jTools.find('.xhEdtButton').not('[name=Html],[name=Fullscreen]').toggleClass('xhEdtEnabled');
+		_jTools.find('.xhEdtButton').not('[name=Html],[name=Fullscreen],[name=About]').toggleClass('xhEdtEnabled');
 	}
 	this.togglePreview=function(state)
 	{
@@ -652,7 +652,7 @@ $.xhEditor=function(textarea,options)
 		}
 		bPreview=!bPreview;
 		_jTools.find('[name=Preview]').toggleClass('xhEdtActive');
-		_jTools.find('.xhEdtButton').not('[name=Preview],[name=Fullscreen]').toggleClass('xhEdtEnabled');
+		_jTools.find('.xhEdtButton').not('[name=Preview],[name=Fullscreen],[name=About]').toggleClass('xhEdtEnabled');
 	}
 	this.toggleFullscreen=function(state)
 	{
