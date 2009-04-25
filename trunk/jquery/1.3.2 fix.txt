@@ -1,0 +1,21 @@
+修正原因：
+-----------------------------------------------
+由于xhEditor需要在iframe子窗口上绑定事件，而jQuery的默认代码要解决一个IE浏览器的bug，错误的将所有的window对象全部替换成父窗口的window，导致iframe窗口的事件绑定全部绑到了父窗口上，因此目前暂时只能删除此段代码以解决问题。
+
+
+修正方法：
+-----------------------------------------------
+
+
+搜索：elem = window;
+
+删除整段代码：
+		// For whatever reason, IE has trouble passing the window object
+		// around, causing it to be cloned in the process
+		if ( elem.setInterval && elem != window )
+			elem = window;
+
+
+特别说明：
+-----------------------------------------------
+当前文件夹中的两个JS文件都已经过修正
