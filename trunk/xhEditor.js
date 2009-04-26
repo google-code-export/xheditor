@@ -6,7 +6,7 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.1 build 090425
+ * @Version: 0.9.2 build 090426
  */
 (function($){
 $.fn.xhEditor=function(bInit,options)
@@ -57,7 +57,7 @@ var htmlLink='<div>链接地址: <input type="text" id="xhEdtLinkHref" value="ht
 var htmlImg='<div>图片地址：<input type="text" id="xhEdtImgSrc" value="http://" /></div><div>替换文本：<input type="text" id="xhEdtImgAlt" /></div><div>对齐方式：<select id="xhEdtImgAlign"><option selected="selected" value="">默认</option><option value="left">左对齐</option><option value="right">右对齐</option><option value="top">顶端</option><option value="middle">居中</option><option value="baseline">基线</option><option value="bottom">底边</option></select></div><div>宽度高度：<input type="text" id="xhEdtImgWidth" style="width:40px;" /> x <input type="text" id="xhEdtImgHeight" style="width:40px;" /></div><div>边框大小：<input type="text" id="xhEdtImgBorder" style="width:40px;" /></div><div>水平间距：<input type="text" id="xhEdtImgVspace" style="width:40px;" /> 垂直间距：<input type="text" id="xhEdtImgHspace" style="width:40px;" /></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
 var htmlFlash='<div>动画地址：<input type="text" id="xhEdtFlashSrc" value="http://" /></div><div>宽度高度：<input type="text" id="xhEdtFlashWidth" style="width:40px;" value="412" /> x <input type="text" id="xhEdtFlashHeight" style="width:40px;" value="300" /></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
 var htmlMedia='<div>视频地址：<input type="text" id="xhEdtMediaSrc" value="http://" /></div><div>宽度高度：<input type="text" id="xhEdtMediaWidth" style="width:40px;" value="412" /> x <input type="text" id="xhEdtMediaHeight" style="width:40px;" value="300" /></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
-var htmlAbout='<div style="width:200px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />版本：v0.9.1 build 20090425</p><p>xhEditor是一个基于jQuery开发的跨平台开源XHTML编辑器组件。</p><p><a href="http://xheditor.googlecode.com/" target="_blank">http://xheditor.googlecode.com/</a></p></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
+var htmlAbout='<div style="width:200px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />版本：v0.9.1 build 20090426</p><p>xhEditor是一个基于jQuery开发的跨平台开源XHTML编辑器组件。</p><p><a href="http://xheditor.googlecode.com/" target="_blank">http://xheditor.googlecode.com/</a></p></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
 var itemEmots=[{t:'Big grin',s:'biggrin.gif'},{t:'Smile',s:'smile.gif'},{t:'Titter',s:'titter.gif'},{t:'Lol',s:'lol.gif'},{t:'Call',s:'call.gif'},{t:'Victory',s:'victory.gif'},{t:'Shy',s:'shy.gif'},{t:'Handshake',s:'handshake.gif'},{t:'Kiss',s:'kiss.gif'},{t:'Sad',s:'sad.gif'},{t:'Cry',s:'cry.gif'},{t:'Huffy',s:'huffy.gif'},{t:'Mad',s:'mad.gif'},{t:'Tongue',s:'tongue.gif'},{t:'Sweat',s:'sweat.gif'},{t:'Shocked',s:'shocked.gif'},{t:'Time',s:'time.gif'},{t:'Hug',s:'hug.gif'}];
 var arrTools={GStart:{},GEnd:{},Separator:{},Cut:{t:'剪切 (Ctrl+X)'},Copy:{t:'复制 (Ctrl+C)'},Paste:{t:'粘贴 (Ctrl+V)'},Pastetext:{t:'粘贴文本'},Fontface:{t:'字体'},FontSize:{t:'字号'},Bold:{t:'加粗 (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'斜体 (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'下划线 (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'中划线 (Ctrl+S)',s:'Ctrl+S'},FontColor:{t:'字体颜色'},BackColor:{t:'背景颜色'},Removeformat:{t:'删除文字格式'},Align:{t:'对齐'},List:{t:'编号'},Outdent:{t:'减少缩进'},Indent:{t:'增加缩进'},Link:{t:'超链接'},Unlink:{t:'取消超链接'},Img:{t:'图片'},Flash:{t:'Flash动画'},Media:{t:'视频'},Emot:{t:'表情'},Html:{t:'Html源代码 (Ctrl+H)',s:'Ctrl+H'},Preview:{t:'预览'},Fullscreen:{t:'全屏编辑 (Esc)',s:'Esc'},About:{t:'关于 xhEditor'}};
 var toolsThemes={
@@ -341,7 +341,8 @@ $.xhEditor=function(textarea,options)
 			if(!isSafari)
 			{
 				//style转font
-				for(var i=0;i<3;i++)sHtml = sHtml.replace(/<(span)(?:\s+[^>]+)? style="((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1>)[\s\S]|<\1>((?!<\1>)[\s\S]|<\1>((?!<\1>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,style,content){
+				function style2font(all,tag,style,content)
+				{
 					var attrs='',f,s1,s2,c;
 					f=style.match(/font-family\s*:\s*([^;"]+)/i);
 					if(f)attrs+=' face="'+f[1]+'"';
@@ -361,7 +362,10 @@ $.xhEditor=function(textarea,options)
 						return '<font'+attrs+'>'+content+"</font>";
 					}
 					else return all;
-				});
+				}
+				sHtml = sHtml.replace(/<(span)(?:\s+[^>]+)? style="((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S])*?)<\/\1>/ig,style2font);//最里层
+				sHtml = sHtml.replace(/<(span)(?:\s+[^>]+)? style="((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,style2font);//第2层
+				sHtml = sHtml.replace(/<(span)(?:\s+[^>]+)? style="((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,style2font);//第3层
 			}
 		}
 		else
@@ -378,7 +382,8 @@ $.xhEditor=function(textarea,options)
 					return pre+'font-size:'+s;
 				});
 				var arrAppleSpan=[{r:/font-weight:\sbold/ig,t:'strong'},{r:/font-style:\sitalic/ig,t:'em'},{r:/text-decoration:\sunderline/ig,t:'u'},{r:/text-decoration:\sline-through/ig,t:'strike'}];
-				for(var i=0;i<6;i++)sHtml = sHtml.replace(/<(span)(\s+[^>]+|)? class="Apple-style-span"(\s+[^>]+|)?>(((?!<\1>)[\s\S]|<\1>((?!<\1>)[\s\S]|<\1>((?!<\1>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,attr1,attr2,content){
+				function replaceAppleSpan(all,tag,attr1,attr2,content)
+				{
 					var attr=attr1+attr2,newTag='';
 					for(var i=0;i<arrAppleSpan.length;i++)
 					{
@@ -389,8 +394,11 @@ $.xhEditor=function(textarea,options)
 						}
 					}
 					if(newTag)return '<'+newTag+'>'+content+'</'+newTag+'>';
-					else return all;
-				});
+					else return all;					
+				}
+				sHtml = sHtml.replace(/<(span)(\s+[^>]+|)? class="Apple-style-span"(\s+[^>]+|)?>(((?!<\1(\s+[^>]+)?>)[\s\S])*?)<\/\1>/ig,replaceAppleSpan);//最里层
+				sHtml = sHtml.replace(/<(span)(\s+[^>]+|)? class="Apple-style-span"(\s+[^>]+|)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,replaceAppleSpan);//第2层
+				sHtml = sHtml.replace(/<(span)(\s+[^>]+|)? class="Apple-style-span"(\s+[^>]+|)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,replaceAppleSpan);//第3层
 			}
 			sHtml = sHtml.replace(/\s*(-moz-|-webkit-)[^=]+?=\s*"[^"]*"/ig,'');
 			sHtml = sHtml.replace(/<(\w+[^>]*?)\s+class="?(?:apple|webkit)\-[^ >]*([^>]*?)>/ig, "<$1$2>");
@@ -443,7 +451,10 @@ $.xhEditor=function(textarea,options)
 		if(settings.clearStyle)sHtml = sHtml.replace(/<style(\s+[^>]+)?>[\s\S]*?<\/style>/ig, '');
 
 		for(var i=0;i<3;i++)sHtml=sHtml.replace(/<(span|strong|b|u|strike|em|i)(\s+[^>]+)?>((?!<\1)[ \t\r\n])*?<\/\1>/ig,'');//内部空白的标签：<span|b|u|s|i> </b>
-		for(var i=0;i<3;i++)sHtml=sHtml.replace(/<(span)>(((?!<\1>)[\s\S]|<\1>((?!<\1>)[\s\S]|<\1>((?!<\1>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,'$2');//无意义标签:<span>aaa</span>
+		//无意义标签:<span>aaa</span>
+		sHtml=sHtml.replace(/<(span)>(((?!<\1(\s+[^>]+)?>)[\s\S])*?)<\/\1>/ig,'$2');//最里层
+		sHtml=sHtml.replace(/<(span)>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,'$2');//第2层
+		sHtml=sHtml.replace(/<(span)>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,'$2');//第3层
 		
 		sHtml = sHtml.replace(/<(p|div)(?:\s+[^>]+)?>(((?!<\1(?: [^>]+)?>)[\s\S])+?)<\/\1>/ig,function(all,tag,content){//p内空白显示
 			var temp=content.replace(/<\/?(span|strong|b|u|strike|em|i)(\s+[^>]+)?>/ig,'');
@@ -584,7 +595,8 @@ $.xhEditor=function(textarea,options)
 		sHtml=results.join('');
 		
 		//font转style
-		for(var i=0;i<3;i++)sHtml = sHtml.replace(/<(font)(\s+[^>]+|)?>(((?!<\1>)[\s\S]|<\1>((?!<\1>)[\s\S]|<\1>((?!<\1>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,attrs,content){
+		function font2style(all,tag,attrs,content)
+		{
 			var styles='',f,s,c,style;
 			f=attrs.match(/ face\s*=\s*"\s*([^"]+)\s*"/i);
 			if(f)styles+='font-family:'+f[1]+';';
@@ -595,8 +607,11 @@ $.xhEditor=function(textarea,options)
 			style=attrs.match(/ style\s*=\s*"\s*([^"]+)\s*"/i);
 			if(style)styles+=style[1];
 			if(styles)content='<span style="'+styles+'">'+content+'</span>';
-			return content;
-		});
+			return content;			
+		}
+		sHtml = sHtml.replace(/<(font)(\s+[^>]+|)?>(((?!<\1(\s+[^>]+)?>)[\s\S])*?)<\/\1>/ig,font2style);//最里层
+		sHtml = sHtml.replace(/<(font)(\s+[^>]+|)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,font2style);//第2层
+		sHtml = sHtml.replace(/<(font)(\s+[^>]+|)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,font2style);//第3层
 			
 		return sHtml;
 	}
