@@ -1,4 +1,5 @@
 #summary 使用帮助
+#labels Featured
 
 ==简单使用说明：==
 
