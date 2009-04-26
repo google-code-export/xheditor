@@ -14,8 +14,7 @@
 4. 调用方法有两种：
   # 方法1：在textarea上添加属性： class="xheditor"
   # 方法2：在您的页面初始JS代码里加上： $('#elm1').xhEditor(true)；
-例如：
-{{{
+例如：{{{
 $({
 $('#elm1').xhEditor(true)；
 });
