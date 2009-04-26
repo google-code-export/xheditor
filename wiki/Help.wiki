@@ -76,6 +76,9 @@ fullscreen：全屏显示
 参数值：true(全屏大小),false(标准大小)
 }}}
 
+
+*所有JS接口说明*
+
 JS接口示例代码：
 {{{
 var editor=$('#elm1').xhEditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true})[0].xhEditor,sHtml;
@@ -89,8 +92,6 @@ editor.toggleHtml()
 editor.togglePreview()
 editor.toggleFullscreen()
 }}}
-
-*所有JS接口说明*
 
 focus：使编辑器获得焦点
 {{{
