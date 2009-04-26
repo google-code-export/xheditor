@@ -15,6 +15,7 @@
 4. 调用方法有两种：
   # 方法1：在textarea上添加属性： class="xheditor"
   # 方法2：在您的页面初始JS代码里加上： $('#elm1').xhEditor(true);
+
 例如：
 {{{
 $({
@@ -27,7 +28,7 @@ $('#elm1').xhEditor(false);
 
 ==初始化参数说明==
 
-示例代码：
+初始化示例代码：
 {{{
 $('#elm1').xhEditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true});
 }}}
@@ -57,12 +58,12 @@ clearStyle：清理style样式
 
 width：编辑器宽度
 {{{
-参数值：不带单位的数字，例如：300
+参数值：不带单位的数字，例：300
 }}}
 
 height：编辑器高度
 {{{
-参数值：不带单位的数字，例如：100
+参数值：不带单位的数字，例：100
 }}}
 
 loadCSS：加载样式
@@ -73,4 +74,65 @@ loadCSS：加载样式
 fullscreen：全屏显示
 {{{
 参数值：true(全屏大小),false(标准大小)
+}}}
+
+JS接口示例代码：
+{{{
+var editor=$('#elm1').xhEditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true})[0].xhEditor,sHtml;
+editor.focus();
+editor.setHTML('str')
+sHtml=editor.getHTML()
+editor.pasteHTML('<p>aaa</p>')
+editor.pasteText('str')
+sHtml=editor.formatXHTML('<b>aaa</b>')
+editor.toggleHtml()
+editor.togglePreview()
+editor.toggleFullscreen()
+}}}
+
+*所有JS接口说明*
+
+focus：使编辑器获得焦点
+{{{
+无参数
+}}}
+
+setHTML：设置编辑器HTML内容
+{{{
+参数1：要设置的HTML内容，例：'<p>aaa</p>'
+}}}
+
+getHTML：返回编辑器格式后的HTML
+{{{
+无参数
+}}}
+
+pasteHTML：粘贴HTML内容到编辑器当前光标处
+{{{
+参数1：要粘贴的HTML代码，例：'<p>uuu</p>'
+}}}
+
+pasteText：粘贴文本到编辑器当前光标处
+{{{
+参数1：要粘贴的文本，例：'这里的内容完全原样显示<strong>aaa</strong>'
+}}}
+
+formatXHTML：格式化XHTML代码
+{{{
+参数1：需要格式化的HTML代码，例：'<b>aaa</b>'，返回'<strong>aaa</strong>'
+}}}
+
+toggleHtml：在源代码模式和编辑模式之间切换
+{{{
+参数1：空(切换),true(显示源代码模式),false(显示编辑模式)
+}}}
+
+togglePreview：在预览模式和编辑模式之间切换
+{{{
+参数1：空(切换),true(显示预览模式),false(显示编辑模式)
+}}}
+
+toggleFullscreen：在全屏模式和标准大小之间切换
+{{{
+参数1：空(切换),true(显示全屏模式),false(显示标准模式)
 }}}
