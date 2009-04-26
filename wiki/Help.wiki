@@ -137,3 +137,11 @@ toggleFullscreen：在全屏模式和标准大小之间切换
 {{{
 参数1：空(切换),true(显示全屏模式),false(显示标准模式)
 }}}
+
+==Demo(演示)：==
+ * 默认模式：[http://static.pirate9.com/js/xheditor_demos/demo1.html]
+ * 自定义按钮：[http://static.pirate9.com/js/xheditor_demos/demo2.html]
+ * 皮肤选择：[http://static.pirate9.com/js/xheditor_demos/demo3.html]
+ * 其它选项：[http://static.pirate9.com/js/xheditor_demos/demo4.html]
+ * Javascript交互：[http://static.pirate9.com/js/xheditor_demos/demo5.html]
+ * 非utf-8编码网页调用：[http://static.pirate9.com/js/xheditor_demos/demo6.html]
