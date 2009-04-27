@@ -32,7 +32,7 @@ $('#elm1').xhEditor(false);
 
 初始化示例代码：
 {{{
-$('#elm1').xhEditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true});
+$('#elm1').xhEditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true});
 }}}
 
 tools：自定义工具按钮
@@ -44,6 +44,11 @@ tools：自定义工具按钮
 skin：皮肤风格选择
 {{{
 参数值：default(默认风格),o2007blue(Office 2007 蓝色),o2007silver(Office 2007 银色)
+}}}
+
+showBlocktag:显示段落标签
+{{{
+参数值：true(显示段落标签),false(不显示)
 }}}
 
 clearScript：清理JS代码
