@@ -14,7 +14,7 @@
 
 4. 调用方法有两种：
 {{{
-方法1：在textarea上添加属性： class="xheditor"
+方法1：在textarea上添加属性： class="xheditor"(设置为xheditor-mini和xheditor-simple，分别默认加载迷你和简单工具栏)
 方法2：在您的页面初始JS代码里加上： $('#elm1').xhEditor(true);
 
 例如：
@@ -32,13 +32,15 @@ $('#elm1').xhEditor(false);
 
 初始化示例代码：
 {{{
-$('#elm1').xhEditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true});
+$('#elm1').xhEditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,forcePtag:true});
 }}}
 
 tools：自定义工具按钮
 {{{
-参数值：full(完全),simple(简单),mini(迷你)
-或者自定义字符串，例如：'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Html,Preview,Fullscreen,About,GEnd'
+参数值：full(完全),simple(简单),mini(迷你),ubb(ubb工具栏)
+或者自定义字符串，例如：'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Source,Preview,Fullscreen,About,GEnd'
+
+注：ubb工具栏必需要配合ubb可视化编辑插件才有意义，否则仅仅只是一个按钮集
 
 完整按钮表：
 GStart：组开始
@@ -69,7 +71,7 @@ Flash：Flash动画
 Media：Windows media player视频
 Emot：表情
 Table：表格
-Html：切换源代码模式
+Source：切换源代码模式
 Preview：切换预览模式
 Fullscreen：切换全屏模式
 About：关于xhEditor
@@ -115,19 +117,23 @@ fullscreen：全屏显示
 参数值：true(全屏大小),false(标准大小)
 }}}
 
+forcePtag:强制P标签
+{{{
+参数值：true(强制使用P标签),false(不强制)
+}}}
 
 ==JS接口说明==
 
 JS接口示例代码：
 {{{
-var editor=$('#elm1').xhEditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true})[0].xhEditor,sHtml;
+var editor=$('#elm1').xhEditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb})[0].xhEditor,sHtml;
 editor.focus();
-editor.setHTML('str')
-sHtml=editor.getHTML()
+editor.setSource('str')
+sHtml=editor.getSource()
 editor.pasteHTML('<p>aaa</p>')
 editor.pasteText('str')
 sHtml=editor.formatXHTML('<b>aaa</b>')
-editor.toggleHtml()
+editor.toggleSource()
 editor.togglePreview()
 editor.toggleFullscreen()
 }}}
@@ -137,12 +143,12 @@ focus：使编辑器获得焦点
 无参数
 }}}
 
-setHTML：设置编辑器HTML内容
+setSource：设置编辑器源代码
 {{{
-参数1：要设置的HTML内容，例：'<p>aaa</p>'
+参数1：要设置的源代码内容，例：'<p>aaa</p>'
 }}}
 
-getHTML：返回编辑器格式后的HTML
+getSource：返回编辑器格式后的源代码
 {{{
 无参数
 }}}
@@ -162,7 +168,7 @@ formatXHTML：格式化XHTML代码
 参数1：需要格式化的HTML代码，例：'<b>aaa</b>'，返回'<strong>aaa</strong>'
 }}}
 
-toggleHtml：在源代码模式和编辑模式之间切换
+toggleSource：在源代码模式和编辑模式之间切换
 {{{
 参数1：空(切换),true(显示源代码模式),false(显示编辑模式)
 }}}
@@ -177,6 +183,10 @@ toggleFullscreen：在全屏模式和标准大小之间切换
 参数1：空(切换),true(显示全屏模式),false(显示标准模式)
 }}}
 
+{{{
+注：beforeSetSource和beforeGetSource是编辑器回调函数，分别在设置源代码和取回源代码之前调用
+}}}
+
 ==Demo(演示)：==
  * 默认模式：[http://static.pirate9.com/js/xheditor_demos/demo1.html]
  * 自定义按钮：[http://static.pirate9.com/js/xheditor_demos/demo2.html]
@@ -184,3 +194,4 @@ toggleFullscreen：在全屏模式和标准大小之间切换
  * 其它选项：[http://static.pirate9.com/js/xheditor_demos/demo4.html]
  * Javascript交互：[http://static.pirate9.com/js/xheditor_demos/demo5.html]
  * 非utf-8编码网页调用：[http://static.pirate9.com/js/xheditor_demos/demo6.html]
+ * UBB可视化编辑：[http://static.pirate9.com/js/xheditor_demos/demo7.html]
