@@ -5,7 +5,7 @@
 xhEditor是一个基于jQuery开发的简单迷你并且高效的可视化XHTML编辑器，基于网络访问并且兼容IE 6.0-8.0,Firefox 3.0,Opera 9.6,Chrome 1.0,Safari 3.22。
 
 ==Features(特点)：==
- * Small：初始加载5个文件，包括：1个js(31k)+2个css(6k)+2个图片(4k)，总共41k。若js和css文件进行gzip压缩，可以进一步缩减为17k左右。
+ * Small：初始加载5个文件，包括：1个js(36k)+2个css(6k)+2个图片(4k)，总共46k。若js和css文件进行gzip压缩，可以进一步缩减为18k左右。
  * Fast：基于jQuery引擎开发，提供高效的代码执行效率
  * Simple：简单的调用方式，加一个class属性就能将您的textarea立马变成一个功能丰富的可视化编辑器。
  * Word：实现Word代码自动检测并清理，提供高效完美的Word代码过滤方案，生成代码最优化精简，但是却不丢失任何细节效果。
@@ -17,6 +17,7 @@ xhEditor是一个基于jQuery开发的简单迷你并且高效的可视化XHTML�
  * 其它选项：[http://static.pirate9.com/js/xheditor_demos/demo4.html]
  * Javascript交互：[http://static.pirate9.com/js/xheditor_demos/demo5.html]
  * 非utf-8编码网页调用：[http://static.pirate9.com/js/xheditor_demos/demo6.html]
+ * UBB可视化编辑：[http://static.pirate9.com/js/xheditor_demos/demo7.html]
 
 ==Thanks(感谢)：==
  * jQuery：[http://jquery.com/]
