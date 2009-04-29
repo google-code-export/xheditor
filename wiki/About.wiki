@@ -9,6 +9,7 @@ xhEditor是一个基于jQuery开发的简单迷你并且高效的可视化XHTML�
  * Fast：基于jQuery引擎开发，提供高效的代码执行效率
  * Simple：简单的调用方式，加一个class属性就能将您的textarea立马变成一个功能丰富的可视化编辑器。
  * Word：实现Word代码自动检测并清理，提供高效完美的Word代码过滤方案，生成代码最优化精简，但是却不丢失任何细节效果。
+ * UBB: 提供完美的UBB可视化编辑解决方案，在您获得安全高效代码存储的同时，又能享受可视化编辑的便捷
 
 ==Demo(演示)：==
  * 默认模式：[http://static.pirate9.com/js/xheditor_demos/demo1.html]
