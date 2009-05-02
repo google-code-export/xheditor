@@ -15,15 +15,15 @@
 4. 调用方法有两种：
 {{{
 方法1：在textarea上添加属性： class="xheditor"(设置为xheditor-mini和xheditor-simple，分别默认加载迷你和简单工具栏)
-方法2：在您的页面初始JS代码里加上： $('#elm1').xhEditor(true);
+方法2：在您的页面初始JS代码里加上： $('#elm1').xheditor(true);
 
 例如：
 $({
-$('#elm1').xhEditor(true);
+$('#elm1').xheditor(true);
 });
 
 相应的隐藏编辑的代码为：
-$('#elm1').xhEditor(false);
+$('#elm1').xheditor(false);
 }}}
 
 
@@ -32,7 +32,7 @@ $('#elm1').xhEditor(false);
 
 初始化示例代码：
 {{{
-$('#elm1').xhEditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,forcePtag:true});
+$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,forcePtag:true});
 }}}
 
 tools：自定义工具按钮
@@ -126,7 +126,7 @@ forcePtag:强制P标签
 
 JS接口示例代码：
 {{{
-var editor=$('#elm1').xhEditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb})[0].xhEditor,sHtml;
+var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb})[0].xheditor,sHtml;
 editor.focus();
 editor.setSource('str')
 sHtml=editor.getSource()
