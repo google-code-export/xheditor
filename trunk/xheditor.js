@@ -110,13 +110,10 @@ $.xheditor=function(textarea,options)
 			_doc.write('</head><body dir="ltr" spellcheck="false" class="editMode'+bodyClass+'"></body></html>');
 			_doc.close();
 			if(isIE)_doc.body.contentEditable='true';
-			else
-			{
-				_doc.designMode = 'On';
-				setTimeout(_this.setOpts,300);
-			}
-			_this.setSource();
+			else _doc.designMode = 'On';
 		}catch(e){}
+		setTimeout(_this.setOpts,300);
+		_this.setSource();
 		_win.setInterval=null;
 		//初始化工具栏
 		var sToolHtml='',tool;
@@ -166,8 +163,8 @@ $.xheditor=function(textarea,options)
 		_jText.hide();
 		_this.bind();
 		xCount++;
-		if(settings.fullscreen)_this.toggleFullscreen();
 		bInit=true;
+		if(settings.fullscreen)_this.toggleFullscreen();
 		return true;
 	}
 	this.remove=function()
@@ -240,6 +237,7 @@ $.xheditor=function(textarea,options)
 			var jArea=$('#'+idIframeArea);
 			jArea.height('100%');
 			if(bFullscreen)jArea.height((jArea.height()-30)+'px');
+			if(isIE)_jTools.hide().show();
 		}
 	}
 	this.fixAppleSel=function(e)
