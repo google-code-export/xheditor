@@ -1,0 +1,80 @@
+<?php
+/*!
+ * ubb2html support for php
+ * @requires xhEditor
+ * 
+ * @author Yanis.Wang<yanis.wang@gmail.com>
+ * @site http://pirate9.com/
+ * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
+ * 
+ * @Version: 0.9.1 build 090430
+ */
+function ubb2html($sUBB)
+{
+	$sHtml=$sUBB;
+	$sHtml=preg_replace("/</",'&lt;',$sHtml);
+	$sHtml=preg_replace("/>/",'&gt;',$sHtml);
+	$sHtml=preg_replace("/\r?\n/",'<br />',$sHtml);
+	$sHtml=preg_replace("/\[(\/?)(b|u|i)\]/",'<$1$2>',$sHtml);
+	$sHtml=preg_replace("/\[color\s*=\s*([^\]]+?)\]([\s\S]*?)\[\/color\]/i",'<span style="color:$1;">$2</span>',$sHtml);
+	function getSizeName($match)
+	{
+		$arrSize=array('xx-small','x-small','small','medium','large','x-large','xx-large');
+		return '<span style="font-size:'.$arrSize[$match[1]-1].';">'.$match[2].'</span>';
+	}
+	$sHtml=preg_replace_callback("/\[size\s*=\s*(\d+?)\]([\s\S]*?)\[\/size\]/i",'getSizeName',$sHtml);
+	$sHtml=preg_replace("/\[font\s*=\s*([^\]]+?)\]([\s\S]*?)\[\/font\]/i",'<span style="font-family:$1;">$2</span>',$sHtml);
+	$sHtml=preg_replace("/\[sup\]([\s\S]*?)\[\/sup\]/i",'<sup>$1</sup>',$sHtml);
+	$sHtml=preg_replace("/\[sub\]([\s\S]*?)\[\/sub\]/i",'<sub>$1</sub>',$sHtml);
+	for($i=0;$i<3;$i++)$sHtml=preg_replace("/\[align\s*=\s*([^\]]+?)\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/",'<p align="$1">$2</p>',$sHtml);
+	$sHtml=preg_replace("/\[img\]\s*([\s\S]+?)\s*\[\/img\]/i",'<img src="$1" />',$sHtml);
+	$sHtml=preg_replace("/\[img\s*=\s*(\d+),(\d+)\s*\]\s*([\s\S]+?)\s*\[\/img\]/i",'<img src="$3" width="$1" height="$2" />',$sHtml);
+	$sHtml=preg_replace("/\[url\]\s*([\s\S]+?)\s*\[\/url\]/i",'<a href="$1">$1</a>',$sHtml);
+	$sHtml=preg_replace("/\[url\s*=\s*([^\]\s]+?)\s*\]\s*([\s\S]+?)\s*\[\/url\]/i",'<a href="$1">$2</a>',$sHtml);
+	$sHtml=preg_replace("/\[email\]\s*([\s\S]+?)\s*\[\/email\]/i",'<a href="mailto:$1">$1</a>',$sHtml);
+	$sHtml=preg_replace("/\[email\s*=\s*([^\]\s]+?)\s*\]\s*([\s\S]+?)\s*\[\/email\]/i",'<a href="mailto:$1">$2</a>',$sHtml);
+	$sHtml=preg_replace("/\[quote\]([\s\S]*?)\[\/quote\]/i",'<blockquote>$1</blockquote>',$sHtml);
+	$sHtml=preg_replace("/\[code\]([\s\S]*?)\[\/code\]/i",'<code>$1</code>',$sHtml);
+	function getFlash($match)
+	{
+		$w=$match[1];$h=$match[2];$url=$match[3];
+		if(!$w)$w=550;if(!$h)$h=400;
+		return '<embed type="application/x-shockwave-flash" src="'.$url.'" wmode="opaque" quality="high" bgcolor="#ffffff" menu="false" play="true" loop="true" width="'.$w.'" height="'.$h.'"/>';
+	}
+	$sHtml=preg_replace_callback("/\[flash\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*)?\]([\s\S]+?)\[\/flash\]/i",'getFlash',$sHtml);
+	function getMedia($match)
+	{
+		$w=$match[1];$h=$match[2];$play=$match[3];$url=$match[4];
+		if(!$w)$w=550;if(!$h)$h=400;
+		return '<embed type="application/x-mplayer2" src="'.$url.'" enablecontextmenu="false" autostart="'.($play=='1'?'true':'false').'" width="'.$w.'" height="'.$h.'"/>';
+	}
+	$sHtml=preg_replace_callback("/\[media\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d+)\s*)?)?\]([\s\S]+?)\[\/media\]/i",'getMedia',$sHtml);
+	function getTable($match)
+	{
+		$w=$match[1];$b=$match[2];
+		$str='<table';
+		if($w)$str.=' width="'.$w.'"';
+		if($b)$str.=' bgcolor="'.$b.'"';
+		return $str.'>';
+	}
+	$sHtml=preg_replace_callback("/\[table(?:\s*=\s*(\d{1,4}%?)\s*(?:,\s*([^\]]+)\s*)?)?]/i",'getTable',$sHtml);
+	function getTR($match){return '<tr'.($match[1]?' bgcolor="'.$match[1].'"':'').'>';}
+	$sHtml=preg_replace_callback("/\[tr(?:\s*=(\s*[^\]]+))?\]/i",'getTR',$sHtml);
+	function getTD($match){
+		$col=$match[1];$row=$match[2];$w=$match[3];
+		return '<td'.($col>1?' colspan="'.$col.'"':'').($row>1?' rowspan="'.$row.'"':'').($w?' width="'.$w.'"':'').'>';
+	}
+	$sHtml=preg_replace_callback("/\[td(?:\s*=\s*(\d{1,2})\s*,\s*(\d{1,2})\s*(?:,\s*(\d{1,4}%?))?)?\]/i",'getTD',$sHtml);
+	$sHtml=preg_replace("/\[\/(table|tr|td)\]/i",'</$1>',$sHtml);
+	$sHtml=preg_replace("/\[\*\]([^\[]+)/i",'<li>$1</li>',$sHtml);
+	function getUL($match)
+	{
+		$str='<ul';
+		if($match[1])$str.=' type="'.$match[1].'"';
+		return $str.'>';
+	}
+	$sHtml=preg_replace_callback("/\[list(?:\s*=\s*([^\]]+)\s*)?\]/i",'getUL',$sHtml);
+	$sHtml=preg_replace("/\[\/list\]/i",'</ul>',$sHtml);
+	return $sHtml;
+}
+?>

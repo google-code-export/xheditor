@@ -6,7 +6,7 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.0 build 090428
+ * @Version: 0.9.1 build 090429
  */
 function ubb2html(sUBB)
 {
@@ -37,6 +37,19 @@ function ubb2html(sUBB)
 		if(!w)w=550;if(!h)h=400;
 		return '<embed type="application/x-mplayer2" src="'+url+'" enablecontextmenu="false" autostart="'+(play=='1'?'true':'false')+'" width="'+w+'" height="'+h+'"/>';
 	});
+	sHtml=sHtml.replace(/\[table(?:\s*=\s*(\d{1,4}%?)\s*(?:,\s*([^\]]+)\s*)?)?]/ig,function(all,w,b){
+		var str='<table';
+		if(w)str+=' width="'+w+'"';
+		if(b)str+=' bgcolor="'+b+'"';
+		return str+'>';
+	});
+	sHtml=sHtml.replace(/\[tr(?:\s*=(\s*[^\]]+))?\]/ig,function(all,bg){
+		return '<tr'+(bg?' bgcolor="'+bg+'"':'')+'>';
+	});
+	sHtml=sHtml.replace(/\[td(?:\s*=\s*(\d{1,2})\s*,\s*(\d{1,2})\s*(?:,\s*(\d{1,4}%?))?)?\]/ig,function(all,col,row,w){
+		return '<td'+(col>1?' colspan="'+col+'"':'')+(row>1?' rowspan="'+row+'"':'')+(w?' width="'+w+'"':'')+'>';
+	});
+	sHtml=sHtml.replace(/\[\/(table|tr|td)\]/ig,'</$1>');
 	
 	sHtml=sHtml.replace(/\[\*\]([^\[]+)/ig,'<li>$1</li>');
 	sHtml=sHtml.replace(/\[list(?:\s*=\s*([^\]]+)\s*)?\]/ig,function(all,type){
@@ -88,23 +101,72 @@ function html2ubb(sHtml)
 	sUBB=sUBB.replace(/<blockquote(?: [^>]+)?>([\s\S]+?)<\/blockquote>/ig,'[quote]$1[/quote]');
 	sUBB=sUBB.replace(/<code(?: [^>]+)?>([\s\S]+?)<\/code>/ig,'[code]$1[/code]');
 	sUBB=sUBB.replace(/<embed((?:\s+[^>]+)?(?:\s+type="application\/x-shockwave-flash"|\s+classid="clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000")[^>]*?)\/>/ig,function(all,attr){
-		var url=attr.match(/\s+src="\s*([^"]+)\s*"/i),w=attr.match(/\s+width="\s*([^"]+)\s*"/i),h=attr.match(/\s+height="\s*([^"]+)\s*"/i),str='[flash';
+		var url=attr.match(/\s+src\s*=\s*"\s*([^"]+)\s*"/i),w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i),h=attr.match(/\s+height\s*=\s*"\s*([^"]+)\s*"/i),str='[flash';
 		if(w&&h)str+='='+w[1]+','+h[1];
 		str+=']'+url[1];
 		return str+'[/flash]';
 	});
 	sUBB=sUBB.replace(/<embed((?:\s+[^>]+)?(?:\s+type="application\/x-mplayer2"|\s+classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6")[^>]*?)\/>/ig,function(all,attr){
-		var url=attr.match(/\s+src="\s*([^"]+)\s*"/i),w=attr.match(/\s+width="\s*([^"]+)\s*"/i),h=attr.match(/\s+height="\s*([^"]+)\s*"/i),p=attr.match(/\s+autostart="\s*([^"]+)\s*"/i),str='[media',auto='0';
+		var url=attr.match(/\s+src\s*=\s*"\s*([^"]+)\s*"/i),w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i),h=attr.match(/\s+height\s*=\s*"\s*([^"]+)\s*"/i),p=attr.match(/\s+autostart\s*=\s*"\s*([^"]+)\s*"/i),str='[media',auto='0';
 		if(p)if(p[1]=='true')auto='1';
 		if(w&&h)str+='='+w[1]+','+h[1]+','+auto;
 		str+=']'+url[1];
 		return str+'[/media]';
 	});
-	sUBB=sUBB.replace(/<ul(?:\s+[^>]+)?\s+type="([^"]+)"[^>]*>/ig,function(all,type,content){return '[list'+(type?'='+type:'')+']';});
+	
+	var regbg=/(?:background|background-color|bgcolor)\s*[:=]\s*(["']?)\s*((rgb\s*\(\s*\d{1,3}%?,\s*\d{1,3}%?\s*,\s*\d{1,3}%?\s*\))|(#[0-9a-f]{3,6})|([a-z]{1,20}))\s*\1/i
+	sUBB=sUBB.replace(/<table(\s+[^>]+|)?>/ig,function(all,attr){
+		var str='[table';
+		if(attr)
+		{
+			var w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i),b=attr.match(regbg);
+			if(w)
+			{
+				str+='='+w[1];
+				if(b)str+=','+b[2];
+			}
+		}
+		return str+']';
+	});
+	sUBB=sUBB.replace(/<tr(\s+[^>]+|)?>/ig,function(all,attr){
+		var str='[tr';
+		if(attr)
+		{
+			var bg=attr.match(regbg)
+			if(bg)str+='='+bg[2];
+		}
+		return str+']';
+	});
+	sUBB=sUBB.replace(/<(?:th|td)(\s+[^>]+|)?>/ig,function(all,attr){
+		var str='[td';
+		if(attr)
+		{
+			var col=attr.match(/\s+colspan\s*=\s*"\s*([^"]+)\s*"/i),row=attr.match(/\s+rowspan\s*=\s*"\s*([^"]+)\s*"/i),w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i);
+			col=col?col[1]:1;
+			row=row?row[1]:1;
+			if(col>1||row>1||w)str+='='+col+','+row;
+			if(w)str+=','+w[1];
+		}
+		return str+']';
+	});
+	sUBB=sUBB.replace(/<\/(table|tr)>/ig,'[/$1]');
+	sUBB=sUBB.replace(/<\/(th|td)>/ig,'[/td]');
+	
+	sUBB=sUBB.replace(/<ul(\s+[^>]+|)?>/ig,function(all,attr){
+		var t;
+		if(attr)t=attr.match(/\s+type\s*=\s*"([^"]+)"/i);
+		return '[list'+(t?'='+t[1]:'')+']';
+	});
 	sUBB=sUBB.replace(/<ol(\s+[^>]+)?>/ig,'[list=1]');
 	sUBB=sUBB.replace(/<li(\s+[^>]+)?>/ig,'[*]');
 	sUBB=sUBB.replace(/<\/li>/ig,'');
 	sUBB=sUBB.replace(/<\/(ul|ol)>/ig,'[/list]');
+	sUBB=sUBB.replace(/<h([1-6])(\s+[^>]+)?>/ig,function(all,n){return '\r\n\r\n[size='+(7-n)+'][b]'});
+	sUBB=sUBB.replace(/<\/h[1-6]>/ig,'[/b][/size]\r\n\r\n');
+	sUBB=sUBB.replace(/<pre(\s+[^>]+)?>/ig,'\r\n\r\n[code]');
+	sUBB=sUBB.replace(/<\/pre>/ig,'[/code]\r\n\r\n');
+	sUBB=sUBB.replace(/<address(\s+[^>]+)?>/ig,'\r\n[i]');
+	sUBB=sUBB.replace(/<\/address>/ig,'[i]\r\n');
 	
 	sUBB=sUBB.replace(/<(p)(?:\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n\r\n$2\r\n\r\n");
 	sUBB=sUBB.replace(/<(div)(?:\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n$2\r\n");

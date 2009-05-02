@@ -2438,6 +2438,11 @@ jQuery.event = {
 		if ( elem.nodeType == 3 || elem.nodeType == 8 )
 			return;
 
+		// For whatever reason, IE has trouble passing the window object
+		// around, causing it to be cloned in the process
+		if ( elem.setInterval && elem != window )
+			elem = window;
+
 		// Make sure that the function being executed has a unique ID
 		if ( !handler.guid )
 			handler.guid = this.guid++;
