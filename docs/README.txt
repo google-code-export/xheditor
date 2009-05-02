@@ -17,13 +17,13 @@
 4. 
 方法1：在textarea上添加属性： class="xheditor"
 方法2：在您的页面初始JS代码里加上：
-$('#elm1').xhEditor(true)；
+$('#elm1').xheditor(true)；
 例如：
 $({
-$('#elm1').xhEditor(true)；
+$('#elm1').xheditor(true)；
 });
 相应的隐藏编辑的代码为
-$('#elm1').xhEditor(false)；
+$('#elm1').xheditor(false)；
 
 
 更多详情，请参考demos里的演示页面

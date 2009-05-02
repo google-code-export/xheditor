@@ -6,28 +6,28 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.3 build 090428
+ * @Version: 0.9.4 build 090502
  */
 (function($){
-$.fn.xhEditor=function(bInit,options)
+$.fn.xheditor=function(bInit,options)
 {
 	return this.each(function(){
 		if(this.tagName.toLowerCase()!='textarea')return;
 		if(bInit)//初始化
 		{
-			if(!this.xhEditor)
+			if(!this.xheditor)
 			{
-				var editor=new $.xhEditor(this,options);
-				if(editor.init())this.xhEditor=editor;			
+				var editor=new $.xheditor(this,options);
+				if(editor.init())this.xheditor=editor;			
 				else editor=null;	
 			}
 		}
 		else//卸载
 		{
-			if(this.xhEditor)
+			if(this.xheditor)
 			{
-				this.xhEditor.remove();
-				this.xhEditor=null;
+				this.xheditor.remove();
+				this.xheditor=null;
 			}
 		}
 	});
@@ -52,22 +52,22 @@ var itemColors=['#FFFFFF','#E5E4E4','#D9D8D8','#C0BDBD','#A7A4A4','#8E8A8B','#82
 var arrBlocktag=[{n:'p',t:'普通段落'},{n:'h1',t:'标题1'},{n:'h2',t:'标题2'},{n:'h3',t:'标题3'},{n:'h4',t:'标题4'},{n:'h5',t:'标题5'},{n:'h6',t:'标题6'},{n:'pre',t:'已编排格式'},{n:'address',t:'地址'}];
 var arrFontname=['宋体','黑体','楷体','隶书','幼圆','Arial','Arial Narrow','Arial Black','Comic Sans MS','Courier','System','Times New Roman','Verdana'];
 var arrFontsize=[{n:'xx-small',wkn:'x-small',s:'8pt',t:'极小'},{n:'x-small',wkn:'small',s:'10pt',t:'特小'},{n:'small',wkn:'medium',s:'12pt',t:'小'},{n:'medium',wkn:'large',s:'14pt',t:'中'},{n:'large',wkn:'x-large',s:'18pt',t:'大'},{n:'x-large',wkn:'xx-large',s:'24pt',t:'特大'},{n:'xx-large',wkn:'-webkit-xxx-large',s:'36pt',t:'极大'}];
-var menuAlign=[{s:'左对齐',v:'justifyleft',t:'左对齐'},{s:'居中',v:'justifycenter',t:'居中'},{s:'右对齐',v:'justifyright',t:'右对齐'},{s:'两端对齐',v:'justifyfull',t:'两端对齐'}],menuList=[{s:'数字列表',v:'insertOrderedList',t:'数字列表'},{s:'符号列表',v:'insertunorderedlist',t:'符号列表'}];
+var menuAlign=[{s:'左对齐',v:'justifyleft',t:'左对齐'},{s:'居中',v:'justifycenter',t:'居中'},{s:'右对齐',v:'justifyright',t:'右对齐'},{s:'两端对齐',v:'justifyfull',t:'两端对齐'}],menuList=[{s:'数字列表',v:'insertOrderedList',t:'数字列表'},{s:'符号列表',v:'insertUnorderedList',t:'符号列表'}];
 var htmlPastetext='<div>使用键盘快捷键(Ctrl+V)把内容粘贴到方框里，按 确定</div><div><textarea id="xhEdtPastetextValue" wrap="soft" spellcheck="false" style="width:300px;height:100px;" /></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
 var htmlLink='<div>链接地址: <input type="text" id="xhEdtLinkHref" value="http://" /></div><div>打开方式: <select id="xhEdtLinkTarget"><option selected="selected" value="">默认</option><option value="_blank">新窗口</option><option value="_self">当前窗口</option><option value="_parent">父窗口</option></select></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
 var htmlImg='<div>图片地址：<input type="text" id="xhEdtImgSrc" value="http://" /></div><div>替换文本：<input type="text" id="xhEdtImgAlt" /></div><div>对齐方式：<select id="xhEdtImgAlign"><option selected="selected" value="">默认</option><option value="left">左对齐</option><option value="right">右对齐</option><option value="top">顶端</option><option value="middle">居中</option><option value="baseline">基线</option><option value="bottom">底边</option></select></div><div>宽度高度：<input type="text" id="xhEdtImgWidth" style="width:40px;" /> x <input type="text" id="xhEdtImgHeight" style="width:40px;" /></div><div>边框大小：<input type="text" id="xhEdtImgBorder" style="width:40px;" /></div><div>水平间距：<input type="text" id="xhEdtImgVspace" style="width:40px;" /> 垂直间距：<input type="text" id="xhEdtImgHspace" style="width:40px;" /></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
 var htmlFlash='<div>动画地址：<input type="text" id="xhEdtFlashSrc" value="http://" /></div><div>宽度高度：<input type="text" id="xhEdtFlashWidth" style="width:40px;" value="412" /> x <input type="text" id="xhEdtFlashHeight" style="width:40px;" value="300" /></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
 var htmlMedia='<div>视频地址：<input type="text" id="xhEdtMediaSrc" value="http://" /></div><div>宽度高度：<input type="text" id="xhEdtMediaWidth" style="width:40px;" value="412" /> x <input type="text" id="xhEdtMediaHeight" style="width:40px;" value="300" /></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
 var htmlTable='<div>行数列数：<input type="text" id="xhEdtTableRows" style="width:40px;" value="3" /> x <input type="text" id="xhEdtTableColumns" style="width:40px;" value="2" /></div><div>标题单元：<select id="xhEdtTableHeaders"><option selected="selected" value="">无</option><option value="row">第一行</option><option value="col">第一列</option><option value="both">第一行和第一列</option></select></div><div>宽度高度：<input type="text" id="xhEdtTableWidth" style="width:40px;" value="200" /> x <input type="text" id="xhEdtTableHeight" style="width:40px;" value="" /></div><div>边框大小：<input type="text" id="xhEdtTableBorder" style="width:40px;" value="1" /></div><div>间距边距：<input type="text" id="xhEdtTableCellSpacing" style="width:40px;" value="1" /> <input type="text" id="xhEdtTableCellPadding" style="width:40px;" value="1" /></div><div>对齐方式：<select id="xhEdtTableAlign"><option selected="selected" value="">默认</option><option value="left">左对齐</option><option value="center">居中</option><option value="right">右对齐</option></select></div><div>表格标题：<input type="text" id="xhEdtTableCaption" /></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
-var htmlAbout='<div style="width:200px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />版本：v0.9.3 build 20090428</p><p>xhEditor是一个基于jQuery开发的跨平台开源XHTML编辑器组件。</p><p><a href="http://xheditor.googlecode.com/" target="_blank">http://xheditor.googlecode.com/</a></p></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
+var htmlAbout='<div style="width:200px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />版本：v0.9.4 build 20090502</p><p>xhEditor是一个基于jQuery开发的跨平台开源XHTML编辑器组件。</p><p><a href="http://xheditor.googlecode.com/" target="_blank">http://xheditor.googlecode.com/</a></p></div><div style="text-align:right;"><input type="button" id="xhEdtSave" value="确定" /></div>';
 var itemEmots=[{t:'Big grin',s:'biggrin.gif'},{t:'Smile',s:'smile.gif'},{t:'Titter',s:'titter.gif'},{t:'Lol',s:'lol.gif'},{t:'Call',s:'call.gif'},{t:'Victory',s:'victory.gif'},{t:'Shy',s:'shy.gif'},{t:'Handshake',s:'handshake.gif'},{t:'Kiss',s:'kiss.gif'},{t:'Sad',s:'sad.gif'},{t:'Cry',s:'cry.gif'},{t:'Huffy',s:'huffy.gif'},{t:'Mad',s:'mad.gif'},{t:'Tongue',s:'tongue.gif'},{t:'Sweat',s:'sweat.gif'},{t:'Shocked',s:'shocked.gif'},{t:'Time',s:'time.gif'},{t:'Hug',s:'hug.gif'}];
 var arrTools={GStart:{},GEnd:{},Separator:{},Cut:{t:'剪切 (Ctrl+X)'},Copy:{t:'复制 (Ctrl+C)'},Paste:{t:'粘贴 (Ctrl+V)'},Pastetext:{t:'粘贴文本'},Blocktag:{t:'段落标签'},Fontface:{t:'字体'},FontSize:{t:'字号'},Bold:{t:'加粗 (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'斜体 (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'下划线 (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'中划线 (Ctrl+S)',s:'Ctrl+S'},FontColor:{t:'字体颜色'},BackColor:{t:'背景颜色'},Removeformat:{t:'删除文字格式'},Align:{t:'对齐'},List:{t:'列表'},Outdent:{t:'减少缩进'},Indent:{t:'增加缩进'},Link:{t:'超链接'},Unlink:{t:'取消超链接'},Img:{t:'图片'},Flash:{t:'Flash动画'},Media:{t:'视频'},Emot:{t:'表情'},Table:{t:'表格'},Source:{t:'源代码'},Preview:{t:'预览'},Fullscreen:{t:'全屏编辑 (Esc)',s:'Esc'},About:{t:'关于 xhEditor'}};
 var toolsThemes={
 	mini:'GStart,Bold,Italic,Underline,Strikethrough,GEnd,Separator,GStart,Align,List,GEnd,Separator,GStart,Link,Img,About,GEnd',
 	simple:'GStart,Blocktag,Fontface,FontSize,Bold,Italic,Underline,Strikethrough,FontColor,BackColor,GEnd,Separator,GStart,Align,List,Outdent,Indent,GEnd,Separator,GStart,Link,Img,Emot,About,GEnd',
 	full:'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Blocktag,Fontface,FontSize,Bold,Italic,Underline,Strikethrough,FontColor,BackColor,Removeformat,GEnd,Separator,GStart,Align,List,Outdent,Indent,GEnd,Separator,GStart,Link,Unlink,Img,Flash,Media,Emot,Table,GEnd,Separator,GStart,Source,Preview,Fullscreen,About,GEnd',
-	ubb:'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Fontface,FontSize,Bold,Italic,Underline,FontColor,Removeformat,GEnd,Separator,GStart,Align,List,Outdent,Indent,GEnd,Separator,GStart,Link,Unlink,Img,Flash,Media,Emot,GEnd,Separator,GStart,Source,Preview,Fullscreen,About,GEnd'};
-$.xhEditor=function(textarea,options)
+	ubb:'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Blocktag,Fontface,FontSize,Bold,Italic,Underline,FontColor,Removeformat,GEnd,Separator,GStart,Align,List,Outdent,Indent,GEnd,Separator,GStart,Link,Unlink,Img,Flash,Media,Emot,Table,GEnd,Separator,GStart,Source,Preview,Fullscreen,About,GEnd'};
+$.xheditor=function(textarea,options)
 {
 	var defaults={skin:'default',tools:'full',clearScript:true,clearStyle:true,showBlocktag:false,forcePtag:true};
 	var _this=this,_text=textarea,_jText=$(_text),_jForm=_jText.closest('form'),_jTools,_win,_jWin,_doc,_jDoc;
@@ -100,7 +100,6 @@ $.xhEditor=function(textarea,options)
 		if(re.test(''+cw))cw+='px';
 		var th=24;//tool高度
 		_jText.after($('<span id="'+idContainer+'" class="xhEdt_'+settings.skin+'" style="display:none"><table cellspacing="0" cellpadding="0" class="xhEdtLayout" style="width:'+cw+';height:'+ch+'px;"><tbody><tr><td id="'+idTools+'" class="xhEdtTool" style="height:'+th+'px"></td></tr><tr><td id="'+idIframeArea+'"class="xhEdtIframeArea"><iframe frameborder="0" id="'+idIframe+'" src="javascript:;" style="width:100%" /></td></tr></tbody></table></span>'));
-
 		_win=$('#'+idIframe)[0].contentWindow;
 		_jWin=$(_win);
 		try{
@@ -118,6 +117,7 @@ $.xhEditor=function(textarea,options)
 			}
 			_this.setSource();
 		}catch(e){}
+		_win.setInterval=null;
 		//初始化工具栏
 		var sToolHtml='',tool;
 		sToolHtml+='<table cellspacing="0" cellpadding="0"><tbody><tr>';
@@ -185,8 +185,7 @@ $.xhEditor=function(textarea,options)
 		var jpWin=$(window);
 		jpWin.unload(_this.getSource).bind('beforeunload', _this.getSource);
 		jpWin.resize(_this.fixFullHeight);
-		_jDoc.keydown(_this.checkShortCut);
-		if(settings.forcePtag)_jDoc.keyup(_this.forcePtag);
+		_jDoc.keydown(_this.checkShortCut).keydown(_this.forcePtag);
 	}
 	this.unbind=function()
 	{
@@ -196,8 +195,7 @@ $.xhEditor=function(textarea,options)
 		var jpWin=$(window);
 		jpWin.unbind('unload',_this.getSource).unbind('beforeunload', _this.getSource);
 		jpWin.unbind('resize',_this.fixFullHeight);
-		_jDoc.unbind('keydown',_this.checkShortCut);
-		if(settings.forcePtag)_jDoc.unbind('keyup',_this.forcePtag);
+		_jDoc.unbind('keydown',_this.checkShortCut).unbind('keydown',_this.forcePtag);		
 	}
 	this.setCSS=function(css)
 	{
@@ -218,16 +216,28 @@ $.xhEditor=function(textarea,options)
 	this.forcePtag=function(ev)
 	{
 		if(bSource||bPreview)return;
-		if(ev.keyCode!=8&&ev.keyCode!=46&&!ev.ctrlKey&&!ev.metaKey)
+		if(ev.keyCode==13&&!ev.shiftKey)
 		{
-			if(_this.getParent('p,h1,h2,h3,h4,h5,h6,pre,address,div').size()==0)_this._exec('formatblock','<p>');
+			var pNode=_this.getParent('p,h1,h2,h3,h4,h5,h6,pre,address,div,li');
+			if(settings.forcePtag){if(pNode.size()==0)_this._exec('formatblock','<p>');}
+			else
+			{
+				if(!isIE)return;
+				if(pNode.size()==0)
+				{
+					var rng=_this.getRng();
+					rng.text="\n"
+					rng.select();
+					return false;
+				}
+			}
 		}
 	}
 	this.fixFullHeight=function()
 	{
 		if(!isMozilla&&!isSafari)
 		{
-			var jArea=$('#idIframeArea');
+			var jArea=$('#'+idIframeArea);
 			jArea.height('100%');
 			if(bFullscreen)jArea.height((jArea.height()-30)+'px');
 		}
@@ -274,7 +284,7 @@ $.xhEditor=function(textarea,options)
 		if(!p.is(tag))p=$(p).closest(tag);
 		return p;
 	}
-	this.pasteHTML=function(html)
+	this.pasteHTML=function(sHtml)
 	{
 		if(bSource||bPreview)return false;
 		_this.focus();
@@ -282,7 +292,7 @@ $.xhEditor=function(textarea,options)
 		if(rng.insertNode)
 		{
 			rng.deleteContents();
-			rng.insertNode(rng.createContextualFragment(html));
+			rng.insertNode(rng.createContextualFragment(sHtml));
 		}
 		else
 		{
@@ -291,7 +301,7 @@ $.xhEditor=function(textarea,options)
 				_this._exec('delete');
 				rng=_this.getRng();
 			}
-			rng.pasteHTML(html);
+			rng.pasteHTML(sHtml);
 		}
 	}
 	this.pasteText=function(text)
@@ -312,14 +322,16 @@ $.xhEditor=function(textarea,options)
 	}
 	this.setSource=function(sHtml)
 	{
-		setTimeout(function(){
-			bookmark=null;
-			if(typeof sHtml!='string'&&sHtml!='')sHtml=_jText.val();
-			if(!bSource&&settings.beforeSetSource)sHtml=settings.beforeSetSource(sHtml);
-			sHtml=_this.formatXHTML(sHtml);
-			if(bSource)$('#sourceCode',_doc).val(sHtml);
-			else $(_doc.body)[0].innerHTML=_this.processHTML(sHtml,'write');
-			},10);
+		setTimeout(function(){_this._setSource(sHtml);},10);
+	}
+	this._setSource=function(sHtml)
+	{
+		bookmark=null;
+		if(typeof sHtml!='string'&&sHtml!='')sHtml=_jText.val();
+		if(!bSource&&settings.beforeSetSource)sHtml=settings.beforeSetSource(sHtml);
+		sHtml=_this.formatXHTML(sHtml);
+		if(bSource)$('#sourceCode',_doc).val(sHtml);
+		else $(_doc.body)[0].innerHTML=_this.processHTML(sHtml,'write');
 	}
 	this.processHTML=function(sHtml,mode)
 	{
@@ -421,9 +433,10 @@ $.xhEditor=function(textarea,options)
 				sHtml = sHtml.replace(/<(span)(\s+[^>]+|)? class="Apple-style-span"(\s+[^>]+|)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,replaceAppleSpan);//第2层
 				sHtml = sHtml.replace(/<(span)(\s+[^>]+|)? class="Apple-style-span"(\s+[^>]+|)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,replaceAppleSpan);//第3层
 			}
-			sHtml = sHtml.replace(/\s*(-moz-|-webkit-)[^=]+?=\s*"[^"]*"/ig,'');
+			sHtml = sHtml.replace(/\s*(?:-moz-|-webkit-)[^=:>]+?[=:]\s*(["']?)[^";>]*\1\s*;?/ig,'');
 			sHtml = sHtml.replace(/<(\w+[^>]*?)\s+class="?(?:apple|webkit)\-[^ >]*([^>]*?)>/ig, "<$1$2>");
 		}
+		
 		return sHtml;
 	}
 	this.getSource=function()
@@ -469,8 +482,8 @@ $.xhEditor=function(textarea,options)
 	}
 	this.cleanHTML=function(sHtml)
 	{
-		if(settings.clearScript)sHtml = sHtml.replace(/<script(\s+[^>]+)?>[\s\S]*?<\/script>/ig, '');
-		if(settings.clearStyle)sHtml = sHtml.replace(/<style(\s+[^>]+)?>[\s\S]*?<\/style>/ig, '');
+		if(settings.clearScript)sHtml = sHtml.replace(/<(script)>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig, '');
+		if(settings.clearStyle)sHtml = sHtml.replace(/<(style)>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig, '');
 
 		for(var i=0;i<3;i++)sHtml=sHtml.replace(/<(span|strong|b|u|strike|em|i)(\s+[^>]+)?>((?!<\1)[ \t\r\n])*?<\/\1>/ig,'');//内部空白的标签：<span|b|u|s|i> </b>
 		//无意义标签:<span>aaa</span>
@@ -659,7 +672,7 @@ $.xhEditor=function(textarea,options)
 			jBody.removeAttr('scroll').attr('class','editMode'+bodyClass);
 		}
 		bSource=!bSource;
-		_this.setSource(sHtml);
+		_this._setSource(sHtml);
 		_jTools.find('[name=Source]').toggleClass('xhEdtEnabled');
 		setTimeout(_this.setOpts,300);
 	}
@@ -1082,9 +1095,9 @@ $.xhEditor=function(textarea,options)
 	}
 }
 $(function(){
-$('textarea.xheditor').xhEditor(true);
-$('textarea.xheditor-mini').xhEditor(true,{tools:'mini'});
-$('textarea.xheditor-simple').xhEditor(true,{tools:'simple'});
+$('textarea.xheditor').xheditor(true);
+$('textarea.xheditor-mini').xheditor(true,{tools:'mini'});
+$('textarea.xheditor-simple').xheditor(true,{tools:'simple'});
 });
 
 })(jQuery);
@@ -1094,7 +1107,7 @@ jquery v1.3.2特殊处理：
 删除当前程序行
 
 接口：
-var editor=$('#elm1').xhEditor(true,{tools:'full',skin:'default',showBlocktag:false,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,forcePtag:true})[0].xhEditor,sHtml;
+var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:false,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,forcePtag:true})[0].xheditor,sHtml;
 editor.focus();
 editor.setSource('str')
 sHtml=editor.getSource()
