@@ -32,15 +32,13 @@ $('#elm1').xheditor(false);
 
 初始化示例代码：
 {{{
-$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,forcePtag:true});
+$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,uploadUrl:"upload.php",uploadExt:"jpg,jpeg,gif,png"});
 }}}
 
 tools：自定义工具按钮
 {{{
-参数值：full(完全),simple(简单),mini(迷你),ubb(ubb工具栏)
+参数值：full(完全),simple(简单),mini(迷你)
 或者自定义字符串，例如：'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Source,Preview,Fullscreen,About,GEnd'
-
-注：ubb工具栏必需要配合ubb可视化编辑插件才有意义，否则仅仅只是一个按钮集
 
 完整按钮表：
 GStart：组开始
@@ -112,9 +110,14 @@ loadCSS：加载样式
 参数值：样式表网址，例如：'http://static.pirate9.com/css/global.css'
 }}}
 
-fullscreen：全屏显示
+fullscreen：默认全屏显示
 {{{
 参数值：true(全屏大小),false(标准大小)
+}}}
+
+sourceMode:默认源代码模式
+{{{
+参数值：true(源代码模式),false(编辑模式)
 }}}
 
 forcePtag:强制P标签
@@ -122,14 +125,43 @@ forcePtag:强制P标签
 参数值：true(强制使用P标签),false(不强制)
 }}}
 
+uploadUrl:文件上传接收URL
+{{{
+参数值：接收用户上传的服务器端程序URL，默认留空为禁用上传功能，具体使用方法请参考demo8演示文件
+}}}
+
+uploadExt:上传前限制本地文件扩展名
+{{{
+参数值：上传前限制的文件扩展名列表，默认为：jpg,jpeg,gif,png，建议与服务端扩展名检查列表一致
+}}}
+
+上传接口使用注意事项：
+{{{
+demos目录中的upload.php仅为演示代码，若您使用的是其它的服务器脚本语言，请自行对初始化参数中的uploadUrl进行修改，并开发相应服务器上传接收程序。
+若您希望在自己的项目中实际使用，请自行修改代码或者重新开发，开发过程中请注意上传文件的格式及大小限制，注意服务器安全问题。 
+
+上传接收程序开发规范：
+1,上传文件域名字为：upload
+2,返回结构必需为json，并且结构如下：{"err":"","msg":"200906030521128703.gif"}
+若上传出现错误，请将错误内容保存在err变量中；若上传成功，请将服务器上的绝对或者相对地址保存在msg变量中。
+编辑器若发现返回的err变量不为空，则弹出窗口显示返回的错误内容。
+
+上传管理方案建议：
+1,在编辑器初始化时在upload.php后面跟上一个服务器生成的绝对唯一的跟踪值，例如：upload.php?infoid=121312121
+2,在服务器接收程序中以这个跟踪值保存到数据库中，同时也可以限制单个跟踪值下总上传文件数或者总文件大小，否则就是一个可以上传无限个文件的漏洞了
+3,最终当前表单提交时，再根据编辑器提交的HTML内容和数据库中上传内容进行比较，删除所有没有使用的上传文件
+4,定期由服务器脚本删除上传数据库中没提交的文件记录，这样就能防止别人将您的网站作为免费相册空间了
+}}}
+
 ==JS接口说明==
 
 JS接口示例代码：
 {{{
-var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb})[0].xheditor,sHtml;
+var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction})[0].xheditor,sHtml;
 editor.focus();
 editor.setSource('str')
 sHtml=editor.getSource()
+editor.appendHTML('<p>aaa</p>')
 editor.pasteHTML('<p>aaa</p>')
 editor.pasteText('str')
 sHtml=editor.formatXHTML('<b>aaa</b>')
@@ -151,6 +183,12 @@ setSource：设置编辑器源代码
 getSource：返回编辑器格式后的源代码
 {{{
 无参数
+}}}
+
+appendHTML：粘贴HTML内容到编辑器结尾处
+{{{
+参数1：要粘贴的HTML代码，例：'<p>uuu</p>'
+注：0.9.5版添加
 }}}
 
 pasteHTML：粘贴HTML内容到编辑器当前光标处
@@ -184,7 +222,9 @@ toggleFullscreen：在全屏模式和标准大小之间切换
 }}}
 
 {{{
-注：beforeSetSource和beforeGetSource是编辑器回调函数，分别在设置源代码和取回源代码之前调用
+编辑器初始化接口：
+beforeSetSource和beforeGetSource是编辑器回调函数，分别在设置源代码和取回源代码之前调用，详细使用方法可参考UBB代码演示页面
+focus和blur是编辑器聚焦和失去焦点时的回调函数
 }}}
 
 ==Demo(演示)：==

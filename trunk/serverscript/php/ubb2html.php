@@ -7,7 +7,7 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.1 build 090430
+ * @Version: 0.9.2 build 090505
  */
 function ubb2html($sUBB)
 {
@@ -15,17 +15,18 @@ function ubb2html($sUBB)
 	$sHtml=preg_replace("/</",'&lt;',$sHtml);
 	$sHtml=preg_replace("/>/",'&gt;',$sHtml);
 	$sHtml=preg_replace("/\r?\n/",'<br />',$sHtml);
-	$sHtml=preg_replace("/\[(\/?)(b|u|i)\]/",'<$1$2>',$sHtml);
-	$sHtml=preg_replace("/\[color\s*=\s*([^\]]+?)\]([\s\S]*?)\[\/color\]/i",'<span style="color:$1;">$2</span>',$sHtml);
+	$sHtml=preg_replace("/\[(\/?)(b|u|i|s|sup|sub)\]/i",'<$1$2>',$sHtml);
+	$sHtml=preg_replace("/\[color\s*=\s*([^\]]+?)\]/i",'<span style="color:$1;">',$sHtml);
 	function getSizeName($match)
 	{
-		$arrSize=array('xx-small','x-small','small','medium','large','x-large','xx-large');
-		return '<span style="font-size:'.$arrSize[$match[1]-1].';">'.$match[2].'</span>';
+		$arrSize=array('8pt','10pt','12pt','14pt','18pt','24pt','36pt');
+		return '<span style="font-size:'.$arrSize[$match[1]-1].';">';
 	}
-	$sHtml=preg_replace_callback("/\[size\s*=\s*(\d+?)\]([\s\S]*?)\[\/size\]/i",'getSizeName',$sHtml);
-	$sHtml=preg_replace("/\[font\s*=\s*([^\]]+?)\]([\s\S]*?)\[\/font\]/i",'<span style="font-family:$1;">$2</span>',$sHtml);
-	$sHtml=preg_replace("/\[sup\]([\s\S]*?)\[\/sup\]/i",'<sup>$1</sup>',$sHtml);
-	$sHtml=preg_replace("/\[sub\]([\s\S]*?)\[\/sub\]/i",'<sub>$1</sub>',$sHtml);
+	$sHtml=preg_replace_callback("/\[size\s*=\s*(\d+?)\]/i",'getSizeName',$sHtml);
+	$sHtml=preg_replace("/\[font\s*=\s*([^\]]+?)\]/i",'<span style="font-family:$1;">',$sHtml);
+	$sHtml=preg_replace("/\[back\s*=\s*([^\]]+?)\]/i",'<span style="background-color:$1;">',$sHtml);
+	$sHtml=preg_replace("/\[\/(color|size|font|back)\]/i",'</span>',$sHtml);
+	
 	for($i=0;$i<3;$i++)$sHtml=preg_replace("/\[align\s*=\s*([^\]]+?)\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/",'<p align="$1">$2</p>',$sHtml);
 	$sHtml=preg_replace("/\[img\]\s*([\s\S]+?)\s*\[\/img\]/i",'<img src="$1" />',$sHtml);
 	$sHtml=preg_replace("/\[img\s*=\s*(\d+),(\d+)\s*\]\s*([\s\S]+?)\s*\[\/img\]/i",'<img src="$3" width="$1" height="$2" />',$sHtml);

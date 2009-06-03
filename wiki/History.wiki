@@ -1,0 +1,39 @@
+#summary xhEditor更新历史
+#labels Featured
+
+==ver 0.9.5 Change(ver 0.9.5更新)==
+ # 添加：jQuery事件层接管textarea的focus事件，以解决某些表单校验组件由于textarea隐藏后，对textarea的聚焦错误问题(必需要使用jQuery的focus方法)
+ # 添加：JS接口添加appendHTML函数，用来向编辑器内部结尾添加HTML代码
+ # 添加：过滤类似无意义HTML代码：<b>aaa</b><b>bbb</b>，前后标签完全一样且不带任何属性和样式，中间没必要结束并新开
+ # 添加：图片上传功能，可以在编辑器初始化时设置uploadUrl参数开启
+ # 添加：UBB模式增加背景色和删除线功能，至此支持了全部的标签，删除ubb按钮集
+ # 添加：编辑器的focus和blur接口，可在编辑器初始化时指定
+ # 添加：添加初始化参数：编辑器初始化默认为源代码模式:sourceMode
+ # 修正：某些不支持盒模型的页面标准可能无法全屏的问题，比如不带任何标准定义的<html>头
+ # 修正：JS文件调用的时候若在结尾加上类似?v=0.9.4这样的代码，会引起编辑器初始严重错误的问题
+
+==ver 0.9.4 Change(ver 0.9.4更新)==
+ # 修正：全屏模式在IE等浏览器下超出屏幕的BUG
+ # 修正：强制P标签在某些情况下无效的BUG
+ # 添加：UBB模式添加表格支持
+ # 修正：UBB模式某些标签转换错误的BUG
+ # 添加：UBB模式服务器脚本转换函数(php,asp)
+ # 修正：内核上跳过jQuery的BUG，目前可直接使用官方1.3.2版js引擎
+ # 调整：为了避免大小写不统一，插件调用接口统一改为小写，例：$('#elm1').xheditor(true)；
+ # 修正：内核上的一些细小BUG
+
+==ver 0.9.3 Change(ver 0.9.3更新)==
+ # 添加：UBB可视化编辑插件(添加beforeSetSource和beforeGetSource接口)
+ # 添加：强制p标签功能(可选择关闭)
+ # 修改：class属性初始化模式增加两个值：xheditor-mini和xheditor-simple，分别调用迷你版和简单版编辑器界面
+ # 修改：一些图片和接口上的细小调整
+
+==ver 0.9.2 Change(ver 0.9.2更新)==
+ # 修正：错误的递规式正则表达式导致某些标签无法正常替换的bug
+ # 添加：段落标签选择功能：p,h1,h2,h3,h4,h5,h6,pre,address
+ # 添加：段落区域及标签显示功能
+ # 添加：表格添加功能
+
+==ver 0.9.1 Change(ver 0.9.1更新)==
+ # 修正：Word代码清理导致内容丢失的BUG
+ # 修正：style和font之间转换丢失字体大小的BUG

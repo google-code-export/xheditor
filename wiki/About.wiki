@@ -19,6 +19,7 @@ xhEditor是一个基于jQuery开发的简单迷你并且高效的可视化XHTML�
  * Javascript交互：[http://static.pirate9.com/js/xheditor_demos/demo5.html]
  * 非utf-8编码网页调用：[http://static.pirate9.com/js/xheditor_demos/demo6.html]
  * UBB可视化编辑：[http://static.pirate9.com/js/xheditor_demos/demo7.html]
+ * Ajax图片上传：[http://static.pirate9.com/js/xheditor_demos/demo8.html]
 
 ==Thanks(感谢)：==
  * jQuery：[http://jquery.com/]
