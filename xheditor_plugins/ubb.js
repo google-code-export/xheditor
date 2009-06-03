@@ -14,12 +14,13 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/</g, '&lt;');
 	sHtml=sHtml.replace(/>/g, '&gt;');
 	sHtml=sHtml.replace(/\r?\n/g,"<br />");
-	sHtml=sHtml.replace(/\[(\/?)(b|u|i)\]/ig,'<$1$2>');
-	sHtml=sHtml.replace(/\[color\s*=\s*([^\]]+?)\]([\s\S]*?)\[\/color\]/ig,'<font color="$1">$2</font>');
-	sHtml=sHtml.replace(/\[size\s*=\s*(\d+?)\]([\s\S]*?)\[\/size\]/ig,'<font size="$1">$2</font>');
-	sHtml=sHtml.replace(/\[font\s*=\s*([^\]]+?)\]([\s\S]*?)\[\/font\]/ig,'<font face="$1">$2</font>');
-	sHtml=sHtml.replace(/\[sup\]([\s\S]*?)\[\/sup\]/ig,'<sup>$1</sup>');
-	sHtml=sHtml.replace(/\[sub\]([\s\S]*?)\[\/sub\]/ig,'<sub>$1</sub>');
+	sHtml=sHtml.replace(/\[(\/?)(b|u|i|s|sup|sub)\]/ig,'<$1$2>');
+	sHtml=sHtml.replace(/\[color\s*=\s*([^\]]+?)\]/ig,'<font color="$1">');
+	sHtml=sHtml.replace(/\[size\s*=\s*(\d+?)\]/ig,'<font size="$1">');
+	sHtml=sHtml.replace(/\[font\s*=\s*([^\]]+?)\]/ig,'<font face="$1">');
+	sHtml=sHtml.replace(/\[\/(color|size|font)\]/ig,'</font>');
+	sHtml=sHtml.replace(/\[back\s*=\s*([^\]]+?)\]/ig,'<span style="background-color:$1;">');
+	sHtml=sHtml.replace(/\[\/back\]/,'</span>');
 	for(i=0;i<3;i++)sHtml=sHtml.replace(/\[align\s*=\s*([^\]]+?)\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/ig,'<p align="$1">$2</p>');
 	sHtml=sHtml.replace(/\[img\]\s*([\s\S]+?)\s*\[\/img\]/ig,'<img src="$1" />');
 	sHtml=sHtml.replace(/\[img\s*=\s*(\d+),(\d+)\s*\]\s*([\s\S]+?)\s*\[\/img\]/ig,'<img src="$3" width="$1" height="$2" />');
@@ -65,12 +66,13 @@ function html2ubb(sHtml)
 	var i,mapSize={'xx-small':1,'8pt':1,'x-small':2,'10pt':2,'small':3,'12pt':3,'medium':4,'14pt':4,'large':5,'18pt':5,'x-large':6,'24pt':6,'xx-large':7,'36pt':7};
 	var sUBB=sHtml;
 	sUBB=sUBB.replace(/\r?\n/g,"");
-	sUBB=sUBB.replace(/<(\/?)(b|u|i)(\s+[^>]+)?>/ig,'[$1$2]');
+	sUBB=sUBB.replace(/<(\/?)(b|u|i|s)(\s+[^>]+)?>/ig,'[$1$2]');
 	sUBB=sUBB.replace(/<(\/?)strong(\s+[^>]+)?>/ig,'[$1b]');
 	sUBB=sUBB.replace(/<(\/?)em(\s+[^>]+)?>/ig,'[$1i]');
+	sUBB=sUBB.replace(/<(\/?)(strike|del)(\s+[^>]+)?>/ig,'[$1s]');
 	sUBB=sUBB.replace(/<(\/?)(sup|sub)(\s+[^>]+)?>/ig,'[$1$2]');
-	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(span)(?:\s+[^>]+)? style="((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,style,content){
-		var face=style.match(/(?:^|;)\s*font-family\s*:\s*([^;]+)/i),size=style.match(/(?:^|;)\s*font-size\s*:\s*([^;]+)/i),color=style.match(/(?:^|;)\s*color\s*:\s*([^;]+)/i),str=content;
+	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(span)(?:\s+[^>]+)? style="((?:[^"]*?;)*\s*(?:font-family|font-size|color|background|background-color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,style,content){
+		var face=style.match(/(?:^|;)\s*font-family\s*:\s*([^;]+)/i),size=style.match(/(?:^|;)\s*font-size\s*:\s*([^;]+)/i),color=style.match(/(?:^|;)\s*color\s*:\s*([^;]+)/i),back=style.match(/(?:^|;)\s*(?:background|background-color)\s*:\s*([^;]+)/i),str=content;
 		if(face)str='[font='+face[1]+']'+str+'[/font]';
 		if(size)
 		{
@@ -78,6 +80,7 @@ function html2ubb(sHtml)
 			if(size)str='[size='+size+']'+str+'[/size]';
 		}
 		if(color)str='[color='+color[1]+']'+str+'[/color]';
+		if(back)str='[back='+back[1]+']'+str+'[/back]';
 		return str;
 	});
 	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(div|p)(?:\s+[^>]+?)?\s+align="(left|center|right)"[^>]*>(((?!<\1(\s+[^>]+)?>)[\s\S])+?)<\/\1>/ig,'[align=$2]$3[/align]');
@@ -113,7 +116,6 @@ function html2ubb(sHtml)
 		str+=']'+url[1];
 		return str+'[/media]';
 	});
-	
 	var regbg=/(?:background|background-color|bgcolor)\s*[:=]\s*(["']?)\s*((rgb\s*\(\s*\d{1,3}%?,\s*\d{1,3}%?\s*,\s*\d{1,3}%?\s*\))|(#[0-9a-f]{3,6})|([a-z]{1,20}))\s*\1/i
 	sUBB=sUBB.replace(/<table(\s+[^>]+|)?>/ig,function(all,attr){
 		var str='[table';

@@ -6,7 +6,7 @@
 ' @site http://pirate9.com/
 ' @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
 ' 
-' @Version: 0.9.1 build 090502
+' @Version: 0.9.2 build 090505
 function ubb2html(sUBB)
 	dim re,sHtml,i
 	Set re = New RegExp
@@ -19,18 +19,20 @@ function ubb2html(sUBB)
 	sHtml=re.Replace(sHtml,"&gt;")
 	re.Pattern="\r?\n"
 	sHtml=re.Replace(sHtml,"<br />")
-	re.Pattern="\[(\/?)(b|u|i)\]"
+	re.Pattern="\[(\/?)(b|u|i|s|sup|sub)\]"
 	sHtml=re.Replace(sHtml,"<$1$2>")
-	re.Pattern="\[color\s*=\s*([^\]]+?)\]([\s\S]*?)\[\/color\]"
-	sHtml=re.Replace(sHtml,"<font color=""$1"">$2</font>")
-	re.Pattern="\[size\s*=\s*(\d+?)\]([\s\S]*?)\[\/size\]"
-	sHtml=re.Replace(sHtml,"<font size=""$1"">$2</font>")
-	re.Pattern="\[font\s*=\s*([^\]]+?)\]([\s\S]*?)\[\/font\]"
-	sHtml=re.Replace(sHtml,"<font face=""$1"">$2</font>")
-	re.Pattern="\[sup\]([\s\S]*?)\[\/sup\]"
-	sHtml=re.Replace(sHtml,"<sup>$1</sup>")
-	re.Pattern="\[sub\]([\s\S]*?)\[\/sub\]"
-	sHtml=re.Replace(sHtml,"<sub>$1</sub>")
+	re.Pattern="\[color\s*=\s*([^\]]+?)\]"
+	sHtml=re.Replace(sHtml,"<font color=""$1"">")
+	re.Pattern="\[size\s*=\s*(\d+?)\]"
+	sHtml=re.Replace(sHtml,"<font size=""$1"">")
+	re.Pattern="\[font\s*=\s*([^\]]+?)\]"
+	sHtml=re.Replace(sHtml,"<font face=""$1"">")
+	re.Pattern="\[\/(color|size|font)\]"
+	sHtml=re.Replace(sHtml,"</font>")
+	re.Pattern="\[back\s*=\s*([^\]]+?)\]"
+	sHtml=re.Replace(sHtml,"<span style=""background-color:$1;"">")
+	re.Pattern="\[\/back\]"
+	sHtml=re.Replace(sHtml,"</span>")
 	re.Pattern="\[align\s*=\s*([^\]]+?)\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]"
 	for i=1 to 3
 		sHtml=re.Replace(sHtml,"<p align=""$1"">$2</p>")

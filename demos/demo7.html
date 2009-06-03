@@ -11,7 +11,7 @@
 $(pageInit);
 function pageInit()
 {
-	$('#elm1').xheditor(true,{tools:'ubb',showBlocktag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb});
+	$('#elm1').xheditor(true,{tools:'full',showBlocktag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb});
 }
 </script>
 </head>
@@ -22,16 +22,18 @@ function pageInit()
 [b]粗体文字 Abc[/b]
 [u]下划线文字 Abc[/u]
 [i]斜体文字 Abc[/i]
-[i][u][b]粗体下划斜体 Abc[/b][/u][/i]
+[s]删除线 Abc[/s]
+[s][i][u][b]粗体下划斜体删除线 Abc[/b][/u][/i][/s]
 [color=red]红颜色[/color]
+[back=#cccccc]背景灰色[/back]
 [size=3]文字大小为 3[/size]
 [font=仿宋]字体为仿宋[/font]
 [align=Center]内容居中[/align]
 [img]http://static.pirate9.com/img/logo_s_zh-cn.gif[/img]
 [img=238,66]http://static.pirate9.com/img/logo_s_zh-cn.gif[/img]
 [url]http://pirate9.com/[/url]
-[url=http://pirate9.net/]第9海盗[/url]
-[url=http://pirate9.net/][img]http://static.pirate9.com/img/logo_s_zh-cn.gif[/img][/url]
+[url=http://pirate9.com/]第9海盗[/url]
+[url=http://pirate9.com/][img]http://static.pirate9.com/img/logo_s_zh-cn.gif[/img][/url]
 [email]yanis.wang@gmail.com[/email]
 [email=yanis.wang@gmail.com]Yanis.Wang[/email]
 X[sup]2[/sup]

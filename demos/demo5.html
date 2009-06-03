@@ -30,8 +30,9 @@ function pageInit()
 <a href="javascript:;" onclick="editor.focus();">focus();</a> | 
 <a href="javascript:;" onclick="editor.setSource('<p>aaa</p>');">setSource('&lt;p&gt;aaa&lt;/p&gt;');</a> |
 <a href="javascript:;" onclick="alert(editor.getSource());">getSource();</a> | 
-<a href="javascript:;" onclick="editor.pasteHTML('<strong>paste</strong>');">pasteHTML('&lt;strong&gt;paste&lt;/strong&gt;');</a> | 
-<a href="javascript:;" onclick="editor.pasteText('<strong>paste</strong>');">pasteText('&lt;strong&gt;paste&lt;/strong&gt;');</a> | 
+<a href="javascript:;" onclick="editor.appendHTML('<strong>添加在尾部</strong>');">appendHTML('&lt;strong&gt;添加在尾部&lt;/strong&gt;');</a> | 
+<a href="javascript:;" onclick="editor.pasteHTML('<strong>粘贴的内容</strong>');">pasteHTML('&lt;strong&gt;粘贴的内容&lt;/strong&gt;');</a> | 
+<a href="javascript:;" onclick="editor.pasteText('<strong>粘贴的内容</strong>');">pasteText('&lt;strong&gt;粘贴的内容&lt;/strong&gt;');</a> | 
 <a href="javascript:;" onclick="alert(editor.formatXHTML('<b>abc</b>'));">formatXHTML('&lt;b&gt;abc&lt;/b&gt;');</a> | 
 <a href="javascript:;" onclick="editor.toggleSource();">toggleSource();</a> | 
 <a href="javascript:;" onclick="editor.toggleSource(true);">toggleSource(true);</a> | 
