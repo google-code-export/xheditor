@@ -32,7 +32,7 @@ $('#elm1').xheditor(false);
 
 初始化示例代码：
 {{{
-$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,uploadUrl:"upload.php",uploadExt:"jpg,jpeg,gif,png"});
+$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,uploadUrl:"upload.php",uploadExt:"jpg,jpeg,gif,png",keepValue:true,plugins:{}});
 }}}
 
 tools：自定义工具按钮
@@ -125,6 +125,12 @@ forcePtag:强制P标签
 参数值：true(强制使用P标签),false(不强制)
 }}}
 
+keepValue:自动保存src和href属性值
+{{{
+参数值：true(保存),false(不保存)
+说明：在IE等浏览器下使用编辑器，插入的图片和链接地址都会被浏览器自动转为绝对地址，比如输入：a.gif，自动会转为：http://test.com/a.gif
+}}}
+
 uploadUrl:文件上传接收URL
 {{{
 参数值：接收用户上传的服务器端程序URL，默认留空为禁用上传功能，具体使用方法请参考demo8演示文件
@@ -152,6 +158,18 @@ demos目录中的upload.php仅为演示代码，若您使用的是其它的服�
 3,最终当前表单提交时，再根据编辑器提交的HTML内容和数据库中上传内容进行比较，删除所有没有使用的上传文件
 4,定期由服务器脚本删除上传数据库中没提交的文件记录，这样就能防止别人将您的网站作为免费相册空间了
 }}}
+
+plugins:自定义按钮之插件扩展
+{{{
+插件对象的属性解释：
+c：样式表名称　t：插件名字(鼠标在按钮上方时显示)　s：快捷方式　e：按钮点击后需要执行的代码
+
+特别说明：
+如果您希望样式表存储在系统自带的模板目录ui.css中，请将插件对象的样式名留空，则会自动按照插件名来调用相应的样式，例如：xhEdtBtnCut、xhEdtBtnCopy，其中的Cut和Copy是插件名
+
+具体调用方法请参考演示文件夹中的demo9
+}}}
+
 
 ==JS接口说明==
 
@@ -235,3 +253,5 @@ focus和blur是编辑器聚焦和失去焦点时的回调函数
  * Javascript交互：[http://static.pirate9.com/js/xheditor_demos/demo5.html]
  * 非utf-8编码网页调用：[http://static.pirate9.com/js/xheditor_demos/demo6.html]
  * UBB可视化编辑：[http://static.pirate9.com/js/xheditor_demos/demo7.html]
+ * Ajax图片上传：[http://static.pirate9.com/js/xheditor_demos/demo8.html]
+ * 插件扩展：[http://static.pirate9.com/js/xheditor_demos/demo9.html]

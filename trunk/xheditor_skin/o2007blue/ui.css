@@ -13,7 +13,8 @@
 .xhEdt_o2007blue a.xhEdtEnabled:hover {background-color:#B2BBD0; background-position:0 -22px}
 .xhEdt_o2007blue a.xhEdtActive{background-color:#B2BBD0; background-position:0 -22px;}
 
-.xhEdt_o2007blue span.xhEdtIcon{display:block;height:20px;width:20px;background:url(img/icons.gif) no-repeat 20px 20px}
+.xhEdt_o2007blue a.xhEdtButton span{display:block;height:20px;width:20px;}
+.xhEdt_o2007blue span.xhEdtIcon{background:url(img/icons.gif) no-repeat 20px 20px}
 
 .xhEdt_o2007blue span.xhEdtBtnCut {background-position:0 0}
 .xhEdt_o2007blue span.xhEdtBtnCopy {background-position:-20px 0}
