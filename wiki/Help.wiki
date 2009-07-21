@@ -32,7 +32,7 @@ $('#elm1').xheditor(false);
 
 初始化示例代码：
 {{{
-$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,uploadUrl:"upload.php",uploadExt:"jpg,jpeg,gif,png",keepValue:true,plugins:{}});
+$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,readonly:false,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",keepValue:true,plugins:{}});
 }}}
 
 tools：自定义工具按钮
@@ -115,6 +115,11 @@ fullscreen：默认全屏显示
 参数值：true(全屏大小),false(标准大小)
 }}}
 
+readonly：默认只读模式
+{{{
+参数值：true(只读模式),false(可编辑模式)
+}}}
+
 sourceMode:默认源代码模式
 {{{
 参数值：true(源代码模式),false(编辑模式)
@@ -131,19 +136,49 @@ keepValue:自动保存src和href属性值
 说明：在IE等浏览器下使用编辑器，插入的图片和链接地址都会被浏览器自动转为绝对地址，比如输入：a.gif，自动会转为：http://test.com/a.gif
 }}}
 
-uploadUrl:文件上传接收URL
+upLinkUrl:超链接文件上传接收URL
+{{{
+参数值：接收用户上传的服务器端程序URL，默认留空为禁用超链接上传功能，具体使用方法请参考demo8演示文件
+}}}
+
+upLinkExt:超链接上传前限制本地文件扩展名
+{{{
+参数值：超链接上传前限制的文件扩展名列表，默认为：zip,rar,txt，建议与服务端扩展名检查列表一致
+}}}
+
+upImgUrl:图片文件上传接收URL
 {{{
 参数值：接收用户上传的服务器端程序URL，默认留空为禁用上传功能，具体使用方法请参考demo8演示文件
 }}}
 
-uploadExt:上传前限制本地文件扩展名
+upImgExt:图片上传前限制本地文件扩展名
 {{{
-参数值：上传前限制的文件扩展名列表，默认为：jpg,jpeg,gif,png，建议与服务端扩展名检查列表一致
+参数值：图片上传前限制的文件扩展名列表，默认为：jpg,jpeg,gif,png，建议与服务端扩展名检查列表一致
+}}}
+
+upFlashUrl:动画文件上传接收URL
+{{{
+参数值：接收用户上传的服务器端程序URL，默认留空为禁用上传功能，具体使用方法请参考demo8演示文件
+}}}
+
+upFlashExt:动画上传前限制本地文件扩展名
+{{{
+参数值：动画上传前限制的文件扩展名列表，默认为：swf，建议与服务端扩展名检查列表一致
+}}}
+
+upMediaUrl:视频文件上传接收URL
+{{{
+参数值：接收用户上传的服务器端程序URL，默认留空为禁用上传功能，具体使用方法请参考demo8演示文件
+}}}
+
+upMediaExt:视频上传前限制本地文件扩展名
+{{{
+参数值：视频上传前限制的文件扩展名列表，默认为：avi，建议与服务端扩展名检查列表一致
 }}}
 
 上传接口使用注意事项：
 {{{
-demos目录中的upload.php仅为演示代码，若您使用的是其它的服务器脚本语言，请自行对初始化参数中的uploadUrl进行修改，并开发相应服务器上传接收程序。
+demos目录中的upload.php仅为演示代码，若您使用的是其它的服务器脚本语言，请自行对初始化参数中的upLinkUrl、upImgUrl、upFlashUrl和upMediaUrl进行修改，并开发相应服务器上传接收程序。
 若您希望在自己的项目中实际使用，请自行修改代码或者重新开发，开发过程中请注意上传文件的格式及大小限制，注意服务器安全问题。 
 
 上传接收程序开发规范：
@@ -175,7 +210,7 @@ c：样式表名称　t：插件名字(鼠标在按钮上方时显示)　s：快
 
 JS接口示例代码：
 {{{
-var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction})[0].xheditor,sHtml;
+var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction})[0].xheditor;
 editor.focus();
 editor.setSource('str')
 sHtml=editor.getSource()
@@ -186,6 +221,9 @@ sHtml=editor.formatXHTML('<b>aaa</b>')
 editor.toggleSource()
 editor.togglePreview()
 editor.toggleFullscreen()
+editor.toggleReadonly()
+alert(editor.settings.upImgExt);
+editor.settings.upImgExt='txt,doc';
 }}}
 
 focus：使编辑器获得焦点
@@ -239,11 +277,40 @@ toggleFullscreen：在全屏模式和标准大小之间切换
 参数1：空(切换),true(显示全屏模式),false(显示标准模式)
 }}}
 
+toggleReadonly：在只读模式和可编辑模式之间切换
 {{{
-编辑器初始化接口：
+参数1：空(切换),true(切换为只读模式),false(切换为可编辑模式)
+}}}
+
+settings：获取或者修改编辑器内部参数
+{{{
+clearScript:清除script代码
+clearStyle:清除style样式
+forcePtag:强制使用P标签
+keepValue:保持属性值
+upLinkUrl:超链接上传接口地址
+upLinkExt:超链接本地上传扩展限制
+upImgUrl:图片上传接口地址
+upImgExt:图片本地上传扩展限制
+upFlashUrl:动画上传接口地址
+upFlashExt:动画本地上传扩展限制
+upMediaUrl:视频上传接口地址
+upMediaExt:视频本地上传扩展限制
+beforeSetSource:在设置源代码到编辑器前调用此函数
+beforeGetSource:从编辑器返回源代码前调用此函数
+focus:编辑器获得焦点时回调此函数
+blur:编辑器失去焦点时回调此函数
+
+注：修改有效变量仅限以上，其它的变量都仅在编辑器初始化时使用
+}}}
+
+
+编辑器初始化回调函数列表：
+{{{
 beforeSetSource和beforeGetSource是编辑器回调函数，分别在设置源代码和取回源代码之前调用，详细使用方法可参考UBB代码演示页面
 focus和blur是编辑器聚焦和失去焦点时的回调函数
 }}}
+
 
 ==Demo(演示)：==
  * 默认模式：[http://static.pirate9.com/js/xheditor_demos/demo1.html]
@@ -255,3 +322,4 @@ focus和blur是编辑器聚焦和失去焦点时的回调函数
  * UBB可视化编辑：[http://static.pirate9.com/js/xheditor_demos/demo7.html]
  * Ajax图片上传：[http://static.pirate9.com/js/xheditor_demos/demo8.html]
  * 插件扩展：[http://static.pirate9.com/js/xheditor_demos/demo9.html]
+ * iframe调用文件上传：[http://static.pirate9.com/js/xheditor_demos/demo10.html]

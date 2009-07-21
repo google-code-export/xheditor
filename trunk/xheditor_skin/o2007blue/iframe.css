@@ -13,7 +13,7 @@ body{font-family: Arial, Verdana, sans-serif;font-size: 12px;background-color: #
 
 .previewMode{margin:5px;padding:0px;}
 
-.showBlocktag p,.showBlocktag h1,.showBlocktag h2,.showBlocktag h3,.showBlocktag h4,.showBlocktag h5,.showBlocktag h6,.showBlocktag pre,.showBlocktag address,.showBlocktag div{padding-top:8px;background:none no-repeat scroll 2px 2px;border:1px dotted gray;}
+.showBlocktag p,.showBlocktag h1,.showBlocktag h2,.showBlocktag h3,.showBlocktag h4,.showBlocktag h5,.showBlocktag h6,.showBlocktag pre,.showBlocktag address,.showBlocktag div{background:none no-repeat scroll right top;border:1px dotted gray;}
 .showBlocktag p{background-image:url(img/tag-p.png);}
 .showBlocktag h1{background-image:url(img/tag-h1.png);}
 .showBlocktag h2{background-image:url(img/tag-h2.png);}

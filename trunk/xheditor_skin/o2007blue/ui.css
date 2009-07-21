@@ -82,10 +82,25 @@
 .xhEdtDialog div{padding:2px 0px;}
 .xhEdtDialog input[type=text]{width:150px;height:16px;font-size:12px;border:1px #ABADB3 solid;}
 .xhEdtDialog input[type=button]{width:40px;border-width:1px;background:#F0F0F0;cursor:pointer;}
-.xhEdtDialog .upload{position: relative;display:inline-block;}
+.xhEdtDialog .upload{position: relative;display:inline-block;width:152px;}
 .xhEdtDialog .upload .text {position: absolute;width:107px;top: 0px;left: 0px;z-index: 3;}
 .xhEdtDialog .upload .btn{position: absolute;top: 0px;left: 112px;width:40px;z-index: 1;}
 .xhEdtDialog .upload .file {cursor:pointer;position: absolute;top: 0px;left: 0px;width:152px;opacity:0;-ms-filter:'alpha(opacity=0)';filter:alpha(opacity=0);z-index: 2;}
 
 .xhEdtUploadIO{position:absolute;top:-1000px;left:-1000px;}
 .xhEdtUploadForm{position:absolute;top:-1200px;left:-1200px;}
+
+.xhEdtOverlay{position: fixed;z-index:9999999;top: 0px;left: 0px;height:100%;width:100%;background-color:#000;filter:alpha(opacity=20);-moz-opacity: 0.20;opacity: 0.20;}
+* html .xhEdtOverlay { /* ie6 hack */
+position: absolute;
+height: expression(document.body.scrollHeight > document.body.offsetHeight ? document.body.scrollHeight : document.body.offsetHeight + 'px');
+}
+
+.xhEdtModal{position: fixed;z-index: 99999999;text-align:left;top:50%;left:50%;background:#fff;border:1px solid #ABC6DD;font-size:12px;}
+* html .xhEdtModal { /* ie6 hack */
+position: absolute;
+margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+}
+.xhEdtTitle{padding:5px;background:#E5EFFD;border-bottom:1px solid #ABC6DD;}
+.xhEdtClose{float:right;display:block;width:16px;height:16px;background:url(img/close.gif);cursor:pointer;}
+.xhEdtContent{padding:5px;}
