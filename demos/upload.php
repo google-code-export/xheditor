@@ -57,35 +57,31 @@ function uploadfile($inputname)
 	else
 	{
 			$temppath=$upfile['tmp_name'];
-			$attachinfo= @getimagesize($temppath);
-			if($attachinfo[2]==IMAGETYPE_GIF||$attachinfo[2]==IMAGETYPE_JPEG||$attachinfo[2]==IMAGETYPE_PNG)
+			$fileinfo=pathinfo($upfile['name']);
+			$extension=$fileinfo['extension'];
+			$filesize=filesize($temppath);
+			if($filesize <= $maxattachsize)
 			{
-				$extension=image_type_to_extension($attachinfo[2],false);
-				$filesize=filesize($temppath);
-				if($filesize <= $maxattachsize)
+				switch($dirtype)
 				{
-					switch($dirtype)
-					{
-						case 1: $attach_subdir = 'day_'.date('ymd'); break;
-						case 2: $attach_subdir = 'month_'.date('ym'); break;
-						case 3: $attach_subdir = 'ext_'.$extension; break;
-					}
-					$attach_dir = $attachdir.'/'.$attach_subdir;
-					if(!is_dir($attach_dir))
-					{
-						@mkdir($attach_dir, 0777);
-						@fclose(fopen($attach_dir.'/index.htm', 'w'));
-					}
-					PHP_VERSION < '4.2.0' && mt_srand((double)microtime() * 1000000);
-					$filename=date("YmdHis").mt_rand(1000,9999).'.'.$extension;
-					$target = $attach_dir.'/'.$filename;
-					
-					move_uploaded_file($upfile['tmp_name'],$target);
-					$msg=$target;
+					case 1: $attach_subdir = 'day_'.date('ymd'); break;
+					case 2: $attach_subdir = 'month_'.date('ym'); break;
+					case 3: $attach_subdir = 'ext_'.$extension; break;
 				}
-				else $err='文件大小超过'.$maxattachsize.'字节';
+				$attach_dir = $attachdir.'/'.$attach_subdir;
+				if(!is_dir($attach_dir))
+				{
+					@mkdir($attach_dir, 0777);
+					@fclose(fopen($attach_dir.'/index.htm', 'w'));
+				}
+				PHP_VERSION < '4.2.0' && mt_srand((double)microtime() * 1000000);
+				$filename=date("YmdHis").mt_rand(1000,9999).'.'.$extension;
+				$target = $attach_dir.'/'.$filename;
+				
+				move_uploaded_file($upfile['tmp_name'],$target);
+				$msg=$target;
 			}
-			else $err='文件格式必需为以下格式：jpg,gif,png';
+			else $err='文件大小超过'.$maxattachsize.'字节';
 
 			@unlink($temppath);
 	}
