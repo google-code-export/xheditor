@@ -322,7 +322,7 @@ $.xheditor=function(textarea,options)
 	{
 		if(!text)text='';
 		text=_this.domEncode(text);
-		text = text.replace(/\r?\n/g, '<br />');
+		text = text.replace(/\r?\n/g, '<br>');
 		_this.pasteHTML(text);
 	}
 	this.appendHTML=function(sHtml)
@@ -361,12 +361,12 @@ $.xheditor=function(textarea,options)
 		{//write
 			if(_this.settings.keepValue)//保存属性值:src,href
 			{
-				function saveValue(all,tag,attrs,n,q,v)
+				function saveValue(all,tag,attrs,n,q,v,e)
 				{
 					attrs+=' _xhe_'+n+'="'+v+'"'
-					return '<'+tag+attrs+'>';
+					return '<'+tag+attrs+' '+e+'>';
 				}
-				sHtml = sHtml.replace(/<(\w+(?:\:\w+)?)(\s+[^>]*?(src|href)\s*=\s*(['"]?)\s*([^'"\s]*)\s*\4[^>]*)>/ig,saveValue);
+				sHtml = sHtml.replace(/<(\w+(?:\:\w+)?)(\s+[^>]*?(src|href)\s*=\s*(['"]?)\s*([^'"\s]*)\s*\4[^\/>]*?)(\/?)>/ig,saveValue);
 			}
 			sHtml = sHtml.replace(/<(\/?)del( [^>]+)?>/ig,'<$1strike$2>');//编辑状态统一转为strike
 			if(isMozilla)
@@ -1092,7 +1092,7 @@ $.xheditor=function(textarea,options)
 			c++;
 			jItem=$('<a href="javascript:;" title="'+v.t+'"><img src="'+sEmotPath+v.s+'" /></a>').click(function(){
 				_this.focus();
-				_this.pasteHTML('<img src="'+sEmotPath+v.s+'" alt="'+v.t+'" />');
+				_this.pasteHTML('<img src="'+sEmotPath+v.s+'" alt="'+v.t+'">');
 				_this.hidePanel();
 			}).mousedown(function(){return false;});
 			jLine.append(jItem);
