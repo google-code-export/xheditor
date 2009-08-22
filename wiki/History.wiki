@@ -1,6 +1,23 @@
 #summary xhEditor更新历史
 #labels Featured
 
+==ver 0.9.8 Change(2009-8-22)==
+ # 修正：Word代码检测方式进一步完善，解决某些Word文档无法清理的问题
+ # 调整：由于某些时候需要用空span标签来定义样式，因此取消空span标签清理功能
+ # 修正：Chrome浏览器环境下，字体大小兼容处理代码的不完善，造成颜色和大小等样式丢失问题的修正，此问题可能在之前很多版本都存在
+ # 调整：原先在WORD代码清理功能模块中的清理meta和link标签及清理XML内容功能，移到cleanHTML中以保证每次返回内容都清理
+ # 修正：文章最前面的全角空格被清除问题的修正
+ # 优化：标签的所有PNG格式背景图片由原先的35K无损压缩至1K左右，3个模板整体减少100K左右
+ # 添加：showModal接口添加modalWidth和modalHeight参数，控制弹出窗口的默认宽高
+ # 添加：showModal接口添加modalTitle参数，控制是否显示窗口上方的标题栏，默认为显示
+ # 调整：clearScript参数改为internalScript，clearStyle参数改为internalStyle
+ # 添加：添加inlineScript参数控制是否清理内联代码，添加inlineStyle参数控制是否清理内联样式
+ # 添加：UBB插件添加图片排版功能，图片标签由原先的[img=宽度,高度]，调整为[img=宽度,高度,对齐]，或者[img=对齐]
+ # 添加：增加图片缩略图功能，添加图片时，可由“|”此符号分隔两个网址，前面网址为缩略图，后面网址是链接的大图地址或者其它网址
+
+，例如：small.gif|big.gif，或者small.gif|http://pirate9.com/
+13.调整：默认表情移至default文件夹下，为今后开发多分类表情做准备
+
 ==ver 0.9.7 fix Change(2009-8-3)==
  # 调整：原插入图片后为默认选择状态，在IE下按回退键后导致页面回退而不是向前删除，现改为插入图片后焦点移至图片后方
  # 修正：script和style过滤功能原先由于正则语句严重错误，导致过滤功能无效问题的修正

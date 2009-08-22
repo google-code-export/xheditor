@@ -32,7 +32,7 @@ $('#elm1').xheditor(false);
 
 初始化示例代码：
 {{{
-$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,readonly:false,clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",keepValue:true,plugins:{}});
+$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,readonly:false,internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",keepValue:true,plugins:{}});
 }}}
 
 tools：自定义工具按钮
@@ -85,14 +85,24 @@ showBlocktag:显示段落标签
 参数值：true(显示段落标签),false(不显示)
 }}}
 
-clearScript：清理JS代码
+internalScript：内部JS代码保留状态
 {{{
-参数值：true(清理JS代码),false(保留JS代码)
+参数值：true(保留内部JS代码),false(清理内部JS代码)
 }}}
 
-clearStyle：清理style样式
+inlineScript：内联JS代码保留状态
 {{{
-参数值：true(清理样式),false(保留样式)
+参数值：true(保留内联JS代码),false(清理内联JS代码)
+}}}
+
+internalStyle：内部样式保留状态
+{{{
+参数值：true(保留内部样式),false(清理内部样式)
+}}}
+
+inlineStyle：内联样式保留状态
+{{{
+参数值：true(保留内联样式),false(清理内联样式)
 }}}
 
 width：编辑器宽度
@@ -134,6 +144,24 @@ keepValue:自动保存src和href属性值
 {{{
 参数值：true(保存),false(不保存)
 说明：在IE等浏览器下使用编辑器，插入的图片和链接地址都会被浏览器自动转为绝对地址，比如输入：a.gif，自动会转为：http://test.com/a.gif
+}}}
+
+modalWidth:showModal弹出窗口的默认宽度
+{{{
+参数值：数值，默认为350
+说明：弹出窗口的默认宽度
+}}}
+
+modalHeight:showModal弹出窗口的默认高度
+{{{
+参数值：数值，默认为220
+说明：弹出窗口的默认高度
+}}}
+
+modalTitle：showModal弹出窗口是否显示上方的标题栏
+{{{
+参数值：true(显示),false(不显示)
+说明：控制弹出窗口是否显示上方的标题栏，默认为显示，若需要显示一个更定制个性化的iframe窗口，可通过此参数隐藏上方的标题栏
 }}}
 
 upLinkUrl:超链接文件上传接收URL
@@ -210,7 +238,7 @@ c：样式表名称　t：插件名字(鼠标在按钮上方时显示)　s：快
 
 JS接口示例代码：
 {{{
-var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',clearScript:true,clearStyle:true,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction})[0].xheditor;
+var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction})[0].xheditor;
 editor.focus();
 editor.setSource('str')
 sHtml=editor.getSource()
@@ -284,8 +312,10 @@ toggleReadonly：在只读模式和可编辑模式之间切换
 
 settings：获取或者修改编辑器内部参数
 {{{
-clearScript:清除script代码
-clearStyle:清除style样式
+internalScript:是否清除内部代码
+inlineScript:是否清除内联代码
+internalStyle:是否清除内部样式
+inlineStyle:是否清除内联样式
 forcePtag:强制使用P标签
 keepValue:保持属性值
 upLinkUrl:超链接上传接口地址

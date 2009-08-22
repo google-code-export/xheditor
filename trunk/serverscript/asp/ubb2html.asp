@@ -6,7 +6,7 @@
 ' @site http://pirate9.com/
 ' @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
 ' 
-' @Version: 0.9.2 build 090505
+' @Version: 0.9.3 build 090818
 function ubb2html(sUBB)
 	dim re,sHtml,i
 	Set re = New RegExp
@@ -39,8 +39,12 @@ function ubb2html(sUBB)
 	next
 	re.Pattern="\[img\]\s*([\s\S]+?)\s*\[\/img\]"
 	sHtml=re.Replace(sHtml,"<img src=""$1"" />")
-	re.Pattern="\[img\s*=\s*(\d+),(\d+)\s*\]\s*([\s\S]+?)\s*\[\/img\]"
+	re.Pattern="\[img\s*=\s*(\d+)\s*,\s*(\d+)\s*\]\s*([\s\S]+?)\s*\[\/img\]"
 	sHtml=re.Replace(sHtml,"<img src=""$3"" width=""$1"" height=""$2"" />")
+	re.Pattern="\[img\s*=\s*(\d+)\s*,\s*(\d+)\s*,\s*(\w+)\s*\]\s*([\s\S]+?)\s*\[\/img\]"
+	sHtml=re.Replace(sHtml,"<img src=""$4"" width=""$1"" height=""$2"" align=""$3"" />")
+	re.Pattern="\[img\s*=\s*(\w+)\s*\]\s*([\s\S]+?)\s*\[\/img\]"
+	sHtml=re.Replace(sHtml,"<img src=""$2"" align=""$1"" />")
 	re.Pattern="\[url\]\s*([\s\S]+?)\s*\[\/url\]"
 	sHtml=re.Replace(sHtml,"<a href=""$1"">$1</a>")
 	re.Pattern="\[url\s*=\s*([^\]\s]+?)\s*\]\s*([\s\S]+?)\s*\[\/url\]"
