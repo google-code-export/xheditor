@@ -7,7 +7,7 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.2 build 090505
+ * @Version: 0.9.3 build 090818
  */
 function ubb2html($sUBB)
 {
@@ -29,7 +29,13 @@ function ubb2html($sUBB)
 	
 	for($i=0;$i<3;$i++)$sHtml=preg_replace("/\[align\s*=\s*([^\]]+?)\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/",'<p align="$1">$2</p>',$sHtml);
 	$sHtml=preg_replace("/\[img\]\s*([\s\S]+?)\s*\[\/img\]/i",'<img src="$1" />',$sHtml);
-	$sHtml=preg_replace("/\[img\s*=\s*(\d+),(\d+)\s*\]\s*([\s\S]+?)\s*\[\/img\]/i",'<img src="$3" width="$1" height="$2" />',$sHtml);
+	function getImg($match)
+	{
+		$p1=$match[1];$p2=$match[2];$p3=$match[3];$src=$match[4];
+		$a=$p3?$p3:($p2?$p1:'');
+		return '<img src="'.$src.'"'.($p2?' width="'.$p1.'" height="'.$p2.'"':'').($a?' align="'.$a.'"':'').' />';
+	}
+	$sHtml=preg_replace_callback("/\[img\s*=(?:\s*(\d+)\s*,\s*(\d+)\s*)?(?:,?\s*(\w+)\s*)?\]\s*([\s\S]+?)\s*\[\/img\]/i",'getImg',$sHtml);
 	$sHtml=preg_replace("/\[url\]\s*([\s\S]+?)\s*\[\/url\]/i",'<a href="$1">$1</a>',$sHtml);
 	$sHtml=preg_replace("/\[url\s*=\s*([^\]\s]+?)\s*\]\s*([\s\S]+?)\s*\[\/url\]/i",'<a href="$1">$2</a>',$sHtml);
 	$sHtml=preg_replace("/\[email\]\s*([\s\S]+?)\s*\[\/email\]/i",'<a href="mailto:$1">$1</a>',$sHtml);

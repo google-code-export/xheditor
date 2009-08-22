@@ -6,7 +6,7 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.1 build 090429
+ * @Version: 0.9.2 build 090818
  */
 function ubb2html(sUBB)
 {
@@ -23,7 +23,13 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/\[\/back\]/,'</span>');
 	for(i=0;i<3;i++)sHtml=sHtml.replace(/\[align\s*=\s*([^\]]+?)\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/ig,'<p align="$1">$2</p>');
 	sHtml=sHtml.replace(/\[img\]\s*([\s\S]+?)\s*\[\/img\]/ig,'<img src="$1" />');
-	sHtml=sHtml.replace(/\[img\s*=\s*(\d+),(\d+)\s*\]\s*([\s\S]+?)\s*\[\/img\]/ig,'<img src="$3" width="$1" height="$2" />');
+	sHtml=sHtml.replace(/\[img\s*=(?:\s*(\d+)\s*,\s*(\d+)\s*)?(?:,?\s*(\w+)\s*)?\]\s*([\s\S]+?)\s*\[\/img\]/ig,function(all,p1,p2,p3,src){
+		var str='<img src="'+src+'"',a=p3?p3:!p2?p1:'';
+		if(p2)str+=' width="'+p1+'" height="'+p2+'"';
+		if(a)str+=' align="'+a+'"';
+		str+=' />';
+		return str;
+	});
 	sHtml=sHtml.replace(/\[url\]\s*([\s\S]+?)\s*\[\/url\]/ig,'<a href="$1">$1</a>');
 	sHtml=sHtml.replace(/\[url\s*=\s*([^\]\s]+?)\s*\]\s*([\s\S]+?)\s*\[\/url\]/ig,'<a href="$1">$2</a>');
 	sHtml=sHtml.replace(/\[email\]\s*([\s\S]+?)\s*\[\/email\]/ig,'<a href="mailto:$1">$1</a>');
@@ -96,8 +102,10 @@ function html2ubb(sHtml)
 		return str+']'+text+'[/'+tag+']';
 	});
 	sUBB=sUBB.replace(/<img(\s+[^>]+?)\/?>/ig,function(all,attr){
-		var url=attr.match(/\s+src="([^"]+?)"/i),w=attr.match(/\s+width="(\d+)"/i),h=attr.match(/\s+height="(\d+)"/i),str='[img';
-		if(w&&h)str+='='+w[1]+','+h[1];
+		var url=attr.match(/\s+src="([^"]+?)"/i),w=attr.match(/\s+width="(\d+)"/i),h=attr.match(/\s+height="(\d+)"/i),a=attr.match(/\s+align="(\w+)"/i),str='[img',p='';
+		if(w&&h)p+=w[1]+','+h[1];
+		if(a)p+=(w&&h?',':'')+a[1];
+		if(p)str+='='+p;
 		str+=']'+url[1];
 		return str+'[/img]';
 	});
@@ -176,7 +184,7 @@ function html2ubb(sHtml)
 	sUBB=sUBB.replace(/<[^<>]+?>/g,'');//删除所有HTML标签
 	
 	sUBB=sUBB.replace(/(\s*?\r?\n){3,}/g,"\r\n\r\n");//限制最多2次换行
-	sUBB=sUBB.replace(/^\s+/g,'');//清除开头换行
+	sUBB=sUBB.replace(/^(\r?\n)+/g,'');//清除开头换行
 	sUBB=sUBB.replace(/\s+$/g,'');//清除结尾换行
 	return sUBB;
 }
