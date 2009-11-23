@@ -5,12 +5,12 @@
 <title>xhEditor demo4 : 其它选项</title>
 <link rel="stylesheet" href="common.css" type="text/css" media="screen" />
 <script type="text/javascript" src="../jquery/jquery-1.3.2.min.js"></script>
-<script type="text/javascript" src="../xheditor.js"></script>
+<script type="text/javascript" src="../xheditor-zh-cn.js"></script>
 <script type="text/javascript">
 $(pageInit);
 function pageInit()
 {
-	$('#elm1').xheditor(true,{width:800,height:300,fullscreen:true,sourceMode:true,showBlocktag:true,forcePtag:false,keepValue:true,clearScript:true,clearStyle:true,loadCSS:'http://static.pirate9.com/css/global.css'});
+	$('#elm1').xheditor(true,{width:800,height:300,fullscreen:true,sourceMode:true,showBlocktag:true,forcePtag:false,keepValue:true,internalScript:true,inlineScript:true,internalStyle:true,inlineStyle:true,loadCSS:'http://static.pirate9.com/css/global.css'});
 }
 </script>
 </head>
@@ -18,7 +18,7 @@ function pageInit()
 <form method="post" action="test.php">
 	<h3>xhEditor demo4 : 其它选项</h3>
 	<textarea id="elm1" name="elm1" rows="12" cols="80" style="width: 80%">
-<p><span style="font-size:small;color:#ff6600;"><strong>登幽州台歌</strong></span></p><p><u>陈子昂</u></p><p>前不见古人，后不见来者。<img src="../xheditor_emot/shocked.gif"/></p><p>念天地之悠悠，独怆然而涕下！<img src="../xheditor_emot/cry.gif"/></p>
+<p><span style="font-size:small;color:#ff6600;"><strong>登幽州台歌</strong></span></p><p><u>陈子昂</u></p><p>前不见古人，后不见来者。<img src="../xheditor_emot/default/shocked.gif"/></p><p>念天地之悠悠，独怆然而涕下！<img src="../xheditor_emot/default/cry.gif"/></p>
 	</textarea>
 	<br/><br />
 	<input type="submit" name="save" value="Submit" />

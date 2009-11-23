@@ -6,19 +6,34 @@
 ' @site http://pirate9.com/
 ' @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
 ' 
-' @Version: 0.9.3 build 090818
+' @Version: 0.9.5 build 091101
 function ubb2html(sUBB)
-	dim re,sHtml,i
+	dim re,sHtml,i,match
 	Set re = New RegExp
 	re.Global = True
 	re.IgnoreCase = True
 	sHtml=sUBB
+	re.Pattern="&"
+	sHtml=re.Replace(sHtml,"&amp;")
 	re.Pattern="<"
 	sHtml=re.Replace(sHtml,"&lt;")
 	re.Pattern=">"
 	sHtml=re.Replace(sHtml,"&gt;")
+	re.Pattern="\t"
+	sHtml=re.Replace(sHtml,"&nbsp; &nbsp; &nbsp; &nbsp; ")
+	re.Pattern="   "
+	sHtml=re.Replace(sHtml,"&nbsp; &nbsp;")
+	re.Pattern="  "
+	sHtml=re.Replace(sHtml,"&nbsp;&nbsp;")
 	re.Pattern="\r?\n"
 	sHtml=re.Replace(sHtml,"<br />")
+	
+	re.Pattern="\[code\]([\s\S]*?)\[\/code\]"
+	Set match = re.Execute(sHtml)
+	For i= 0 to  match.count -1
+		sHtml=Replace(sHtml,match.item(i),"[ubbcodeplace_"&i&"]")
+	Next
+	
 	re.Pattern="\[(\/?)(b|u|i|s|sup|sub)\]"
 	sHtml=re.Replace(sHtml,"<$1$2>")
 	re.Pattern="\[color\s*=\s*([^\]]+?)\]"
@@ -95,6 +110,12 @@ function ubb2html(sUBB)
 	sHtml=re.Replace(sHtml,"<ul type=""$1"">")
 	re.Pattern="\[\/list\]"
 	sHtml=re.Replace(sHtml,"</ul>")
+	
+	For i= 0 to  match.count -1
+		sHtml=replace(sHtml,"[ubbcodeplace_"&i&"]",match.item(i))
+	Next
+	
 	ubb2html=sHtml
+	
 end function
 %>

@@ -1,11 +1,13 @@
 .xhEdt_default table, .xhEdt_default tr, .xhEdt_default td, .xhEdt_default iframe {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; color:#000}
 
 .xhEdt_default table.xhEdtLayout {display:inline-table;background:#F0F0EE; border:1px solid #C5C5C5;width:100%;height:100%;}
-.xhEdt_default td.xhEdtTool {background:url(img/toolsbg.gif);border-bottom:1px solid #C5C5C5;padding:2px;}
+.xhEdt_default td.xhEdtTool{padding:0px 3px;border-bottom:1px solid #C5C5C5;}
+.xhEdt_default td.xhEdtTool span{float:left;margin:2px 0px;}
+.xhEdt_default td.xhEdtTool br{clear:left;}
 
-.xhEdt_o2007blue span.xhEdtGStart{display:none;}
-.xhEdt_o2007blue span.xhEdtGEnd{display:none;}
-.xhEdt_default span.xhEdtSeparator {display:block;height:20px;width:4px;background:url(img/icons.gif) no-repeat -580px 0;margin:0 2px}
+.xhEdt_default span.xhEdtGStart{display:none;}
+.xhEdt_default span.xhEdtGEnd{display:none;}
+.xhEdt_default span.xhEdtSeparator{display:block;height:22px;width:4px;margin:2px 2px !important;background:url(img/icons.gif) no-repeat -580px 0;}
 
 .xhEdt_default a.xhEdtButton{display:block;margin:1px;border:0px; width:20px; height:20px;}
 .xhEdt_default a.xhEdtButton span{opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30);}
@@ -13,7 +15,7 @@
 .xhEdt_default a.xhEdtEnabled:hover {margin:0px;border:1px solid #999; background:#fff;}
 .xhEdt_default a.xhEdtActive{margin:0px;border:1px solid #999; background:#fff;}
 
-.xhEdt_default a.xhEdtButton span{display:block;height:20px;width:20px;}
+.xhEdt_default a.xhEdtButton span{display:block;margin:0px;height:20px;width:20px;}
 .xhEdt_default span.xhEdtIcon{background:url(img/icons.gif) no-repeat 20px 20px}
 
 .xhEdt_default span.xhEdtBtnCut {background-position:0 0}
@@ -54,7 +56,7 @@
 .xhEdt_default iframe {display:block;background:#fff;width:100%;height:100%;}
 
 .xhEdt_Fullfix{overflow:hidden;}
-.xhEdt_Fullfix body{overflow:hidden;margin:0px;padding:0px;width:100%;height:100%;}
+.xhEdt_Fullfix body{overflow:hidden;width:100%;height:100%;}
 .xhEdt_Fullscreen{top:0px;left:0px;position:fixed;z-index:999999;width:100%;height:100%;background:#fff;}
 * html .xhEdt_Fullscreen{position: absolute;_top:expression((document.compatMode?documentElement.scrollTop:document.body.scrollTop)+'px');height: expression((document.compatMode?documentElement.offsetHeight:document.body.offsetHeight) + 'px');}
 
@@ -76,16 +78,16 @@
 .xhEdtColor a:hover{border:#000 1px solid;}
 .xhEdtColor a img{display:none;}
 
-.xhEdtDialog{padding:10px;font-size:12px;}
+.xhEdtDialog{padding:10px;font-size:12px;font-family: Simsun;}
 .xhEdtDialog a{text-decoration:underline;color:#00f;}
 .xhEdtDialog a:hover{text-decoration:underline;color:#00f}
 .xhEdtDialog div{padding:2px 0px;}
-.xhEdtDialog input[type=text]{width:150px;height:16px;font-size:12px;border:1px #ABADB3 solid;}
-.xhEdtDialog input[type=button]{width:40px;border-width:1px;background:#F0F0F0;cursor:pointer;}
-.xhEdtDialog .upload{position: relative;display:inline-block;width:152px;}
+.xhEdtDialog input[type=text]{width:160px;height:16px;font-size:12px;border:1px #ABADB3 solid;}
+.xhEdtDialog input[type=button]{margin:0;border-width:1px;background:#F0F0F0;cursor:pointer;}
+.xhEdtDialog .upload{position: relative;display:inline-block;width:162px;}
 .xhEdtDialog .upload .text {position: absolute;width:107px;top: 0px;left: 0px;z-index: 3;}
-.xhEdtDialog .upload .btn{position: absolute;top: 0px;left: 112px;width:40px;z-index: 1;}
-.xhEdtDialog .upload .file {cursor:pointer;position: absolute;top: 0px;left: 0px;width:152px;opacity:0;-ms-filter:'alpha(opacity=0)';filter:alpha(opacity=0);z-index: 2;}
+.xhEdtDialog .upload .btn{position: absolute;top: 0px;left: 112px;width:50px;z-index: 1;padding:0;}
+.xhEdtDialog .upload .file {cursor:pointer;position: absolute;top: 0px;left: 0px;width:162px;opacity:0;-ms-filter:'alpha(opacity=0)';filter:alpha(opacity=0);z-index: 2;}
 
 .xhEdtUploadIO{position:absolute;top:-1000px;left:-1000px;}
 .xhEdtUploadForm{position:absolute;top:-1200px;left:-1200px;}
@@ -101,6 +103,6 @@ height: expression(document.body.scrollHeight > document.body.offsetHeight ? doc
 position: absolute;
 margin-top: expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
 }
-.xhEdtTitle{padding:5px;background:url(img/toolsbg.gif);border-bottom:1px solid #bbb;}
+.xhEdtTitle{padding:5px;background:#F0F0EE;border-bottom:1px solid #bbb;}
 .xhEdtClose{float:right;display:block;width:16px;height:16px;background:url(img/close.gif);cursor:pointer;}
 .xhEdtContent{padding:5px;}

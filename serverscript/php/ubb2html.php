@@ -7,14 +7,30 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.3 build 090818
+ * @Version: 0.9.4 build 091101
  */
+
 function ubb2html($sUBB)
-{
+{	
 	$sHtml=$sUBB;
+		
+	$sHtml=preg_replace("/&/",'&amp;',$sHtml);
 	$sHtml=preg_replace("/</",'&lt;',$sHtml);
 	$sHtml=preg_replace("/>/",'&gt;',$sHtml);
+	$sHtml=preg_replace("/\t/",'&nbsp; &nbsp; &nbsp; &nbsp; ',$sHtml);
+	$sHtml=preg_replace("/   /",'&nbsp; &nbsp;',$sHtml);
+	$sHtml=preg_replace("/  /",'&nbsp;&nbsp;',$sHtml);
 	$sHtml=preg_replace("/\r?\n/",'<br />',$sHtml);
+	
+	global $cnum,$arrcode;$cnum=0;
+	function saveCodeArea($match)
+	{
+		global $cnum,$arrcode;
+		$cnum++;$arrcode[$cnum]=$match[0];
+		return "[\tubbcodeplace_".$cnum."\t]";
+	}
+	$sHtml=preg_replace_callback("/\[code\]([\s\S]*?)\[\/code\]/i",'saveCodeArea',$sHtml);
+	
 	$sHtml=preg_replace("/\[(\/?)(b|u|i|s|sup|sub)\]/i",'<$1$2>',$sHtml);
 	$sHtml=preg_replace("/\[color\s*=\s*([^\]]+?)\]/i",'<span style="color:$1;">',$sHtml);
 	function getSizeName($match)
@@ -41,7 +57,6 @@ function ubb2html($sUBB)
 	$sHtml=preg_replace("/\[email\]\s*([\s\S]+?)\s*\[\/email\]/i",'<a href="mailto:$1">$1</a>',$sHtml);
 	$sHtml=preg_replace("/\[email\s*=\s*([^\]\s]+?)\s*\]\s*([\s\S]+?)\s*\[\/email\]/i",'<a href="mailto:$1">$2</a>',$sHtml);
 	$sHtml=preg_replace("/\[quote\]([\s\S]*?)\[\/quote\]/i",'<blockquote>$1</blockquote>',$sHtml);
-	$sHtml=preg_replace("/\[code\]([\s\S]*?)\[\/code\]/i",'<code>$1</code>',$sHtml);
 	function getFlash($match)
 	{
 		$w=$match[1];$h=$match[2];$url=$match[3];
@@ -82,6 +97,9 @@ function ubb2html($sUBB)
 	}
 	$sHtml=preg_replace_callback("/\[list(?:\s*=\s*([^\]]+)\s*)?\]/i",'getUL',$sHtml);
 	$sHtml=preg_replace("/\[\/list\]/i",'</ul>',$sHtml);
+
+	for($i=1;$i<=$cnum;$i++)$sHtml=str_replace("[\tubbcodeplace_".$i."\t]", $arrcode[$i],$sHtml);
+
 	return $sHtml;
 }
 ?>
