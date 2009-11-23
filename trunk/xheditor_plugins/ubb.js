@@ -6,14 +6,25 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.2 build 090818
+ * @Version: 0.9.3 build 091101
  */
 function ubb2html(sUBB)
 {
-	var i,sHtml=sUBB;
-	sHtml=sHtml.replace(/</g, '&lt;');
-	sHtml=sHtml.replace(/>/g, '&gt;');
+	var i,sHtml=sUBB,filter,arrcode=new Array(),cnum=0;
+	
+	sHtml=sHtml.replace(/&/ig, '&amp;');
+	filter={'<':'&lt;','>':'&gt;'};
+	sHtml=sHtml.replace(/[<>]/g,function(c){return filter[c];});
+	sHtml=sHtml.replace(/\t/ig, '&nbsp; &nbsp; &nbsp; &nbsp; ');
+	sHtml=sHtml.replace(/   /ig, '&nbsp; &nbsp;');
+	sHtml=sHtml.replace(/  /ig, '&nbsp;&nbsp;');
 	sHtml=sHtml.replace(/\r?\n/g,"<br />");
+	
+	sHtml=sHtml.replace(/\[code\]([\s\S]*?)\[\/code\]/ig,function(all,c){//code特殊处理
+		cnum++;arrcode[cnum]=all;
+		return "[\tubbcodeplace_"+cnum+"\t]";
+	});
+
 	sHtml=sHtml.replace(/\[(\/?)(b|u|i|s|sup|sub)\]/ig,'<$1$2>');
 	sHtml=sHtml.replace(/\[color\s*=\s*([^\]]+?)\]/ig,'<font color="$1">');
 	sHtml=sHtml.replace(/\[size\s*=\s*(\d+?)\]/ig,'<font size="$1">');
@@ -35,7 +46,6 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/\[email\]\s*([\s\S]+?)\s*\[\/email\]/ig,'<a href="mailto:$1">$1</a>');
 	sHtml=sHtml.replace(/\[email\s*=\s*([^\]\s]+?)\s*\]\s*([\s\S]+?)\s*\[\/email\]/ig,'<a href="mailto:$1">$2</a>');
 	sHtml=sHtml.replace(/\[quote\]([\s\S]*?)\[\/quote\]/ig,'<blockquote>$1</blockquote>');
-	sHtml=sHtml.replace(/\[code\]([\s\S]*?)\[\/code\]/ig,'<code>$1</code>');
 	sHtml=sHtml.replace(/\[flash\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*)?\]([\s\S]+?)\[\/flash\]/ig,function(all,w,h,url){
 		if(!w)w=550;if(!h)h=400;
 		return '<embed type="application/x-shockwave-flash" src="'+url+'" wmode="opaque" quality="high" bgcolor="#ffffff" menu="false" play="true" loop="true" width="'+w+'" height="'+h+'"/>';
@@ -65,13 +75,25 @@ function ubb2html(sUBB)
 		return str+'>';
 	});
 	sHtml=sHtml.replace(/\[\/list\]/ig,'</ul>');
+	
+	for(i=1;i<=cnum;i++)sHtml=sHtml.replace("[\tubbcodeplace_"+i+"\t]", arrcode[i]);
+
 	return sHtml;
 }
+
 function html2ubb(sHtml)
 {
-	var i,mapSize={'xx-small':1,'8pt':1,'x-small':2,'10pt':2,'small':3,'12pt':3,'medium':4,'14pt':4,'large':5,'18pt':5,'x-large':6,'24pt':6,'xx-large':7,'36pt':7};
-	var sUBB=sHtml;
+	var mapSize={'xx-small':1,'8pt':1,'x-small':2,'10pt':2,'small':3,'12pt':3,'medium':4,'14pt':4,'large':5,'18pt':5,'x-large':6,'24pt':6,'xx-large':7,'36pt':7};
+	var i,sUBB=sHtml,arrcode=new Array(),cnum=0;
+	
 	sUBB=sUBB.replace(/\r?\n/g,"");
+	sUBB=sUBB.replace(/<br\s*?\/?>/ig,"\r\n");
+	
+	sUBB=sUBB.replace(/\[code\]([\s\S]*?)\[\/code\]/ig,function(all,c){//code特殊处理
+		cnum++;arrcode[cnum]=all;
+		return "[\tubbcodeplace_"+cnum+"\t]";
+	});
+	
 	sUBB=sUBB.replace(/<(\/?)(b|u|i|s)(\s+[^>]+)?>/ig,'[$1$2]');
 	sUBB=sUBB.replace(/<(\/?)strong(\s+[^>]+)?>/ig,'[$1b]');
 	sUBB=sUBB.replace(/<(\/?)em(\s+[^>]+)?>/ig,'[$1i]');
@@ -90,6 +112,7 @@ function html2ubb(sHtml)
 		return str;
 	});
 	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(div|p)(?:\s+[^>]+?)?\s+align="(left|center|right)"[^>]*>(((?!<\1(\s+[^>]+)?>)[\s\S])+?)<\/\1>/ig,'[align=$2]$3[/align]');
+	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(center)(?:\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S])*?)<\/\1>/ig,'[align=center]$2[/align]');
 	sUBB=sUBB.replace(/<a(?:\s+[^>]+)?\s+href="\s*([^"]+?)\s*"[^>]*>([\s\S]+?)<\/a>/ig,function(all,url,text){
 		var tag='url',str;
 		if(url.match(/^mailto:/i))
@@ -110,7 +133,6 @@ function html2ubb(sHtml)
 		return str+'[/img]';
 	});
 	sUBB=sUBB.replace(/<blockquote(?: [^>]+)?>([\s\S]+?)<\/blockquote>/ig,'[quote]$1[/quote]');
-	sUBB=sUBB.replace(/<code(?: [^>]+)?>([\s\S]+?)<\/code>/ig,'[code]$1[/code]');
 	sUBB=sUBB.replace(/<embed((?:\s+[^>]+)?(?:\s+type="application\/x-shockwave-flash"|\s+classid="clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000")[^>]*?)\/>/ig,function(all,attr){
 		var url=attr.match(/\s+src\s*=\s*"\s*([^"]+)\s*"/i),w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i),h=attr.match(/\s+height\s*=\s*"\s*([^"]+)\s*"/i),str='[flash';
 		if(w&&h)str+='='+w[1]+','+h[1];
@@ -173,18 +195,23 @@ function html2ubb(sHtml)
 	sUBB=sUBB.replace(/<\/(ul|ol)>/ig,'[/list]');
 	sUBB=sUBB.replace(/<h([1-6])(\s+[^>]+)?>/ig,function(all,n){return '\r\n\r\n[size='+(7-n)+'][b]'});
 	sUBB=sUBB.replace(/<\/h[1-6]>/ig,'[/b][/size]\r\n\r\n');
-	sUBB=sUBB.replace(/<pre(\s+[^>]+)?>/ig,'\r\n\r\n[code]');
-	sUBB=sUBB.replace(/<\/pre>/ig,'[/code]\r\n\r\n');
 	sUBB=sUBB.replace(/<address(\s+[^>]+)?>/ig,'\r\n[i]');
 	sUBB=sUBB.replace(/<\/address>/ig,'[i]\r\n');
 	
 	sUBB=sUBB.replace(/<(p)(?:\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n\r\n$2\r\n\r\n");
 	sUBB=sUBB.replace(/<(div)(?:\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n$2\r\n");
-	sUBB=sUBB.replace(/<br\s*?\/?>/ig,"\r\n");
-	sUBB=sUBB.replace(/<[^<>]+?>/g,'');//删除所有HTML标签
 	
 	sUBB=sUBB.replace(/(\s*?\r?\n){3,}/g,"\r\n\r\n");//限制最多2次换行
 	sUBB=sUBB.replace(/^(\r?\n)+/g,'');//清除开头换行
 	sUBB=sUBB.replace(/\s+$/g,'');//清除结尾换行
+	
+	for(i=1;i<=cnum;i++)sUBB=sUBB.replace("[\tubbcodeplace_"+i+"\t]", arrcode[i]);
+	
+	sUBB=sUBB.replace(/<[^<>]+?>/g,'');//删除所有HTML标签
+	sUBB=sUBB.replace(/&lt;/ig, '<');
+	sUBB=sUBB.replace(/&gt;/ig, '>');
+	sUBB=sUBB.replace(/&nbsp;/ig, ' ');
+	sUBB=sUBB.replace(/&amp;/ig, '&');
+	
 	return sUBB;
 }

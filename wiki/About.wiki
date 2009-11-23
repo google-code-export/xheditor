@@ -12,16 +12,16 @@ xhEditor是一个基于jQuery开发的简单迷你并且高效的可视化XHTML�
  * UBB: 提供完美的UBB可视化编辑解决方案，在您获得安全高效代码存储的同时，又能享受可视化编辑的便捷
 
 ==Demo(演示)：==
- * 默认模式：[http://static.pirate9.com/js/xheditor_demos/demo1.html]
- * 自定义按钮：[http://static.pirate9.com/js/xheditor_demos/demo2.html]
- * 皮肤选择：[http://static.pirate9.com/js/xheditor_demos/demo3.html]
- * 其它选项：[http://static.pirate9.com/js/xheditor_demos/demo4.html]
- * Javascript交互：[http://static.pirate9.com/js/xheditor_demos/demo5.html]
- * 非utf-8编码网页调用：[http://static.pirate9.com/js/xheditor_demos/demo6.html]
- * UBB可视化编辑：[http://static.pirate9.com/js/xheditor_demos/demo7.html]
- * Ajax图片上传：[http://static.pirate9.com/js/xheditor_demos/demo8.html]
- * 插件扩展：[http://static.pirate9.com/js/xheditor_demos/demo9.html]
- * iframe调用文件上传：[http://static.pirate9.com/js/xheditor_demos/demo10.html]
+ * 默认模式：[http://xheditor.com/demos/demo01.html]
+ * 自定义按钮：[http://xheditor.com/demos/demo02.html]
+ * 皮肤选择：[http://xheditor.com/demos/demo03.html]
+ * 其它选项：[http://xheditor.com/demos/demo04.html]
+ * Javascript交互：[http://xheditor.com/demos/demo05.html]
+ * 非utf-8编码网页调用：[http://xheditor.com/demos/demo06.html]
+ * UBB可视化编辑：[http://xheditor.com/demos/demo07.html]
+ * Ajax图片上传：[http://xheditor.com/demos/demo08.html]
+ * 插件扩展：[http://xheditor.com/demos/demo09.html]
+ * iframe调用文件上传：[http://xheditor.com/demos/demo10.html]
 
 ==Thanks(感谢)：==
  * jQuery：[http://jquery.com/]

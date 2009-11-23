@@ -44,6 +44,7 @@ tools：自定义工具按钮
 GStart：组开始
 GEnd：组结束
 Separator：分隔符
+BtnBr：强制换行
 Cut：剪切
 Copy：复制
 Paste：粘贴
@@ -133,6 +134,11 @@ readonly：默认只读模式
 sourceMode:默认源代码模式
 {{{
 参数值：true(源代码模式),false(编辑模式)
+}}}
+
+baseUrl:图片基址
+{{{
+参数值：图片的基本地址，应用在图片需要相对路径的编辑器环境中
 }}}
 
 forcePtag:强制P标签
@@ -275,6 +281,11 @@ appendHTML：粘贴HTML内容到编辑器结尾处
 注：0.9.5版添加
 }}}
 
+getSelect：返回当前选中的内容
+{{{
+参数1：返回格式，可选'text'返回文本格式，其它所有值都将返回HTML格式
+}}}
+
 pasteHTML：粘贴HTML内容到编辑器当前光标处
 {{{
 参数1：要粘贴的HTML代码，例：'<p>uuu</p>'
@@ -310,6 +321,11 @@ toggleReadonly：在只读模式和可编辑模式之间切换
 参数1：空(切换),true(切换为只读模式),false(切换为可编辑模式)
 }}}
 
+toggleShowBlocktag：切换块标签显示状态
+{{{
+参数1：空(切换),true(切换为显示块标签),false(切换为不显示块标签)
+}}}
+
 settings：获取或者修改编辑器内部参数
 {{{
 internalScript:是否清除内部代码
@@ -342,14 +358,32 @@ focus和blur是编辑器聚焦和失去焦点时的回调函数
 }}}
 
 
+showModal:显示模式窗口
+{{{
+参数1：模式窗口的标题title
+参数2：模式窗口的内容content
+参数3：模式窗口的宽度w
+参数4：模式窗口的高度h
+参数5：模式窗口关闭时的回调函数onClose
+}}}
+
+showIframeModal:显示iframe式的模式窗口
+{{{
+参数1：iframe的地址ifmurl
+参数2：模式窗口的标题
+参数3：提供给目标iframe页面回调用的回调函数，可以在iframe页面中以这样的形式调用：callback('1.gif');
+参数4：模式窗口的宽度w
+参数5：模式窗口的高度h
+}}}
+
 ==Demo(演示)：==
- * 默认模式：[http://static.pirate9.com/js/xheditor_demos/demo1.html]
- * 自定义按钮：[http://static.pirate9.com/js/xheditor_demos/demo2.html]
- * 皮肤选择：[http://static.pirate9.com/js/xheditor_demos/demo3.html]
- * 其它选项：[http://static.pirate9.com/js/xheditor_demos/demo4.html]
- * Javascript交互：[http://static.pirate9.com/js/xheditor_demos/demo5.html]
- * 非utf-8编码网页调用：[http://static.pirate9.com/js/xheditor_demos/demo6.html]
- * UBB可视化编辑：[http://static.pirate9.com/js/xheditor_demos/demo7.html]
- * Ajax图片上传：[http://static.pirate9.com/js/xheditor_demos/demo8.html]
- * 插件扩展：[http://static.pirate9.com/js/xheditor_demos/demo9.html]
- * iframe调用文件上传：[http://static.pirate9.com/js/xheditor_demos/demo10.html]
+ * 默认模式：[http://xheditor.com/demos/demo01.html]
+ * 自定义按钮：[http://xheditor.com/demos/demo02.html]
+ * 皮肤选择：[http://xheditor.com/demos/demo03.html]
+ * 其它选项：[http://xheditor.com/demos/demo04.html]
+ * Javascript交互：[http://xheditor.com/demos/demo05.html]
+ * 非utf-8编码网页调用：[http://xheditor.com/demos/demo06.html]
+ * UBB可视化编辑：[http://xheditor.com/demos/demo07.html]
+ * Ajax图片上传：[http://xheditor.com/demos/demo08.html]
+ * 插件扩展：[http://xheditor.com/demos/demo09.html]
+ * iframe调用文件上传：[http://xheditor.com/demos/demo10.html]
