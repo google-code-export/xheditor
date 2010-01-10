@@ -5,7 +5,7 @@
 
 1. 下载xhEditor最新版本。下载地址：[http://code.google.com/p/xheditor/downloads/list]
 
-2. 解压zip文件，将其中的xheditor.js以及xheditor_emot和xheditor_skin两个文件夹上传到网站相应目录
+2. 解压zip文件，将其中的xheditor.js以及xheditor_emot、xheditor_plugins和xheditor_skin三个文件夹上传到网站相应目录
 
 3. 在相应html文件的head标签结束之前添加
 {{{
@@ -15,7 +15,8 @@
 4. 调用方法有两种：
 {{{
 方法1：在textarea上添加属性： class="xheditor"(设置为xheditor-mini和xheditor-simple，分别默认加载迷你和简单工具栏)
-方法2：在您的页面初始JS代码里加上： $('#elm1').xheditor(true);
+方法2：在textarea上添加属性： xheditor="{skin:'default'}"，此方法支持除插件之外的所有初始化参数方法
+方法3：在您的页面初始JS代码里加上： $('#elm1').xheditor(true);
 
 例如：
 $({
@@ -81,9 +82,24 @@ skin：皮肤风格选择
 参数值：default(默认风格),o2007blue(Office 2007 蓝色),o2007silver(Office 2007 银色)
 }}}
 
+layerShadow:阴影的深度(按钮面板和模式窗口的背景阴影)
+{{{
+参数值：0(不显示阴影),大于0的数值(显示阴影并设置阴影的深度)
+}}}
+
+clickCancelDialog:点击任意位置取消按钮面板功能
+{{{
+参数值：默认true(开启点击取消功能),false(关闭点击取消功能，必需要点击“取消”按钮才能关闭按钮面板)
+}}}
+
 showBlocktag:显示段落标签
 {{{
 参数值：true(显示段落标签),false(不显示)
+}}}
+
+linkTag：样式链接link标签保留状态
+{{{
+参数值：true(保留样式链接link标签),false(清理样式链接link标签)
 }}}
 
 internalScript：内部JS代码保留状态
@@ -118,7 +134,7 @@ height：编辑器高度
 
 loadCSS：加载样式
 {{{
-参数值：样式表网址，例如：'http://static.pirate9.com/css/global.css'
+参数值：样式表网址字符串，例如：'1.gif'，或者是字符串数组，例如：['1.gif','2.gif']
 }}}
 
 fullscreen：默认全屏显示
@@ -150,6 +166,12 @@ keepValue:自动保存src和href属性值
 {{{
 参数值：true(保存),false(不保存)
 说明：在IE等浏览器下使用编辑器，插入的图片和链接地址都会被浏览器自动转为绝对地址，比如输入：a.gif，自动会转为：http://test.com/a.gif
+}}}
+
+defLinkText:超链接的默认文字
+{{{
+参数值：字符串(默认值：“点击打开链接”)
+说明：只在不选择任何内容的情况下才会用到这个参数值
 }}}
 
 modalWidth:showModal弹出窗口的默认宽度
@@ -216,7 +238,7 @@ demos目录中的upload.php仅为演示代码，若您使用的是其它的服�
 若您希望在自己的项目中实际使用，请自行修改代码或者重新开发，开发过程中请注意上传文件的格式及大小限制，注意服务器安全问题。 
 
 上传接收程序开发规范：
-1,上传文件域名字为：upload
+1,上传文件域名字为：filedata
 2,返回结构必需为json，并且结构如下：{"err":"","msg":"200906030521128703.gif"}
 若上传出现错误，请将错误内容保存在err变量中；若上传成功，请将服务器上的绝对或者相对地址保存在msg变量中。
 编辑器若发现返回的err变量不为空，则弹出窗口显示返回的错误内容。
@@ -240,9 +262,9 @@ c：样式表名称　t：插件名字(鼠标在按钮上方时显示)　s：快
 }}}
 
 
-==JS接口说明==
+==API接口说明==
 
-JS接口示例代码：
+API接口示例代码：
 {{{
 var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction})[0].xheditor;
 editor.focus();
@@ -283,7 +305,7 @@ appendHTML：粘贴HTML内容到编辑器结尾处
 
 getSelect：返回当前选中的内容
 {{{
-参数1：返回格式，可选'text'返回文本格式，其它所有值都将返回HTML格式
+参数1：返回格式，可选'text'返回文本格式，其它所有值都返回HTML格式
 }}}
 
 pasteHTML：粘贴HTML内容到编辑器当前光标处
@@ -326,6 +348,25 @@ toggleShowBlocktag：切换块标签显示状态
 参数1：空(切换),true(切换为显示块标签),false(切换为不显示块标签)
 }}}
 
+showModal:显示模式窗口
+{{{
+参数1：模式窗口的标题title
+参数2：模式窗口的内容content
+参数3：模式窗口的宽度w
+参数4：模式窗口的高度h
+参数5：模式窗口关闭时的回调函数onRemove
+}}}
+
+showIframeModal:显示iframe式的模式窗口
+{{{
+参数1：iframe的地址ifmurl
+参数2：模式窗口的标题
+参数3：提供给目标iframe页面回调用的回调函数，可以在iframe页面中以这样的形式调用：callback('1.gif');
+参数4：模式窗口的宽度w
+参数5：模式窗口的高度h
+参数6：模式窗口关闭时的回调函数onRemove
+}}}
+
 settings：获取或者修改编辑器内部参数
 {{{
 internalScript:是否清除内部代码
@@ -358,23 +399,6 @@ focus和blur是编辑器聚焦和失去焦点时的回调函数
 }}}
 
 
-showModal:显示模式窗口
-{{{
-参数1：模式窗口的标题title
-参数2：模式窗口的内容content
-参数3：模式窗口的宽度w
-参数4：模式窗口的高度h
-参数5：模式窗口关闭时的回调函数onClose
-}}}
-
-showIframeModal:显示iframe式的模式窗口
-{{{
-参数1：iframe的地址ifmurl
-参数2：模式窗口的标题
-参数3：提供给目标iframe页面回调用的回调函数，可以在iframe页面中以这样的形式调用：callback('1.gif');
-参数4：模式窗口的宽度w
-参数5：模式窗口的高度h
-}}}
 
 ==Demo(演示)：==
  * 默认模式：[http://xheditor.com/demos/demo01.html]

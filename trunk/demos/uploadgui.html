@@ -5,7 +5,7 @@
 <title>文件上传</title>
 <style>
 body{
-	padding:0px;
+	padding:5px;
 	margin:0px;
 	font-size:12px;
 }	
@@ -13,13 +13,13 @@ body{
 <script>
 function upload()
 {
-	callback('http://pirate9.com/test.zip');
+	callback('http://xheditor.com/test');
 	unloadme();
 }
 </script>
 </head> 
 <body> 
-<a href="javascript:;" onclick="upload();">点击这里完成文件上传</a><br />
-<p style="color:#999;">注：此页面仅供演示用，您可以在此页面的基础上实现文件上传和文件管理功能<br />本页面提供两个接口用来和编辑器进行互动：callback和unloadme，其中callback接口的返回参数个数可在showIframeModal调用时进行定义</p>
+<a href="javascript:void(0);" onclick="upload();">点击这里完成文件上传</a><br />
+<p style="color:#999;">注：此页面仅供演示用，您可以在此页面的基础上实现文件上传和用户文件浏览功能<br />本页面提供唯一接口用来和编辑器进行互动：callback，callback的唯一返回参数就是返回值</p>
 </body> 
 </html>

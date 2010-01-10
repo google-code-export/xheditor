@@ -11,15 +11,29 @@ $(pageInit);
 var editor;
 function pageInit()
 {
-	editor=$('#elm1').xheditor(true)[0].xheditor;
+	editor=$('#elm1').xheditor(true)[0].objxhe;
 }
 </script>
 </head>
 <body>
+<div id="header-nav">
+	<ul>
+		<li><a href="demo01.html"><span>默认模式</span></a></li>
+		<li><a href="demo02.html"><span>自定义按钮</span></a></li>
+		<li><a href="demo03.html"><span>皮肤选择</span></a></li>
+		<li><a href="demo04.html"><span>其它选项</span></a></li>
+		<li><a href="demo05.html"><span>JS交互</span></a></li>
+		<li><a href="demo06.html"><span>非utf-8编码调用</span></a></li>
+		<li><a href="demo07.html"><span>UBB可视化</span></a></li>
+		<li><a href="demo08.html"><span>Ajax上传</span></a></li>
+		<li><a href="demo09.html"><span>插件扩展</span></a></li>
+		<li><a href="demo10.html"><span>iframe调用上传</span></a></li>
+	</ul>
+</div>
 <form method="post" action="test.php">
 	<h3>xhEditor demo5 : Javascript交互</h3>
 	<textarea id="elm1" name="elm1" rows="12" cols="80" style="width: 80%">
-<p><span style="font-size:small;color:#ff6600;"><strong>登幽州台歌</strong></span></p><p><u>陈子昂</u></p><p>前不见古人，后不见来者。<img src="../xheditor_emot/default/shocked.gif"/></p><p>念天地之悠悠，独怆然而涕下！<img src="../xheditor_emot/default/cry.gif"/></p>
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;var editor;&lt;br /&gt;editor=$('#elm1').xheditor(true)[0].objxhe;&lt;br /&gt;editor.pasteHTML('&amp;lt;strong&amp;gt;粘贴的内容&amp;lt;/strong&amp;gt;');&lt;/p&gt;&lt;p&gt;&lt;br /&gt;注：本页面演示大部分外部调用的API接口，更多详细帮助信息请查看：&lt;a href="http://code.google.com/p/xheditor/wiki/Help"&gt;http://code.google.com/p/xheditor/wiki/Help&lt;/a&gt;&lt;/p&gt;
 	</textarea>
 	<br/><br />
 	<input type="submit" name="save" value="Submit" />

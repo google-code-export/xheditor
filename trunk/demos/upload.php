@@ -7,16 +7,19 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
+ * @Version: 0.9.1 build 100102
+ * 
  * 注：本程序仅为演示用，请您根据自己需求进行相应修改，或者重开发。
  */
 header('Content-Type: text/html; charset=UTF-8');
 
 function uploadfile($inputname)
 {
+	$immediate=$_GET['immediate'];
 	$attachdir='upload';//上传文件保存路径，结尾不要带/
 	$dirtype=1;//1:按天存入目录 2:按月存入目录 3:按扩展名存目录  建议使用按天存
 	$maxattachsize=2097152;//最大上传大小，默认是2M
-	$upext='txt,rar,zip,jpg,jpeg,gif,png,swf,avi';//上传扩展名
+	$upext='txt,rar,zip,jpg,jpeg,gif,png,swf,wmv,avi,wma,mp3,mid';//上传扩展名
 	
 	$err = "";
 	$msg = "";
@@ -60,7 +63,8 @@ function uploadfile($inputname)
 			if(preg_match('/'.str_replace(',','|',$upext).'/i',$extension))
 			{
 				$filesize=filesize($temppath);
-				if($filesize <= $maxattachsize)
+				if($filesize > $maxattachsize)$err='文件大小超过'.$maxattachsize.'字节';
+				else
 				{
 					switch($dirtype)
 					{
@@ -79,9 +83,9 @@ function uploadfile($inputname)
 					$target = $attach_dir.'/'.$filename;
 					
 					move_uploaded_file($upfile['tmp_name'],$target);
+					if($immediate=='1')$target='!'.$target;
 					$msg=$target;
 				}
-				else $err='文件大小超过'.$maxattachsize.'字节';
 			}
 			else $err='上传文件扩展名必需为：'.$upext;
 
@@ -90,7 +94,7 @@ function uploadfile($inputname)
 	return array('err'=>$err,'msg'=>$msg);
 }
 
-$state=uploadfile('upload');
+$state=uploadfile('filedata');
 echo json_encode($state);
 
 ?>

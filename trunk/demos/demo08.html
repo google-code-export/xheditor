@@ -10,15 +10,35 @@
 $(pageInit);
 function pageInit()
 {
-	$('#elm1').xheditor(true,{tools:'full',upLinkUrl:"upload.php",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php",upFlashExt:"swf",upMediaUrl:"upload.php",upMediaExt:"avi"});
+	$('#elm1').xheditor(true,{upLinkUrl:"upload.php",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php",upFlashExt:"swf",upMediaUrl:"upload.php",upMediaExt:"avi"});
+	$('#elm2').xheditor(true,{upLinkUrl:"upload.php?immediate=1",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php?immediate=1",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php?immediate=1",upFlashExt:"swf",upMediaUrl:"upload.php?immediate=1",upMediaExt:"avi"});
 }
 </script>
 </head>
 <body>
+<div id="header-nav">
+	<ul>
+		<li><a href="demo01.html"><span>默认模式</span></a></li>
+		<li><a href="demo02.html"><span>自定义按钮</span></a></li>
+		<li><a href="demo03.html"><span>皮肤选择</span></a></li>
+		<li><a href="demo04.html"><span>其它选项</span></a></li>
+		<li><a href="demo05.html"><span>JS交互</span></a></li>
+		<li><a href="demo06.html"><span>非utf-8编码调用</span></a></li>
+		<li><a href="demo07.html"><span>UBB可视化</span></a></li>
+		<li><a href="demo08.html"><span>Ajax上传</span></a></li>
+		<li><a href="demo09.html"><span>插件扩展</span></a></li>
+		<li><a href="demo10.html"><span>iframe调用上传</span></a></li>
+	</ul>
+</div>
 <form method="post" action="test.php">
 	<h3>xhEditor demo8 : Ajax文件上传</h3>
+	普通上传模式:<br />
 	<textarea id="elm1" name="elm1" rows="12" cols="80" style="width: 80%">
-请确保当前目录中的upload.php有相应的PHP执行权限，若您使用的是其它的服务器脚本语言，请自行对初始化参数中的upLinkUrl、upImgUrl、upFlashUrl和upMediaUrl进行修改，并开发相应服务器上传接收程序。<br/>注：upload.php仅为演示代码，若您希望在自己的项目中实际使用，请自行修改代码或者重新开发，开发过程中请注意上传文件的格式及大小限制，注意服务器安全问题。 <br/><br/><strong>上传接收程序开发规范：<br/></strong>1,上传文件域名字为：upload<br/>2,返回结构必需为json，并且结构如下：{"err":"","msg":"200906030521128703.gif"}<br/>若上传出现错误，请将错误内容保存在err变量中；若上传成功，请将服务器上的绝对或者相对地址保存在msg变量中。<br/>编辑器若发现返回的err变量不为空，则弹出窗口显示返回的错误内容。<br/><br/><br/><strong>上传管理方案建议：</strong><br/>1,在编辑器初始化时在upload.php后面跟上一个服务器生成的绝对唯一的跟踪值，例如：upload.php?infoid=121312121<br/>2,在服务器接收程序中以这个跟踪值保存到数据库中，同样可以限制单个跟踪值下总上传文件数或者总文件大小，否则就是一个可以上传无限个文件的漏洞了<br/>3,最终当前表单提交时，再根据编辑器提交的HTML内容和数据库中上传内容进行比较，删除所有没有使用的上传文件<br/>4,定期由服务器脚本删除上传数据库中没提交的文件记录，这样就能防止别人将您的网站作为免费相册空间了<br/>
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm1').xheditor(true,{upLinkUrl:"upload.php",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php",upFlashExt:"swf",upMediaUrl:"upload.php",upMediaExt:"avi"});&lt;/p&gt;&lt;p&gt;&lt;br /&gt;&lt;/p&gt;&lt;p&gt;请确保当前目录中的upload.php有相应的PHP执行权限，若您使用的是其它的服务器脚本语言，请自行对初始化参数中的upLinkUrl、upImgUrl、upFlashUrl和upMediaUrl进行修改，并开发相应服务器上传接收程序。&lt;/p&gt;注：upload.php仅为演示代码，若您希望在自己的项目中实际使用，请自行修改代码或者重新开发，开发过程中请注意上传文件的格式及大小限制，注意服务器安全问题。 &lt;br /&gt;&lt;br /&gt;&lt;strong&gt;上传接收程序开发规范：&lt;br /&gt;&lt;/strong&gt;1,上传文件域名字为：upload&lt;br /&gt;2,返回结构必需为json，并且结构如下：{"err":"","msg":"200906030521128703.gif"}&lt;br /&gt;若上传出现错误，请将错误内容保存在err变量中；若上传成功，请将服务器上的绝对或者相对地址保存在msg变量中。&lt;br /&gt;编辑器若发现返回的err变量不为空，则弹出窗口显示返回的错误内容。&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;strong&gt;上传管理方案建议：&lt;/strong&gt;&lt;br /&gt;1,在编辑器初始化时在upload.php后面跟上一个服务器生成的绝对唯一的跟踪值，例如：upload.php?infoid=121312121&lt;br /&gt;2,在服务器接收程序中以这个跟踪值保存到数据库中，同样可以限制单个跟踪值下总上传文件数或者总文件大小，否则就是一个可以上传无限个文件的漏洞了&lt;br /&gt;3,最终当前表单提交时，再根据编辑器提交的HTML内容和数据库中上传内容进行比较，删除所有没有使用的上传文件&lt;br /&gt;4,定期由服务器脚本删除上传数据库中没提交的文件记录，这样就能防止别人将您的网站作为免费相册空间了
+	</textarea><br /><br />
+	立即上传模式:<br />
+	<textarea id="elm2" name="elm2" rows="12" cols="80" style="width: 80%">
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm2').xheditor(true,{upLinkUrl:"upload.php?immediate=1",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php?immediate=1",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php?immediate=1",upFlashExt:"swf",upMediaUrl:"upload.php?immediate=1",upMediaExt:"avi"});&lt;/p&gt;&lt;p&gt;&lt;br /&gt;&lt;/p&gt;&lt;p&gt;若返回的地址最前面为半角的感叹号：“!”，表示为&lt;span style="color:#fe2419;"&gt;立即上传模式&lt;/span&gt;，上传成功后不需要点“确定”按钮，随后自动插入到编辑器内容中。<BR>&nbsp;&lt;/p&gt;
 	</textarea>
 	<br/><br />
 	<input type="submit" name="save" value="Submit" />
