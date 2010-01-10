@@ -6,7 +6,7 @@
  * @site http://pirate9.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.3 build 091101
+ * @Version: 0.9.4 build 091231
  */
 function ubb2html(sUBB)
 {
@@ -20,56 +20,57 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/  /ig, '&nbsp;&nbsp;');
 	sHtml=sHtml.replace(/\r?\n/g,"<br />");
 	
-	sHtml=sHtml.replace(/\[code\]([\s\S]*?)\[\/code\]/ig,function(all,c){//code特殊处理
+	sHtml=sHtml.replace(/\[code\s*(=\s*([^\]]+?))?\]([\s\S]*?)\[\/code\]/ig,function(all,t,c){//code特殊处理
 		cnum++;arrcode[cnum]=all;
 		return "[\tubbcodeplace_"+cnum+"\t]";
 	});
 
 	sHtml=sHtml.replace(/\[(\/?)(b|u|i|s|sup|sub)\]/ig,'<$1$2>');
-	sHtml=sHtml.replace(/\[color\s*=\s*([^\]]+?)\]/ig,'<font color="$1">');
-	sHtml=sHtml.replace(/\[size\s*=\s*(\d+?)\]/ig,'<font size="$1">');
-	sHtml=sHtml.replace(/\[font\s*=\s*([^\]]+?)\]/ig,'<font face="$1">');
+	sHtml=sHtml.replace(/\[color\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,'<font color="$1">');
+	sHtml=sHtml.replace(/\[size\s*=\s*(\d+?)\s*\]/ig,'<font size="$1">');
+	sHtml=sHtml.replace(/\[font\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,'<font face="$1">');
 	sHtml=sHtml.replace(/\[\/(color|size|font)\]/ig,'</font>');
-	sHtml=sHtml.replace(/\[back\s*=\s*([^\]]+?)\]/ig,'<span style="background-color:$1;">');
+	sHtml=sHtml.replace(/\[back\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,'<span style="background-color:$1;">');
 	sHtml=sHtml.replace(/\[\/back\]/,'</span>');
-	for(i=0;i<3;i++)sHtml=sHtml.replace(/\[align\s*=\s*([^\]]+?)\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/ig,'<p align="$1">$2</p>');
-	sHtml=sHtml.replace(/\[img\]\s*([\s\S]+?)\s*\[\/img\]/ig,'<img src="$1" />');
-	sHtml=sHtml.replace(/\[img\s*=(?:\s*(\d+)\s*,\s*(\d+)\s*)?(?:,?\s*(\w+)\s*)?\]\s*([\s\S]+?)\s*\[\/img\]/ig,function(all,p1,p2,p3,src){
-		var str='<img src="'+src+'"',a=p3?p3:!p2?p1:'';
-		if(p2)str+=' width="'+p1+'" height="'+p2+'"';
+	for(i=0;i<3;i++)sHtml=sHtml.replace(/\[align\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/ig,'<p align="$1">$2</p>');
+	sHtml=sHtml.replace(/\[img\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/ig,'<img src="$1" />');
+	sHtml=sHtml.replace(/\[img\s*=(?:\s*(\d*)\s*,\s*(\d*)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*)?\s*\[\/img\]/ig,function(all,p1,p2,p3,src){
+		var str='<img src="'+src+'"',a=p3?p3:(isNaN(p1)?p1:'');
+		if(!isNaN(p1))str+=' width="'+p1+'"';
+		if(!isNaN(p2))str+=' height="'+p2+'"'
 		if(a)str+=' align="'+a+'"';
 		str+=' />';
 		return str;
 	});
-	sHtml=sHtml.replace(/\[url\]\s*([\s\S]+?)\s*\[\/url\]/ig,'<a href="$1">$1</a>');
-	sHtml=sHtml.replace(/\[url\s*=\s*([^\]\s]+?)\s*\]\s*([\s\S]+?)\s*\[\/url\]/ig,'<a href="$1">$2</a>');
-	sHtml=sHtml.replace(/\[email\]\s*([\s\S]+?)\s*\[\/email\]/ig,'<a href="mailto:$1">$1</a>');
-	sHtml=sHtml.replace(/\[email\s*=\s*([^\]\s]+?)\s*\]\s*([\s\S]+?)\s*\[\/email\]/ig,'<a href="mailto:$1">$2</a>');
+	sHtml=sHtml.replace(/\[url\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/url\]/ig,'<a href="$1">$1</a>');
+	sHtml=sHtml.replace(/\[url\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]\s*([\s\S]+?)\s*\[\/url\]/ig,'<a href="$1">$2</a>');
+	sHtml=sHtml.replace(/\[email\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/email\]/ig,'<a href="mailto:$1">$1</a>');
+	sHtml=sHtml.replace(/\[email\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]\s*([\s\S]+?)\s*\[\/email\]/ig,'<a href="mailto:$1">$2</a>');
 	sHtml=sHtml.replace(/\[quote\]([\s\S]*?)\[\/quote\]/ig,'<blockquote>$1</blockquote>');
-	sHtml=sHtml.replace(/\[flash\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*)?\]([\s\S]+?)\[\/flash\]/ig,function(all,w,h,url){
+	sHtml=sHtml.replace(/\[flash\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*)?\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/flash\]/ig,function(all,w,h,url){
 		if(!w)w=550;if(!h)h=400;
 		return '<embed type="application/x-shockwave-flash" src="'+url+'" wmode="opaque" quality="high" bgcolor="#ffffff" menu="false" play="true" loop="true" width="'+w+'" height="'+h+'"/>';
 	});
-	sHtml=sHtml.replace(/\[media\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d+)\s*)?)?\]([\s\S]+?)\[\/media\]/ig,function(all,w,h,play,url){
+	sHtml=sHtml.replace(/\[media\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d+)\s*)?)?\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/media\]/ig,function(all,w,h,play,url){
 		if(!w)w=550;if(!h)h=400;
 		return '<embed type="application/x-mplayer2" src="'+url+'" enablecontextmenu="false" autostart="'+(play=='1'?'true':'false')+'" width="'+w+'" height="'+h+'"/>';
 	});
-	sHtml=sHtml.replace(/\[table(?:\s*=\s*(\d{1,4}%?)\s*(?:,\s*([^\]]+)\s*)?)?]/ig,function(all,w,b){
+	sHtml=sHtml.replace(/\[table\s*(?:=\s*(\d{1,4}%?)\s*(?:,\s*([^\]"]+)(?:"[^\]]*?)?)?)?\s*\]/ig,function(all,w,b){
 		var str='<table';
 		if(w)str+=' width="'+w+'"';
 		if(b)str+=' bgcolor="'+b+'"';
 		return str+'>';
 	});
-	sHtml=sHtml.replace(/\[tr(?:\s*=(\s*[^\]]+))?\]/ig,function(all,bg){
+	sHtml=sHtml.replace(/\[tr\s*(?:=\s*([^\]"]+?)(?:"[^\]]*?)?)?\s*\]/ig,function(all,bg){
 		return '<tr'+(bg?' bgcolor="'+bg+'"':'')+'>';
 	});
-	sHtml=sHtml.replace(/\[td(?:\s*=\s*(\d{1,2})\s*,\s*(\d{1,2})\s*(?:,\s*(\d{1,4}%?))?)?\]/ig,function(all,col,row,w){
+	sHtml=sHtml.replace(/\[td\s*(?:=\s*(\d{1,2})\s*,\s*(\d{1,2})\s*(?:,\s*(\d{1,4}%?))?)?\s*\]/ig,function(all,col,row,w){
 		return '<td'+(col>1?' colspan="'+col+'"':'')+(row>1?' rowspan="'+row+'"':'')+(w?' width="'+w+'"':'')+'>';
 	});
 	sHtml=sHtml.replace(/\[\/(table|tr|td)\]/ig,'</$1>');
 	
 	sHtml=sHtml.replace(/\[\*\]([^\[]+)/ig,'<li>$1</li>');
-	sHtml=sHtml.replace(/\[list(?:\s*=\s*([^\]]+)\s*)?\]/ig,function(all,type){
+	sHtml=sHtml.replace(/\[list\s*(?:=\s*([^\]"]+?)(?:"[^\]]*?)?)?\s*\]/ig,function(all,type){
 		var str='<ul';
 		if(type)str+=' type="'+type+'"';
 		return str+'>';
@@ -86,10 +87,13 @@ function html2ubb(sHtml)
 	var mapSize={'xx-small':1,'8pt':1,'x-small':2,'10pt':2,'small':3,'12pt':3,'medium':4,'14pt':4,'large':5,'18pt':5,'x-large':6,'24pt':6,'xx-large':7,'36pt':7};
 	var i,sUBB=sHtml,arrcode=new Array(),cnum=0;
 	
+	sUBB = sUBB.replace(/<(script)(\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig, '');
+	sUBB = sUBB.replace(/<(style)(\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig, '');
+	
 	sUBB=sUBB.replace(/\r?\n/g,"");
 	sUBB=sUBB.replace(/<br\s*?\/?>/ig,"\r\n");
 	
-	sUBB=sUBB.replace(/\[code\]([\s\S]*?)\[\/code\]/ig,function(all,c){//code特殊处理
+	sUBB=sUBB.replace(/\[code\s*(=\s*([^\]]+?))?\]([\s\S]*?)\[\/code\]/ig,function(all,t,c){//code特殊处理
 		cnum++;arrcode[cnum]=all;
 		return "[\tubbcodeplace_"+cnum+"\t]";
 	});
@@ -126,8 +130,9 @@ function html2ubb(sHtml)
 	});
 	sUBB=sUBB.replace(/<img(\s+[^>]+?)\/?>/ig,function(all,attr){
 		var url=attr.match(/\s+src="([^"]+?)"/i),w=attr.match(/\s+width="(\d+)"/i),h=attr.match(/\s+height="(\d+)"/i),a=attr.match(/\s+align="(\w+)"/i),str='[img',p='';
-		if(w&&h)p+=w[1]+','+h[1];
-		if(a)p+=(w&&h?',':'')+a[1];
+		if(!url)return '';
+		if(w||h)p+=(w?w[1]:'')+','+(h?h[1]:'');
+		if(a)p+=(w||h?',':'')+a[1];
 		if(p)str+='='+p;
 		str+=']'+url[1];
 		return str+'[/img]';
@@ -135,12 +140,14 @@ function html2ubb(sHtml)
 	sUBB=sUBB.replace(/<blockquote(?: [^>]+)?>([\s\S]+?)<\/blockquote>/ig,'[quote]$1[/quote]');
 	sUBB=sUBB.replace(/<embed((?:\s+[^>]+)?(?:\s+type="application\/x-shockwave-flash"|\s+classid="clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000")[^>]*?)\/>/ig,function(all,attr){
 		var url=attr.match(/\s+src\s*=\s*"\s*([^"]+)\s*"/i),w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i),h=attr.match(/\s+height\s*=\s*"\s*([^"]+)\s*"/i),str='[flash';
+		if(!url)return '';
 		if(w&&h)str+='='+w[1]+','+h[1];
 		str+=']'+url[1];
 		return str+'[/flash]';
 	});
 	sUBB=sUBB.replace(/<embed((?:\s+[^>]+)?(?:\s+type="application\/x-mplayer2"|\s+classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6")[^>]*?)\/>/ig,function(all,attr){
 		var url=attr.match(/\s+src\s*=\s*"\s*([^"]+)\s*"/i),w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i),h=attr.match(/\s+height\s*=\s*"\s*([^"]+)\s*"/i),p=attr.match(/\s+autostart\s*=\s*"\s*([^"]+)\s*"/i),str='[media',auto='0';
+		if(!url)return '';
 		if(p)if(p[1]=='true')auto='1';
 		if(w&&h)str+='='+w[1]+','+h[1]+','+auto;
 		str+=']'+url[1];
