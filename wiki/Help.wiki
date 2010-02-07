@@ -446,3 +446,4 @@ focus和blur是编辑器聚焦和失去焦点时的回调函数
  * Ajax图片上传：[http://xheditor.com/demos/demo08.html]
  * 插件扩展：[http://xheditor.com/demos/demo09.html]
  * iframe调用文件上传：[http://xheditor.com/demos/demo10.html]
+ * 异步加载：[http://xheditor.com/demos/demo11.html]
