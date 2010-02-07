@@ -3,21 +3,17 @@
  * @requires xhEditor
  * 
  * @author Yanis.Wang<yanis.wang@gmail.com>
- * @site http://pirate9.com/
+ * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.4 build 091231
+ * @Version: 0.9.5 build 100207
  */
 function ubb2html(sUBB)
 {
-	var i,sHtml=sUBB,filter,arrcode=new Array(),cnum=0;
-	
+	var i,sHtml=String(sUBB),arrcode=new Array(),cnum=0;
+
 	sHtml=sHtml.replace(/&/ig, '&amp;');
-	filter={'<':'&lt;','>':'&gt;'};
-	sHtml=sHtml.replace(/[<>]/g,function(c){return filter[c];});
-	sHtml=sHtml.replace(/\t/ig, '&nbsp; &nbsp; &nbsp; &nbsp; ');
-	sHtml=sHtml.replace(/   /ig, '&nbsp; &nbsp;');
-	sHtml=sHtml.replace(/  /ig, '&nbsp;&nbsp;');
+	sHtml=sHtml.replace(/[<>]/g,function(c){return {'<':'&lt;','>':'&gt;'}[c];});
 	sHtml=sHtml.replace(/\r?\n/g,"<br />");
 	
 	sHtml=sHtml.replace(/\[code\s*(=\s*([^\]]+?))?\]([\s\S]*?)\[\/code\]/ig,function(all,t,c){//code特殊处理
@@ -34,7 +30,7 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/\[\/back\]/,'</span>');
 	for(i=0;i<3;i++)sHtml=sHtml.replace(/\[align\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/ig,'<p align="$1">$2</p>');
 	sHtml=sHtml.replace(/\[img\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/ig,'<img src="$1" />');
-	sHtml=sHtml.replace(/\[img\s*=(?:\s*(\d*)\s*,\s*(\d*)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*)?\s*\[\/img\]/ig,function(all,p1,p2,p3,src){
+	sHtml=sHtml.replace(/\[img\s*=(?:\s*(\d*%?)\s*,\s*(\d*%?)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*)?\s*\[\/img\]/ig,function(all,p1,p2,p3,src){
 		var str='<img src="'+src+'"',a=p3?p3:(isNaN(p1)?p1:'');
 		if(!isNaN(p1))str+=' width="'+p1+'"';
 		if(!isNaN(p2))str+=' height="'+p2+'"'
@@ -42,8 +38,9 @@ function ubb2html(sUBB)
 		str+=' />';
 		return str;
 	});
-	sHtml=sHtml.replace(/\[url\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/url\]/ig,'<a href="$1">$1</a>');
-	sHtml=sHtml.replace(/\[url\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]\s*([\s\S]+?)\s*\[\/url\]/ig,'<a href="$1">$2</a>');
+	sHtml=sHtml.replace(/\[emot\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\/\]/ig,'<img emot="$1" />');
+	sHtml=sHtml.replace(/\[url\]\s*(((?!")[\s\S])*?)(?:"[\s\S]*?)?\s*\[\/url\]/ig,'<a href="$1">$1</a>');
+	sHtml=sHtml.replace(/\[url\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]\s*([\s\S]*?)\s*\[\/url\]/ig,'<a href="$1">$2</a>');
 	sHtml=sHtml.replace(/\[email\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/email\]/ig,'<a href="mailto:$1">$1</a>');
 	sHtml=sHtml.replace(/\[email\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]\s*([\s\S]+?)\s*\[\/email\]/ig,'<a href="mailto:$1">$2</a>');
 	sHtml=sHtml.replace(/\[quote\]([\s\S]*?)\[\/quote\]/ig,'<blockquote>$1</blockquote>');
@@ -79,18 +76,24 @@ function ubb2html(sUBB)
 	
 	for(i=1;i<=cnum;i++)sHtml=sHtml.replace("[\tubbcodeplace_"+i+"\t]", arrcode[i]);
 
+	sHtml=sHtml.replace(/(^|<\/?\w+(?:\s+[^>]*?)?>)([^<$]+)/ig, function(all,tag,text){
+		return tag+text.replace(/[\t ]/g,function(c){return {'\t':'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',' ':'&nbsp;'}[c];});
+	});
+	
 	return sHtml;
 }
 
 function html2ubb(sHtml)
 {
 	var mapSize={'xx-small':1,'8pt':1,'x-small':2,'10pt':2,'small':3,'12pt':3,'medium':4,'14pt':4,'large':5,'18pt':5,'x-large':6,'24pt':6,'xx-large':7,'36pt':7};
-	var i,sUBB=sHtml,arrcode=new Array(),cnum=0;
+	var regSrc=/\s+src\s*=\s*(["']?)\s*(.+?)\s*\1(\s|$)/i,regWidth=/\s+width\s*=\s*(["']?)\s*(\d+(?:\.\d+)?%?)\s*\1(\s|$)/i,regHeight=/\s+height\s*=\s*(["']?)\s*(\d+(?:\.\d+)?%?)\s*\1(\s|$)/i,regBg=/(?:background|background-color|bgcolor)\s*[:=]\s*(["']?)\s*((rgb\s*\(\s*\d{1,3}%?,\s*\d{1,3}%?\s*,\s*\d{1,3}%?\s*\))|(#[0-9a-f]{3,6})|([a-z]{1,20}))\s*\1/i
+	var i,sUBB=String(sHtml),arrcode=new Array(),cnum=0;
+
+	sUBB=sUBB.replace(/\s*\r?\n\s*/g,'');
 	
-	sUBB = sUBB.replace(/<(script)(\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig, '');
-	sUBB = sUBB.replace(/<(style)(\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig, '');
-	
-	sUBB=sUBB.replace(/\r?\n/g,"");
+	sUBB = sUBB.replace(/<(script|style)(\s+[^>]*?)?>[\s\S]*?<\/\1>/ig, '');
+	sUBB = sUBB.replace(/<!--[\s\S]*?-->/ig,'');
+
 	sUBB=sUBB.replace(/<br\s*?\/?>/ig,"\r\n");
 	
 	sUBB=sUBB.replace(/\[code\s*(=\s*([^\]]+?))?\]([\s\S]*?)\[\/code\]/ig,function(all,t,c){//code特殊处理
@@ -98,12 +101,12 @@ function html2ubb(sHtml)
 		return "[\tubbcodeplace_"+cnum+"\t]";
 	});
 	
-	sUBB=sUBB.replace(/<(\/?)(b|u|i|s)(\s+[^>]+)?>/ig,'[$1$2]');
-	sUBB=sUBB.replace(/<(\/?)strong(\s+[^>]+)?>/ig,'[$1b]');
-	sUBB=sUBB.replace(/<(\/?)em(\s+[^>]+)?>/ig,'[$1i]');
-	sUBB=sUBB.replace(/<(\/?)(strike|del)(\s+[^>]+)?>/ig,'[$1s]');
-	sUBB=sUBB.replace(/<(\/?)(sup|sub)(\s+[^>]+)?>/ig,'[$1$2]');
-	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(span)(?:\s+[^>]+)? style="((?:[^"]*?;)*\s*(?:font-family|font-size|color|background|background-color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,style,content){
+	sUBB=sUBB.replace(/<(\/?)(b|u|i|s)(\s+[^>]*?)?>/ig,'[$1$2]');
+	sUBB=sUBB.replace(/<(\/?)strong(\s+[^>]*?)?>/ig,'[$1b]');
+	sUBB=sUBB.replace(/<(\/?)em(\s+[^>]*?)?>/ig,'[$1i]');
+	sUBB=sUBB.replace(/<(\/?)(strike|del)(\s+[^>]*?)?>/ig,'[$1s]');
+	sUBB=sUBB.replace(/<(\/?)(sup|sub)(\s+[^>]*?)?>/ig,'[$1$2]');
+	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)*\s*(?:font-family|font-size|color|background|background-color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,style,content){
 		var face=style.match(/(?:^|;)\s*font-family\s*:\s*([^;]+)/i),size=style.match(/(?:^|;)\s*font-size\s*:\s*([^;]+)/i),color=style.match(/(?:^|;)\s*color\s*:\s*([^;]+)/i),back=style.match(/(?:^|;)\s*(?:background|background-color)\s*:\s*([^;]+)/i),str=content;
 		if(face)str='[font='+face[1]+']'+str+'[/font]';
 		if(size)
@@ -111,13 +114,21 @@ function html2ubb(sHtml)
 			size=mapSize[size[1].toLowerCase()];
 			if(size)str='[size='+size+']'+str+'[/size]';
 		}
-		if(color)str='[color='+color[1]+']'+str+'[/color]';
-		if(back)str='[back='+back[1]+']'+str+'[/back]';
+		if(color)str='[color='+formatColor(color[1])+']'+str+'[/color]';
+		if(back)str='[back='+formatColor(back[1])+']'+str+'[/back]';
 		return str;
 	});
-	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(div|p)(?:\s+[^>]+?)?\s+align="(left|center|right)"[^>]*>(((?!<\1(\s+[^>]+)?>)[\s\S])+?)<\/\1>/ig,'[align=$2]$3[/align]');
-	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(center)(?:\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S])*?)<\/\1>/ig,'[align=center]$2[/align]');
-	sUBB=sUBB.replace(/<a(?:\s+[^>]+)?\s+href="\s*([^"]+?)\s*"[^>]*>([\s\S]+?)<\/a>/ig,function(all,url,text){
+	function formatColor(c)
+	{
+		var matchs;
+		if(matchs=c.match(/\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i)){c='#';for(var i=1;i<=3;i++)c+=(matchs[i]-0).toString(16);}
+		c=c.replace(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/i,'#$1$1$2$2$3$3');
+		return c;
+	}
+	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(div|p)(?:\s+[^>]*?)?\s+align\s*=\s*(["']?)\s*(left|center|right)\s*\2[^>]*>(((?!<\1(\s+[^>]*?)?>)[\s\S])+?)<\/\1>/ig,'[align=$3]$4[/align]');
+	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(center)(?:\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S])*?)<\/\1>/ig,'[align=center]$2[/align]');
+	sUBB=sUBB.replace(/<a(?:\s+[^>]*?)?\s+href=(["'])\s*(.+?)\s*\1[^>]*>\s*([\s\S]*?)\s*<\/a>/ig,function(all,q,url,text){
+		if(!(url&&text))return '';
 		var tag='url',str;
 		if(url.match(/^mailto:/i))
 		{
@@ -128,92 +139,92 @@ function html2ubb(sHtml)
 		if(url!=text)str+='='+url;
 		return str+']'+text+'[/'+tag+']';
 	});
-	sUBB=sUBB.replace(/<img(\s+[^>]+?)\/?>/ig,function(all,attr){
-		var url=attr.match(/\s+src="([^"]+?)"/i),w=attr.match(/\s+width="(\d+)"/i),h=attr.match(/\s+height="(\d+)"/i),a=attr.match(/\s+align="(\w+)"/i),str='[img',p='';
+	sUBB=sUBB.replace(/<img(\s+[^>]*?)\/?>/ig,function(all,attr){
+		var emot=attr.match(/\s+emot\s*=\s*(["']?)\s*(.+?)\s*\1(\s|$)/i);
+		if(emot)return '[emot='+emot[2]+'/]';
+		var url=attr.match(regSrc),w=attr.match(regWidth),h=attr.match(regHeight),a=attr.match(/\s+align\s*=\s*(["']?)\s*(\w+)\s*\1(\s|$)/i),str='[img',p='';
 		if(!url)return '';
-		if(w||h)p+=(w?w[1]:'')+','+(h?h[1]:'');
-		if(a)p+=(w||h?',':'')+a[1];
+		if(w||h)p+=(w?w[2]:'')+','+(h?h[2]:'');
+		if(a)p+=(w||h?',':'')+a[2];
 		if(p)str+='='+p;
-		str+=']'+url[1];
+		str+=']'+url[2];
 		return str+'[/img]';
 	});
-	sUBB=sUBB.replace(/<blockquote(?: [^>]+)?>([\s\S]+?)<\/blockquote>/ig,'[quote]$1[/quote]');
-	sUBB=sUBB.replace(/<embed((?:\s+[^>]+)?(?:\s+type="application\/x-shockwave-flash"|\s+classid="clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000")[^>]*?)\/>/ig,function(all,attr){
-		var url=attr.match(/\s+src\s*=\s*"\s*([^"]+)\s*"/i),w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i),h=attr.match(/\s+height\s*=\s*"\s*([^"]+)\s*"/i),str='[flash';
+	sUBB=sUBB.replace(/<blockquote(?:\s+[^>]*?)?>([\s\S]+?)<\/blockquote>/ig,'[quote]$1[/quote]');
+	sUBB=sUBB.replace(/<embed((?:\s+[^>]*?)?(?:\s+type\s*=\s*"\s*application\/x-shockwave-flash\s*"|\s+classid\s*=\s*"\s*clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000\s*")[^>]*?)\/>/ig,function(all,attr){
+		var url=attr.match(regSrc),w=attr.match(regWidth),h=attr.match(regHeight),str='[flash';
 		if(!url)return '';
-		if(w&&h)str+='='+w[1]+','+h[1];
-		str+=']'+url[1];
+		if(w&&h)str+='='+w[2]+','+h[2];
+		str+=']'+url[2];
 		return str+'[/flash]';
 	});
-	sUBB=sUBB.replace(/<embed((?:\s+[^>]+)?(?:\s+type="application\/x-mplayer2"|\s+classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6")[^>]*?)\/>/ig,function(all,attr){
-		var url=attr.match(/\s+src\s*=\s*"\s*([^"]+)\s*"/i),w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i),h=attr.match(/\s+height\s*=\s*"\s*([^"]+)\s*"/i),p=attr.match(/\s+autostart\s*=\s*"\s*([^"]+)\s*"/i),str='[media',auto='0';
+	sUBB=sUBB.replace(/<embed((?:\s+[^>]*?)?(?:\s+type\s*=\s*"\s*application\/x-mplayer2\s*"|\s+classid\s*=\s*"\s*clsid:6bf52a52-394a-11d3-b153-00c04f79faa6\s*")[^>]*?)\/>/ig,function(all,attr){
+		var url=attr.match(regSrc),w=attr.match(regWidth),h=attr.match(regHeight),p=attr.match(/\s+autostart\s*=\s*(["']?)\s*(.+?)\s*\1(\s|$)/i),str='[media',auto='0';
 		if(!url)return '';
-		if(p)if(p[1]=='true')auto='1';
-		if(w&&h)str+='='+w[1]+','+h[1]+','+auto;
-		str+=']'+url[1];
+		if(p)if(p[2]=='true')auto='1';
+		if(w&&h)str+='='+w[2]+','+h[2]+','+auto;
+		str+=']'+url[2];
 		return str+'[/media]';
 	});
-	var regbg=/(?:background|background-color|bgcolor)\s*[:=]\s*(["']?)\s*((rgb\s*\(\s*\d{1,3}%?,\s*\d{1,3}%?\s*,\s*\d{1,3}%?\s*\))|(#[0-9a-f]{3,6})|([a-z]{1,20}))\s*\1/i
-	sUBB=sUBB.replace(/<table(\s+[^>]+|)?>/ig,function(all,attr){
+	sUBB=sUBB.replace(/<table(\s+[^>]*?)?>/ig,function(all,attr){
 		var str='[table';
 		if(attr)
 		{
-			var w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i),b=attr.match(regbg);
+			var w=attr.match(regWidth),b=attr.match(regBg);
 			if(w)
 			{
-				str+='='+w[1];
+				str+='='+w[2];
 				if(b)str+=','+b[2];
 			}
 		}
 		return str+']';
 	});
-	sUBB=sUBB.replace(/<tr(\s+[^>]+|)?>/ig,function(all,attr){
+	sUBB=sUBB.replace(/<tr(\s+[^>]*?)?>/ig,function(all,attr){
 		var str='[tr';
 		if(attr)
 		{
-			var bg=attr.match(regbg)
+			var bg=attr.match(regBg)
 			if(bg)str+='='+bg[2];
 		}
 		return str+']';
 	});
-	sUBB=sUBB.replace(/<(?:th|td)(\s+[^>]+|)?>/ig,function(all,attr){
+	sUBB=sUBB.replace(/<(?:th|td)(\s+[^>]*?)?>/ig,function(all,attr){
 		var str='[td';
 		if(attr)
 		{
-			var col=attr.match(/\s+colspan\s*=\s*"\s*([^"]+)\s*"/i),row=attr.match(/\s+rowspan\s*=\s*"\s*([^"]+)\s*"/i),w=attr.match(/\s+width\s*=\s*"\s*([^"]+)\s*"/i);
-			col=col?col[1]:1;
-			row=row?row[1]:1;
+			var col=attr.match(/\s+colspan\s*=\s*(["']?)\s*(\d+)\s*\1(\s|$)/i),row=attr.match(/\s+rowspan\s*=\s*(["']?)\s*(\d+)\s*\1(\s|$)/i),w=attr.match(regWidth);
+			col=col?col[2]:1;
+			row=row?row[2]:1;
 			if(col>1||row>1||w)str+='='+col+','+row;
-			if(w)str+=','+w[1];
+			if(w)str+=','+w[2];
 		}
 		return str+']';
 	});
 	sUBB=sUBB.replace(/<\/(table|tr)>/ig,'[/$1]');
 	sUBB=sUBB.replace(/<\/(th|td)>/ig,'[/td]');
 	
-	sUBB=sUBB.replace(/<ul(\s+[^>]+|)?>/ig,function(all,attr){
+	sUBB=sUBB.replace(/<ul(\s+[^>]*?)?>/ig,function(all,attr){
 		var t;
-		if(attr)t=attr.match(/\s+type\s*=\s*"([^"]+)"/i);
-		return '[list'+(t?'='+t[1]:'')+']';
+		if(attr)t=attr.match(/\s+type\s*=\s*(["']?)\s*(.+?)\s*\1(\s|$)/i);
+		return '[list'+(t?'='+t[2]:'')+']';
 	});
-	sUBB=sUBB.replace(/<ol(\s+[^>]+)?>/ig,'[list=1]');
-	sUBB=sUBB.replace(/<li(\s+[^>]+)?>/ig,'[*]');
+	sUBB=sUBB.replace(/<ol(\s+[^>]*?)?>/ig,'[list=1]');
+	sUBB=sUBB.replace(/<li(\s+[^>]*?)?>/ig,'[*]');
 	sUBB=sUBB.replace(/<\/li>/ig,'');
 	sUBB=sUBB.replace(/<\/(ul|ol)>/ig,'[/list]');
-	sUBB=sUBB.replace(/<h([1-6])(\s+[^>]+)?>/ig,function(all,n){return '\r\n\r\n[size='+(7-n)+'][b]'});
+	sUBB=sUBB.replace(/<h([1-6])(\s+[^>]*?)?>/ig,function(all,n){return '\r\n\r\n[size='+(7-n)+'][b]'});
 	sUBB=sUBB.replace(/<\/h[1-6]>/ig,'[/b][/size]\r\n\r\n');
-	sUBB=sUBB.replace(/<address(\s+[^>]+)?>/ig,'\r\n[i]');
+	sUBB=sUBB.replace(/<address(\s+[^>]*?)?>/ig,'\r\n[i]');
 	sUBB=sUBB.replace(/<\/address>/ig,'[i]\r\n');
+	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(p)(?:\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n\r\n$2\r\n\r\n");
+	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(div)(?:\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n$2\r\n");
 	
-	sUBB=sUBB.replace(/<(p)(?:\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n\r\n$2\r\n\r\n");
-	sUBB=sUBB.replace(/<(div)(?:\s+[^>]+)?>(((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S]|<\1(\s+[^>]+)?>((?!<\1(\s+[^>]+)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n$2\r\n");
-	
-	sUBB=sUBB.replace(/(\s*?\r?\n){3,}/g,"\r\n\r\n");//限制最多2次换行
-	sUBB=sUBB.replace(/^(\r?\n)+/g,'');//清除开头换行
-	sUBB=sUBB.replace(/\s+$/g,'');//清除结尾换行
+	sUBB=sUBB.replace(/((\s|&nbsp;)*\r?\n){3,}/g,"\r\n\r\n");//限制最多2次换行
+	sUBB=sUBB.replace(/^((\s|&nbsp;)*\r?\n)+/g,'');//清除开头换行
+	sUBB=sUBB.replace(/((\s|&nbsp;)*\r?\n)+$/g,'');//清除结尾换行
 	
 	for(i=1;i<=cnum;i++)sUBB=sUBB.replace("[\tubbcodeplace_"+i+"\t]", arrcode[i]);
-	
+
 	sUBB=sUBB.replace(/<[^<>]+?>/g,'');//删除所有HTML标签
 	sUBB=sUBB.replace(/&lt;/ig, '<');
 	sUBB=sUBB.replace(/&gt;/ig, '>');

@@ -33,7 +33,7 @@ $('#elm1').xheditor(false);
 
 初始化示例代码：
 {{{
-$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,readonly:false,internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",keepValue:true,plugins:{}});
+$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,readonly:false,internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",plugins:{}});
 }}}
 
 tools：自定义工具按钮
@@ -134,7 +134,7 @@ height：编辑器高度
 
 loadCSS：加载样式
 {{{
-参数值：样式表网址字符串，例如：'1.gif'，或者是字符串数组，例如：['1.gif','2.gif']
+参数值：样式表网址字符串，例如：'1.css'，或者是字符串数组，例如：['1.css','2.css']
 }}}
 
 fullscreen：默认全屏显示
@@ -152,20 +152,36 @@ sourceMode:默认源代码模式
 参数值：true(源代码模式),false(编辑模式)
 }}}
 
-baseUrl:图片基址
-{{{
-参数值：图片的基本地址，应用在图片需要相对路径的编辑器环境中
-}}}
-
 forcePtag:强制P标签
 {{{
-参数值：true(强制使用P标签),false(不强制)
+参数值：true(强制使用P标签),false(不强制),默认true
 }}}
 
-keepValue:自动保存src和href属性值
+shortcuts:自定义键盘快捷方式
 {{{
-参数值：true(保存),false(不保存)
-说明：在IE等浏览器下使用编辑器，插入的图片和链接地址都会被浏览器自动转为绝对地址，比如输入：a.gif，自动会转为：http://test.com/a.gif
+参数：快捷键对应事件代码的对象数组
+示例：{'ctrl+enter':function(){$('#frmTest').submit();}}
+备注：1.0.0 beta2新添加
+}}}
+
+localUrl:本地URL地址强制转换方式选择
+{{{
+参数：abs(绝对路径),root(根路径),rel(相对路径)
+备注：1.0.0 beta2新添加
+}}}
+
+emotMark:是否在img标签上标注emot属性
+{{{
+参数：true(标注),false(不标注),默认为false
+说明：若使用了ubb插件，请设置此属性为true
+备注：1.0.0 beta2新添加
+}}}
+
+wordDeepClean:Word文档深入清理选项
+{{{
+参数：true(深入清理),false(不深入清理，保留style样式效果),默认为true
+说明：若网站应用需要保留更多的Word样式效果，请设置此值为false，不过产生的HTML代码体积会大大增大
+备注：1.0.0 beta2新添加
 }}}
 
 defLinkText:超链接的默认文字
@@ -190,6 +206,12 @@ modalTitle：showModal弹出窗口是否显示上方的标题栏
 {{{
 参数值：true(显示),false(不显示)
 说明：控制弹出窗口是否显示上方的标题栏，默认为显示，若需要显示一个更定制个性化的iframe窗口，可通过此参数隐藏上方的标题栏
+}}}
+
+upBtnText:上传按钮的文字
+{{{
+参数值：任意字符串,默认值：“上传”
+备注：1.0.0 beta2新添加
 }}}
 
 upLinkUrl:超链接文件上传接收URL
@@ -230,6 +252,12 @@ upMediaUrl:视频文件上传接收URL
 upMediaExt:视频上传前限制本地文件扩展名
 {{{
 参数值：视频上传前限制的文件扩展名列表，默认为：avi，建议与服务端扩展名检查列表一致
+}}}
+
+onUpload:文件上传成功回调函数
+{{{
+参数值：成功后需要执行的函数
+备注：1.0.0 beta2新添加
 }}}
 
 上传接口使用注意事项：
@@ -348,6 +376,14 @@ toggleShowBlocktag：切换块标签显示状态
 参数1：空(切换),true(切换为显示块标签),false(切换为不显示块标签)
 }}}
 
+addShortcuts：添加快捷键
+{{{
+参数1：快捷键值，例：'ctrl+enter'
+参数2：用户按下快捷键后需要响应的程序代码，例：function(){$('#frmTest').submit();}
+说明：允许为某个相同快捷键值重复添加多个响应代码
+备注：1.0.0 beta2新添加
+}}}
+
 showModal:显示模式窗口
 {{{
 参数1：模式窗口的标题title
@@ -374,7 +410,6 @@ inlineScript:是否清除内联代码
 internalStyle:是否清除内部样式
 inlineStyle:是否清除内联样式
 forcePtag:强制使用P标签
-keepValue:保持属性值
 upLinkUrl:超链接上传接口地址
 upLinkExt:超链接本地上传扩展限制
 upImgUrl:图片上传接口地址

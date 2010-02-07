@@ -24,16 +24,16 @@ margin-top: expression((TBWindowMargin = document.documentElement && document.do
 }
 #header-nav ul{
 	margin:0;
-	padding:10px 5px 0 20px;
+	padding:10px 5px 0 12px;
 	list-style:none;
 }
 #header-nav li{
-	display:inline;
+	float:left;
 	margin:0;
 	padding:0;
 }
 #header-nav a{
-	float:left;
+	display:block;
 	background:url("img/tabbgl.gif") no-repeat left top;
 	margin:0;
 	padding:0 0 0 4px;
