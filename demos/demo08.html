@@ -4,15 +4,23 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>xhEditor demo8 : Ajax文件上传</title>
 <link rel="stylesheet" href="common.css" type="text/css" media="screen" />
-<script type="text/javascript" src="../jquery/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="../jquery/jquery-1.4.1.min.js"></script>
 <script type="text/javascript" src="../xheditor-zh-cn.js"></script>
 <script type="text/javascript">
 $(pageInit);
 function pageInit()
 {
-	$('#elm1').xheditor(true,{upLinkUrl:"upload.php",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php",upFlashExt:"swf",upMediaUrl:"upload.php",upMediaExt:"avi"});
-	$('#elm2').xheditor(true,{upLinkUrl:"upload.php?immediate=1",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php?immediate=1",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php?immediate=1",upFlashExt:"swf",upMediaUrl:"upload.php?immediate=1",upMediaExt:"avi"});
+	$('#elm1').xheditor(true,{upLinkUrl:"upload.php",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php",upFlashExt:"swf",upMediaUrl:"upload.php",upMediaExt:"wmv,avi,wma,mp3,mid",shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm2').xheditor(true,{upLinkUrl:"upload.php?immediate=1",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php?immediate=1",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php?immediate=1",upFlashExt:"swf",upMediaUrl:"upload.php?immediate=1",upMediaExt:"wmv,avi,wma,mp3,mid",shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm3').xheditor(true,{upLinkUrl:"uploadattach.php",upLinkExt:"zip,rar,txt",shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm4').xheditor(true,{upImgUrl:"uploadthumb.php",upImgExt:"jpg,jpeg,gif,png",shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm5').xheditor(true,{upLinkUrl:"upload.php",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",onUpload:insertUpload,shortcuts:{'ctrl+enter':submitForm}});
 }
+function insertUpload(url)
+{
+	 $("#uploadList").append('<option value="'+url+'">'+url+'</option>');
+}
+function submitForm(){$('#frmDemo').submit();}
 </script>
 </head>
 <body>
@@ -28,9 +36,10 @@ function pageInit()
 		<li><a href="demo08.html"><span>Ajax上传</span></a></li>
 		<li><a href="demo09.html"><span>插件扩展</span></a></li>
 		<li><a href="demo10.html"><span>iframe调用上传</span></a></li>
+		<li><a href="demo11.html"><span>异步加载</span></a></li>
 	</ul>
 </div>
-<form method="post" action="test.php">
+<form id="frmDemo" method="post" action="show.php">
 	<h3>xhEditor demo8 : Ajax文件上传</h3>
 	普通上传模式:<br />
 	<textarea id="elm1" name="elm1" rows="12" cols="80" style="width: 80%">
@@ -38,8 +47,21 @@ function pageInit()
 	</textarea><br /><br />
 	立即上传模式:<br />
 	<textarea id="elm2" name="elm2" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm2').xheditor(true,{upLinkUrl:"upload.php?immediate=1",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php?immediate=1",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php?immediate=1",upFlashExt:"swf",upMediaUrl:"upload.php?immediate=1",upMediaExt:"avi"});&lt;/p&gt;&lt;p&gt;&lt;br /&gt;&lt;/p&gt;&lt;p&gt;若返回的地址最前面为半角的感叹号：“!”，表示为&lt;span style="color:#fe2419;"&gt;立即上传模式&lt;/span&gt;，上传成功后不需要点“确定”按钮，随后自动插入到编辑器内容中。<BR>&nbsp;&lt;/p&gt;
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm2').xheditor(true,{upLinkUrl:"upload.php?immediate=1",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php?immediate=1",upImgExt:"jpg,jpeg,gif,png",upFlashUrl:"upload.php?immediate=1",upFlashExt:"swf",upMediaUrl:"upload.php?immediate=1",upMediaExt:"avi"});&lt;/p&gt;&lt;p&gt;&lt;br /&gt;&lt;/p&gt;&lt;p&gt;若返回的地址最前面为&lt;span style="color:#fe2419;"&gt;&lt;strong&gt;半角的感叹号：“!”&lt;/strong&gt;&lt;/span&gt;，表示为&lt;strong&gt;&lt;span style="color:#fe2419;"&gt;立即上传模式&lt;/span&gt;&lt;/strong&gt;，上传成功后不需要点“确定”按钮，随后自动插入到编辑器内容中。&lt;br /&gt;&lt;/p&gt;
+	</textarea><br /><br />
+	带链接文字的附件上传:<br />
+	<textarea id="elm3" name="elm3" rows="12" cols="80" style="width: 80%">
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm3').xheditor(true,{upLinkUrl:"uploadattach.php",upLinkExt:"zip,rar,txt"});&lt;/p&gt;&lt;p&gt;&lt;br /&gt;&lt;/p&gt;&lt;p&gt;&lt;span style="color:#fe2419;"&gt;&lt;strong&gt;带链接文字的附件上传&lt;/strong&gt;&lt;/span&gt;仅可在“超链接”按钮中使用，URL链接和链接文字之间用&lt;span style="color:#fe2419;"&gt;&lt;strong&gt;半角的&lt;/strong&gt;&lt;/span&gt;&lt;span style="color:#fe2419;"&gt;&lt;strong&gt;逗号：“,”分隔&lt;/strong&gt;&lt;/span&gt;，例如：test.zip,download，前面为下载的URL链接，后面为超链接的文字内容，例如可以是附件的文件名。&lt;/p&gt;&lt;p&gt;特别说明：uploadattach.php是静态内容，仅为演示用，无论上传了什么文件都返回一个演示用的文件。&lt;/p&gt;
+	</textarea><br /><br />
+	缩略图上传模式:<br />
+	<textarea id="elm4" name="elm4" rows="12" cols="80" style="width: 80%">
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm4').xheditor(true,{upImgUrl:"uploadthumb.php",upImgExt:"jpg,jpeg,gif,png"});&lt;/p&gt;&lt;p&gt;&lt;br /&gt;&lt;/p&gt;&lt;p&gt;&lt;span style="color:#fe2419;"&gt;&lt;strong&gt;缩略图模式&lt;/strong&gt;&lt;/span&gt;仅可在“图片”按钮中使用，小图和大图链接之间用&lt;span style="color:#fe2419;"&gt;&lt;strong&gt;半角的&lt;/strong&gt;&lt;/span&gt;&lt;span style="color:#fe2419;"&gt;&lt;strong&gt;逗号：“,”分隔&lt;/strong&gt;&lt;/span&gt;，例如：small.gif,big.html，大图链接可以是图片，也可以是URL网址。&lt;/p&gt;&lt;p&gt;缩略图模式可与多文件插入混合使用，例如：1.gif,1.html|2.gif,2.html&lt;br /&gt;&lt;/p&gt;&lt;p&gt;特别说明：uploadthumb.php是静态内容，仅为演示用，无论上传了什么图片都返回内置的演示图片文件。&lt;/p&gt;
+	</textarea><br /><br />
+	上传文件URL回调:<br />
+	<textarea id="elm5" name="elm5" rows="12" cols="80" style="width: 80%">
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm5').xheditor(true,{upLinkUrl:"upload.php",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",onUpload:insertUpload});&lt;/p&gt;&lt;p&gt;&lt;br /&gt;&lt;/p&gt;&lt;p&gt;上传文件URL回调接口onUpload可扩展编辑器内置的文件上传功能，例如可以将编辑器中上传的图片应用在文章主图片上。&lt;/p&gt;
 	</textarea>
+	<br /><br />上传文件列表：<select id="uploadList" style="width:350px;"></select>
 	<br/><br />
 	<input type="submit" name="save" value="Submit" />
 	<input type="reset" name="reset" value="Reset" />

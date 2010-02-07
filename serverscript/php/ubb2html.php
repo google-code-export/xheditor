@@ -4,25 +4,23 @@
  * @requires xhEditor
  * 
  * @author Yanis.Wang<yanis.wang@gmail.com>
- * @site http://pirate9.com/
+ * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.5 build 091231
+ * @Version: 0.9.6 build 100207
  */
-
 function ubb2html($sUBB)
 {	
 	$sHtml=$sUBB;
-		
+	
+	global $emotPath,$cnum,$arrcode,$bUbb2htmlFunctionInit;$cnum=0;$arrcode=array();
+	$emotPath='../xheditor_emot/';//表情根路径
+	
 	$sHtml=preg_replace("/&/",'&amp;',$sHtml);
 	$sHtml=preg_replace("/</",'&lt;',$sHtml);
 	$sHtml=preg_replace("/>/",'&gt;',$sHtml);
-	$sHtml=preg_replace("/\t/",'&nbsp; &nbsp; &nbsp; &nbsp; ',$sHtml);
-	$sHtml=preg_replace("/   /",'&nbsp; &nbsp;',$sHtml);
-	$sHtml=preg_replace("/  /",'&nbsp;&nbsp;',$sHtml);
 	$sHtml=preg_replace("/\r?\n/",'<br />',$sHtml);
 	
-	global $cnum,$arrcode,$bUbb2htmlFunctionInit;$cnum=0;
 	if(!$bUbb2htmlFunctionInit){
 	function saveCodeArea($match)
 	{
@@ -54,9 +52,19 @@ function ubb2html($sUBB)
 		$a=$p3?$p3:(!is_numeric($p1)?$p1:'');
 		return '<img src="'.$src.'"'.(is_numeric($p1)?' width="'.$p1.'"':'').(is_numeric($p2)?' height="'.$p2.'"':'').($a?' align="'.$a.'"':'').' />';
 	}}
-	$sHtml=preg_replace_callback('/\[img\s*=(?:\s*(\d*)\s*,\s*(\d*)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/i','getImg',$sHtml);
-	$sHtml=preg_replace('/\[url\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/url\]/i','<a href="$1">$1</a>',$sHtml);
-	$sHtml=preg_replace('/\[url\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]\s*([\s\S]+?)\s*\[\/url\]/i','<a href="$1">$2</a>',$sHtml);
+	$sHtml=preg_replace_callback('/\[img\s*=(?:\s*(\d*%?)\s*,\s*(\d*%?)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/i','getImg',$sHtml);
+	if(!$bUbb2htmlFunctionInit){
+	function getEmot($match)
+	{
+		global $emotPath;
+		$arr=split(',',$match[1]);
+		if(!$arr[1]){$arr[1]=$arr[0];$arr[0]='default';}
+		$path=$emotPath.$arr[0].'/'.$arr[1].'.gif';
+		return '<img src="'.$path.'" />';
+	}}
+	$sHtml=preg_replace_callback('/\[emot\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\/\]/i','getEmot',$sHtml);
+	$sHtml=preg_replace('/\[url\]\s*(((?!")[\s\S])*?)(?:"[\s\S]*?)?\s*\[\/url\]/i','<a href="$1">$1</a>',$sHtml);
+	$sHtml=preg_replace('/\[url\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]\s*([\s\S]*?)\s*\[\/url\]/i','<a href="$1">$2</a>',$sHtml);
 	$sHtml=preg_replace('/\[email\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/email\]/i','<a href="mailto:$1">$1</a>',$sHtml);
 	$sHtml=preg_replace('/\[email\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]\s*([\s\S]+?)\s*\[\/email\]/i','<a href="mailto:$1">$2</a>',$sHtml);
 	$sHtml=preg_replace("/\[quote\]([\s\S]*?)\[\/quote\]/i",'<blockquote>$1</blockquote>',$sHtml);
@@ -105,6 +113,16 @@ function ubb2html($sUBB)
 
 	for($i=1;$i<=$cnum;$i++)$sHtml=str_replace("[\tubbcodeplace_".$i."\t]", $arrcode[$i],$sHtml);
 
+	if(!$bUbb2htmlFunctionInit){
+	function fixText($match)
+	{
+		$text=$match[2];
+		$text=preg_replace("/\t/",'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$text);
+		$text=preg_replace("/ /",'&nbsp;',$text);
+		return $match[1].$text;
+	}}
+	$sHtml=preg_replace_callback('/(^|<\/?\w+(?:\s+[^>]*?)?>)([^<$]+)/i','fixText',$sHtml);
+	
 	$bUbb2htmlFunctionInit=true;
 	
 	return $sHtml;

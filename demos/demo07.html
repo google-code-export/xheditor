@@ -4,15 +4,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>xhEditor demo7 : UBB可视化编辑</title>
 <link rel="stylesheet" href="common.css" type="text/css" media="screen" />
-<script type="text/javascript" src="../jquery/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="../jquery/jquery-1.4.1.min.js"></script>
 <script type="text/javascript" src="../xheditor-zh-cn.js"></script>
 <script type="text/javascript" src="../xheditor_plugins/ubb.js"></script>
 <script type="text/javascript">
 $(pageInit);
 function pageInit()
 {
-	$('#elm1').xheditor(true,{tools:'full',forcePtag:false,showBlocktag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb});
+	$('#elm1').xheditor(true,{tools:'full',forcePtag:false,showBlocktag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb,emots:{'qq':{'name':'QQ','count':55,'width':25,'height':25,'line':11}},emotMark:true,shortcuts:{'ctrl+enter':submitForm}});
 }
+function submitForm(){$('#frmDemo').submit();}
 </script>
 </head>
 <body>
@@ -28,9 +29,10 @@ function pageInit()
 		<li><a href="demo08.html"><span>Ajax上传</span></a></li>
 		<li><a href="demo09.html"><span>插件扩展</span></a></li>
 		<li><a href="demo10.html"><span>iframe调用上传</span></a></li>
+		<li><a href="demo11.html"><span>异步加载</span></a></li>
 	</ul>
 </div>
-<form method="post" action="test.php">
+<form id="frmDemo" method="post" action="showubb.php">
 	<h3>xhEditor demo7 : UBB可视化编辑</h3>
 	<textarea id="elm1" name="elm1" rows="12" cols="80" style="width: 80%">
 [b]粗体文字 Abc[/b]
@@ -43,11 +45,11 @@ function pageInit()
 [size=3]文字大小为 3[/size]
 [font=FangSong_GB2312]字体为仿宋[/font]
 [align=Center]内容居中[/align]
-[img]img/pirate9.gif[/img]
-[img=238,66]img/pirate9.gif[/img]
+[img]img/demo.gif[/img]
+[img=238,66]img/demo.gif[/img]
 [url]http://pirate9.com/[/url]
 [url=http://pirate9.com/]第9海盗[/url]
-[url=http://pirate9.com/][img]img/pirate9.gif[/img][/url]
+[url=http://pirate9.com/][img]img/demo.gif[/img][/url]
 [email]yanis.wang@gmail.com[/email]
 [email=yanis.wang@gmail.com]Yanis.Wang[/email]
 X[sup]2[/sup]
