@@ -22,7 +22,7 @@ xhEditor是一个基于jQuery开发的简单迷你并且高效的可视化XHTML�
  * Ajax图片上传：[http://xheditor.com/demos/demo08.html]
  * 插件扩展：[http://xheditor.com/demos/demo09.html]
  * iframe调用文件上传：[http://xheditor.com/demos/demo10.html]
- * 异步加载：[http://xheditor.com/demos/demo10.html]
+ * 异步加载：[http://xheditor.com/demos/demo11.html]
 
 ==Thanks(感谢)：==
  * jQuery：[http://jquery.com/]
