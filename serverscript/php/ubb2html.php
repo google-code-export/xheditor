@@ -7,7 +7,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.6 build 100207
+ * @Version: 0.9.6 build 100221
  */
 function ubb2html($sUBB)
 {	
@@ -16,11 +16,6 @@ function ubb2html($sUBB)
 	global $emotPath,$cnum,$arrcode,$bUbb2htmlFunctionInit;$cnum=0;$arrcode=array();
 	$emotPath='../xheditor_emot/';//表情根路径
 	
-	$sHtml=preg_replace("/&/",'&amp;',$sHtml);
-	$sHtml=preg_replace("/</",'&lt;',$sHtml);
-	$sHtml=preg_replace("/>/",'&gt;',$sHtml);
-	$sHtml=preg_replace("/\r?\n/",'<br />',$sHtml);
-	
 	if(!$bUbb2htmlFunctionInit){
 	function saveCodeArea($match)
 	{
@@ -28,7 +23,12 @@ function ubb2html($sUBB)
 		$cnum++;$arrcode[$cnum]=$match[0];
 		return "[\tubbcodeplace_".$cnum."\t]";
 	}}
-	$sHtml=preg_replace_callback("/\[code\s*(=\s*([^\]]+?))?\]([\s\S]*?)\[\/code\]/i",'saveCodeArea',$sHtml);
+	$sHtml=preg_replace_callback('/\[code\s*(?:=\s*((?:(?!")[\s\S])+?)(?:"[\s\S]*?)?)?\]([\s\S]*?)\[\/code\]/i','saveCodeArea',$sHtml);
+	
+	$sHtml=preg_replace("/&/",'&amp;',$sHtml);
+	$sHtml=preg_replace("/</",'&lt;',$sHtml);
+	$sHtml=preg_replace("/>/",'&gt;',$sHtml);
+	$sHtml=preg_replace("/\r?\n/",'<br />',$sHtml);
 	
 	$sHtml=preg_replace("/\[(\/?)(b|u|i|s|sup|sub)\]/i",'<$1$2>',$sHtml);
 	$sHtml=preg_replace('/\[color\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/i','<span style="color:$1;">',$sHtml);

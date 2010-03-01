@@ -6,7 +6,7 @@
 ' @site http://pirate9.com/
 ' @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
 ' 
-' @Version: 0.9.1 build 100102
+' @Version: 0.9.2 build 100225
 '
 ' 注：本程序仅为演示用，请您根据自己需求进行相应修改，或者重开发。
 
@@ -17,16 +17,17 @@ response.charset="UTF-8"
 response.write uploadfile("filedata")
 
 function uploadfile(inputname)
-	dim immediate,attachdir,dirtype,maxattachsize,upext
+	dim immediate,attachdir,dirtype,maxattachsize,upext,msgtype
 	immediate=Request.QueryString("immediate")
 	attachdir="upload"'上传文件保存路径，结尾不要带/
 	dirtype=1'1:按天存入目录 2:按月存入目录 3:按扩展名存目录  建议使用按天存
 	maxattachsize=2097152'最大上传大小，默认是2M
 	upext="txt,rar,zip,jpg,jpeg,gif,png,swf,wmv,avi,wma,mp3,mid"'上传扩展名
+	msgtype=2'返回上传参数的格式：1，只返回url，2，返回参数数组
 	
 	dim err,msg,upfile
 	err = ""
-	msg = ""
+	msg = "''"
 	
 	set upfile=new upfile_class
 	upfile.AllowExt=replace(upext,",",";")+";"
@@ -67,12 +68,17 @@ function uploadfile(inputname)
 			filename=DateFormat(now,"yyyymmddhhnnss")+cstr(cint(9999*Rnd))+"."+extension
 			target=attach_dir+filename
 			moveFile attach_dir+tmpfile,target
-			msg=target
-			if immediate="1" then msg="!"+msg
+			if immediate="1" then target="!"+target
+			target=jsonString(target)
+			if msgtype=1 then
+				msg="'"+target+"'"
+			else
+				msg="{url:'"+target+"',localname:'"+upfile.file(inputname).FileName+"',id:'1'}"
+			end if
 		end if
 	end if
 	set upfile=nothing
-	uploadfile="{err:'"+jsonString(err)+"',msg:'"+jsonString(msg)+"'}"
+	uploadfile="{err:'"+jsonString(err)+"',msg:"+msg+"}"
 end function
 
 function jsonString(str)
@@ -266,7 +272,7 @@ Public Sub GetData (MaxSize)
 			oUpFileStream.CopyTo tStream,iInfoEnd-iFormStart
 			tStream.Position = 0
 			tStream.Type = 2
-			tStream.CharSet = "gb2312"
+			tStream.CharSet = "utf-8"
 			sInfo = tStream.ReadText			
 			'取得表单项目名称
 			iFormStart = InStrB (iInfoEnd,RequestBinDate,sSpace)-1
