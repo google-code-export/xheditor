@@ -257,6 +257,7 @@ upMediaExt:视频上传前限制本地文件扩展名
 onUpload:文件上传成功回调函数
 {{{
 参数值：成功后需要执行的函数
+说明：这个函数执行时返回的值为上传程序返回的msg变量，可能为字符串或者数组，若为字符串则直接代表url，若是数组，则必需包含一个url的变量，其它可由可开发者自定义
 备注：1.0.0 beta2新添加
 }}}
 
@@ -294,7 +295,7 @@ c：样式表名称　t：插件名字(鼠标在按钮上方时显示)　s：快
 
 API接口示例代码：
 {{{
-var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction})[0].xheditor;
+var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction});
 editor.focus();
 editor.setSource('str')
 sHtml=editor.getSource()
@@ -395,8 +396,8 @@ showModal:显示模式窗口
 
 showIframeModal:显示iframe式的模式窗口
 {{{
-参数1：iframe的地址ifmurl
-参数2：模式窗口的标题
+参数1：模式窗口的标题
+参数2：iframe的地址ifmurl
 参数3：提供给目标iframe页面回调用的回调函数，可以在iframe页面中以这样的形式调用：callback('1.gif');
 参数4：模式窗口的宽度w
 参数5：模式窗口的高度h

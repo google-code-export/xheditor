@@ -16,7 +16,7 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/[<>]/g,function(c){return {'<':'&lt;','>':'&gt;'}[c];});
 	sHtml=sHtml.replace(/\r?\n/g,"<br />");
 	
-	sHtml=sHtml.replace(/\[code\s*(=\s*([^\]]+?))?\]([\s\S]*?)\[\/code\]/ig,function(all,t,c){//code特殊处理
+	sHtml=sHtml.replace(/\[code\s*(?:=\s*([^\]]+?))?\]([\s\S]*?)\[\/code\]/ig,function(all,t,c){//code特殊处理
 		cnum++;arrcode[cnum]=all;
 		return "[\tubbcodeplace_"+cnum+"\t]";
 	});
@@ -27,7 +27,7 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/\[font\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,'<font face="$1">');
 	sHtml=sHtml.replace(/\[\/(color|size|font)\]/ig,'</font>');
 	sHtml=sHtml.replace(/\[back\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,'<span style="background-color:$1;">');
-	sHtml=sHtml.replace(/\[\/back\]/,'</span>');
+	sHtml=sHtml.replace(/\[\/back\]/ig,'</span>');
 	for(i=0;i<3;i++)sHtml=sHtml.replace(/\[align\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/ig,'<p align="$1">$2</p>');
 	sHtml=sHtml.replace(/\[img\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/ig,'<img src="$1" />');
 	sHtml=sHtml.replace(/\[img\s*=(?:\s*(\d*%?)\s*,\s*(\d*%?)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*)?\s*\[\/img\]/ig,function(all,p1,p2,p3,src){
