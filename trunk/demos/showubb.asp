@@ -6,6 +6,7 @@ Response.Charset="UTF-8"
 dim sHtml
 sHtml=ubb2html(request("elm1"))'Server.HTMLEncode()
 sHtml=showCode(sHtml)
+sHtml=showFlv(sHtml)
 %><script language="javascript" runat="server">
 function showCode(sHtml)
 {
@@ -17,20 +18,21 @@ function showCode(sHtml)
 	});
 	return sHtml;
 }
+function showFlv(sHtml)
+{
+	sHtml=sHtml.replace(/\[flv\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*)?\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/flv\]/ig,function(all,w,h,url){
+		if(!w)w=480;if(!h)h=400;
+		return '<embed type="application/x-shockwave-flash" src="mediaplayer/player.swf" wmode="transparent" allowscriptaccess="always" allowfullscreen="true" quality="high" bgcolor="#ffffff" width="'+w+'" height="'+h+'" flashvars="file='+url+'" />';
+	});
+	return sHtml;
+}
 </script><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>UBB文章显示测试页</title>
 <style type="text/css">
-pre1 {
-margin: 5px 20px !important;
-border-color:#2080D0 !important;
-border-style:solid !important;
-border-width:1px 1px 1px 4px !important;
-padding: 5px !important;
-background: #f8f8f8 !important;
-word-break:break-word;word-wrap:break-word;white-space:-moz-pre-wrap;white-space:-hp-pre-wrap;white-space:-o-pre-wrap;white-space:-pre-wrap;white-space:pre;white-space:pre-wrap;white-space:pre-line;
+body{margin:5px;border:2px solid #ccc;padding:5px;}
 </style>
 <script type="text/javascript" src="syntaxhighlighter/shCore.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushXml.js"></script>

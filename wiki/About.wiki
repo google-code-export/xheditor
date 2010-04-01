@@ -5,7 +5,7 @@
 xhEditor是一个基于jQuery开发的简单迷你并且高效的可视化XHTML编辑器，基于网络访问并且兼容IE 6.0+,Firefox 3.0+,Opera 9.6+,Chrome 1.0+,Safari 3.22+。
 
 ==Features(特点)：==
- * Small：初始加载4个文件，包括：1个js(46k)+2个css(9k)+1个图片(5k)，总共60k。若js和css文件进行gzip压缩，可以进一步缩减为21k左右。
+ * Small：初始加载4个文件，包括：1个js(50k)+2个css(10k)+1个图片(5k)，总共65k。若js和css文件进行gzip压缩传输，可以进一步缩减为24k左右。即使加上jQuery的24K，总共仅加载48K。
  * Fast：基于jQuery引擎开发，提供高效的代码执行效率。
  * Simple：简单的调用方式，加一个class属性就能将您的textarea立马变成一个功能丰富的可视化编辑器。
  * Word：实现Word代码自动检测并清理，提供高效完美的Word代码过滤方案，生成代码最优化精简，但是却不丢失任何细节效果。
@@ -16,7 +16,7 @@ xhEditor是一个基于jQuery开发的简单迷你并且高效的可视化XHTML�
  * 自定义按钮：[http://xheditor.com/demos/demo02.html]
  * 皮肤选择：[http://xheditor.com/demos/demo03.html]
  * 其它选项：[http://xheditor.com/demos/demo04.html]
- * Javascript交互：[http://xheditor.com/demos/demo05.html]
+ * Javascript API交互：[http://xheditor.com/demos/demo05.html]
  * 非utf-8编码网页调用：[http://xheditor.com/demos/demo06.html]
  * UBB可视化编辑：[http://xheditor.com/demos/demo07.html]
  * Ajax图片上传：[http://xheditor.com/demos/demo08.html]
@@ -27,4 +27,4 @@ xhEditor是一个基于jQuery开发的简单迷你并且高效的可视化XHTML�
 ==Thanks(感谢)：==
  * jQuery：[http://jquery.com/]
  * TinyMCE：[http://tinymce.moxiecode.com/]
- * JS Compressor：[http://developer.yahoo.com/yui/compressor/]
+ * Closure Compiler：[http://code.google.com/closure/compiler/]

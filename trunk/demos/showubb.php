@@ -12,6 +12,13 @@ function showCode($match)
 	return '<pre class="brush: '.$match[1].';">'.$match[2].'</pre>';
 }
 $sHtml=preg_replace_callback('/\[code\s*(?:=\s*((?:(?!")[\s\S])+?)(?:"[\s\S]*?)?)?\]([\s\S]*?)\[\/code\]/i','showCode',$sHtml);
+function showFlv($match)
+{
+	$w=$match[1];$h=$match[2];$url=$match[3];
+	if(!$w)$w=480;if(!$h)$h=400;
+	return '<embed type="application/x-shockwave-flash" src="mediaplayer/player.swf" wmode="transparent" allowscriptaccess="always" allowfullscreen="true" quality="high" bgcolor="#ffffff" width="'.$w.'" height="'.$h.'" flashvars="file='.$url.'" />';
+}
+$sHtml=preg_replace_callback('/\[flv\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*)?\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/flv\]/i','showFlv',$sHtml);
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

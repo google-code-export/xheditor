@@ -7,7 +7,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.6 build 100221
+ * @Version: 0.9.7 build 100302
  */
 function ubb2html($sUBB)
 {	
@@ -58,7 +58,7 @@ function ubb2html($sUBB)
 	{
 		global $emotPath;
 		$arr=split(',',$match[1]);
-		if(!$arr[1]){$arr[1]=$arr[0];$arr[0]='default';}
+		if(!isset($arr[1])){$arr[1]=$arr[0];$arr[0]='default';}
 		$path=$emotPath.$arr[0].'/'.$arr[1].'.gif';
 		return '<img src="'.$path.'" />';
 	}}
@@ -72,7 +72,7 @@ function ubb2html($sUBB)
 	function getFlash($match)
 	{
 		$w=$match[1];$h=$match[2];$url=$match[3];
-		if(!$w)$w=550;if(!$h)$h=400;
+		if(!$w)$w=480;if(!$h)$h=400;
 		return '<embed type="application/x-shockwave-flash" src="'.$url.'" wmode="opaque" quality="high" bgcolor="#ffffff" menu="false" play="true" loop="true" width="'.$w.'" height="'.$h.'" />';
 	}}
 	$sHtml=preg_replace_callback('/\[flash\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*)?\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/flash\]/i','getFlash',$sHtml);
@@ -80,7 +80,7 @@ function ubb2html($sUBB)
 	function getMedia($match)
 	{
 		$w=$match[1];$h=$match[2];$play=$match[3];$url=$match[4];
-		if(!$w)$w=550;if(!$h)$h=400;
+		if(!$w)$w=480;if(!$h)$h=400;
 		return '<embed type="application/x-mplayer2" src="'.$url.'" enablecontextmenu="false" autostart="'.($play=='1'?'true':'false').'" width="'.$w.'" height="'.$h.'" />';
 	}}
 	$sHtml=preg_replace_callback('/\[media\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*(\d+)\s*)?)?\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/media\]/i','getMedia',$sHtml);
@@ -100,7 +100,7 @@ function ubb2html($sUBB)
 	}}
 	$sHtml=preg_replace_callback("/\[td\s*(?:=\s*(\d{1,2})\s*,\s*(\d{1,2})\s*(?:,\s*(\d{1,4}%?))?)?\s*\]/i",'getTD',$sHtml);
 	$sHtml=preg_replace("/\[\/(table|tr|td)\]/i",'</$1>',$sHtml);
-	$sHtml=preg_replace("/\[\*\]([^\[]+)/i",'<li>$1</li>',$sHtml);
+	$sHtml=preg_replace("/\[\*\]((?:(?!\[\*\]|\[\/list\]|\[list\s*(?:=[^\]]+)?\])[\s\S])+)/i",'<li>$1</li>',$sHtml);
 	if(!$bUbb2htmlFunctionInit){
 	function getUL($match)
 	{

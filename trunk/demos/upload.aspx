@@ -112,7 +112,7 @@ string upLoadFile(string inputname)
                 if (immediate == "1") target = "!" + target;
 				target=jsonString(target);
 				if(msgtype==1)msg = "'"+target+"'";
-				else msg = "{url:'"+target+"',localname:'"+postedfile.FileName+"',id:'1'}";
+				else msg = "{'url':'"+target+"','localname':'"+postedfile.FileName+"','id':'1'}";
             }
         }
         
@@ -121,7 +121,7 @@ string upLoadFile(string inputname)
     postedfile = null;
     filecollection = null;
 
-    return "{err:'" + jsonString(err) + "',msg:" + msg + "}";
+    return "{'err':'" + jsonString(err) + "','msg':" + msg + "}";
 }
 
 

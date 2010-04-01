@@ -5,7 +5,7 @@
 
 1. 下载xhEditor最新版本。下载地址：[http://code.google.com/p/xheditor/downloads/list]
 
-2. 解压zip文件，将其中的xheditor.js以及xheditor_emot、xheditor_plugins和xheditor_skin三个文件夹上传到网站相应目录
+2. 解压压缩文件，将其中的xheditor.js以及xheditor_emot、xheditor_plugins和xheditor_skin三个文件夹上传到网站相应目录
 
 3. 在相应html文件的head标签结束之前添加
 {{{
@@ -14,26 +14,26 @@
 
 4. 调用方法有两种：
 {{{
-方法1：在textarea上添加属性： class="xheditor"(设置为xheditor-mini和xheditor-simple，分别默认加载迷你和简单工具栏)
-方法2：在textarea上添加属性： xheditor="{skin:'default'}"，此方法支持除插件之外的所有初始化参数方法
-方法3：在您的页面初始JS代码里加上： $('#elm1').xheditor(true);
+方法1：在textarea上添加属性： class="xheditor {skin:'default'}"，前面主参数也可以是xheditor-mini和xheditor-simple，分别加载迷你和简单工具栏，后面详细参数可以省略
+方法2：在您的页面初始JS代码里加上： $('#elm1').xheditor();
 
 例如：
 $({
-$('#elm1').xheditor(true);
+$('#elm1').xheditor();
 });
 
-相应的隐藏编辑的代码为：
+相应的删除编辑器的代码为：
 $('#elm1').xheditor(false);
 }}}
 
+重要说明：2种初始化方法只能选择其中一种，不能混合使用，优先级分别是：方法1>方法2，例如用了方法1，方法2就无法使用了
 
 
 ==初始化参数说明==
 
 初始化示例代码：
 {{{
-$('#elm1').xheditor(true,{tools:'full',skin:'default',showBlocktag:true,readonly:false,internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",plugins:{}});
+$('#elm1').xheditor({tools:'full',skin:'default',showBlocktag:true,readonly:false,internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",plugins:{}});
 }}}
 
 tools：自定义工具按钮
@@ -170,10 +170,23 @@ localUrl:本地URL地址强制转换方式选择
 备注：1.0.0 beta2新添加
 }}}
 
-emotMark:是否在img标签上标注emot属性
+emotMark:是否在表情img标签上标注emot属性
 {{{
 参数：true(标注),false(不标注),默认为false
 说明：若使用了ubb插件，请设置此属性为true
+备注：1.0.0 beta2新添加
+}}}
+
+emots:添加自定义表情
+{{{
+参数：可定义多个JSON对象数组，示例如下：{qq:{name:'QQ',count:55,width:25,height:25,line:11},msn:{name:'MSN',count:40,width:22,height:22,line:8}}
+	name：表情分组名
+	count：表情数量
+	list：表情列表，例：{test1:'表情1',test2:'表情2'}，键名代表文件名，扩展名必需为gif，键值代表alt信息
+	width：单个表情区域宽度，必需大于或等于表情最大宽度
+	height：单表情区域高度，必需大于或等于表情最大高度
+	line：单行显示表情数量
+	说明：count和list必需选其中一个值，注意count模式插入表情img的alt为空
 备注：1.0.0 beta2新添加
 }}}
 
@@ -182,6 +195,12 @@ wordDeepClean:Word文档深入清理选项
 参数：true(深入清理),false(不深入清理，保留style样式效果),默认为true
 说明：若网站应用需要保留更多的Word样式效果，请设置此值为false，不过产生的HTML代码体积会大大增大
 备注：1.0.0 beta2新添加
+}}}
+
+hoverExecDelay:悬停自动执行延迟的时间
+{{{
+参数：数值(单位毫秒)，默认为100，设置为-1关闭此功能
+备注：1.0.0 rc2新添加
 }}}
 
 defLinkText:超链接的默认文字
@@ -202,7 +221,7 @@ modalHeight:showModal弹出窗口的默认高度
 说明：弹出窗口的默认高度
 }}}
 
-modalTitle：showModal弹出窗口是否显示上方的标题栏
+modalTitle:showModal弹出窗口是否显示上方的标题栏
 {{{
 参数值：true(显示),false(不显示)
 说明：控制弹出窗口是否显示上方的标题栏，默认为显示，若需要显示一个更定制个性化的iframe窗口，可通过此参数隐藏上方的标题栏
@@ -217,6 +236,7 @@ upBtnText:上传按钮的文字
 upLinkUrl:超链接文件上传接收URL
 {{{
 参数值：接收用户上传的服务器端程序URL，默认留空为禁用超链接上传功能，具体使用方法请参考demo8演示文件
+注：可使用内置变量：{editorRoot}，代表当前编辑器的根路径，例：{editorRoot}upload.php
 }}}
 
 upLinkExt:超链接上传前限制本地文件扩展名
@@ -227,6 +247,7 @@ upLinkExt:超链接上传前限制本地文件扩展名
 upImgUrl:图片文件上传接收URL
 {{{
 参数值：接收用户上传的服务器端程序URL，默认留空为禁用上传功能，具体使用方法请参考demo8演示文件
+注：可使用内置变量：{editorRoot}，代表当前编辑器的根路径，例：{editorRoot}upload.php
 }}}
 
 upImgExt:图片上传前限制本地文件扩展名
@@ -237,6 +258,7 @@ upImgExt:图片上传前限制本地文件扩展名
 upFlashUrl:动画文件上传接收URL
 {{{
 参数值：接收用户上传的服务器端程序URL，默认留空为禁用上传功能，具体使用方法请参考demo8演示文件
+注：可使用内置变量：{editorRoot}，代表当前编辑器的根路径，例：{editorRoot}upload.php
 }}}
 
 upFlashExt:动画上传前限制本地文件扩展名
@@ -247,6 +269,7 @@ upFlashExt:动画上传前限制本地文件扩展名
 upMediaUrl:视频文件上传接收URL
 {{{
 参数值：接收用户上传的服务器端程序URL，默认留空为禁用上传功能，具体使用方法请参考demo8演示文件
+注：可使用内置变量：{editorRoot}，代表当前编辑器的根路径，例：{editorRoot}upload.php
 }}}
 
 upMediaExt:视频上传前限制本地文件扩展名
@@ -282,7 +305,11 @@ demos目录中的upload.php仅为演示代码，若您使用的是其它的服�
 plugins:自定义按钮之插件扩展
 {{{
 插件对象的属性解释：
-c：样式表名称　t：插件名字(鼠标在按钮上方时显示)　s：快捷方式　e：按钮点击后需要执行的代码
+c：样式表名称
+t：插件名字(鼠标在按钮上方时显示)
+s：快捷方式，例："ctrl+enter"
+h：是否鼠标悬停直接执行,1:直接执行(省略当前值代表不直接执行)
+e：按钮点击后需要执行的代码
 
 特别说明：
 如果您希望样式表存储在系统自带的模板目录ui.css中，请将插件对象的样式名留空，则会自动按照插件名来调用相应的样式，例如：xhEdtBtnCut、xhEdtBtnCopy，其中的Cut和Copy是插件名
@@ -295,7 +322,7 @@ c：样式表名称　t：插件名字(鼠标在按钮上方时显示)　s：快
 
 API接口示例代码：
 {{{
-var editor=$('#elm1').xheditor(true,{tools:'full',skin:'default',internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction});
+var editor=$('#elm1').xheditor({tools:'full',skin:'default',internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,beforeSetSource:ubb2html,beforeGetSource:html2ubb,focus:focusAction,blur:blurAction});
 editor.focus();
 editor.setSource('str')
 sHtml=editor.getSource()
@@ -340,16 +367,19 @@ getSelect：返回当前选中的内容
 pasteHTML：粘贴HTML内容到编辑器当前光标处
 {{{
 参数1：要粘贴的HTML代码，例：'<p>uuu</p>'
+参数2：是否覆盖粘贴，留空(覆盖粘贴)、true(粘贴在光标选择区域之前)、false(粘贴在光标选择区域之后)
 }}}
 
 pasteText：粘贴文本到编辑器当前光标处
 {{{
 参数1：要粘贴的文本，例：'这里的内容完全原样显示<strong>aaa</strong>'
+参数2：是否覆盖粘贴，留空(覆盖粘贴)、true(粘贴在光标选择区域之前)、false(粘贴在光标选择区域之后)
 }}}
 
 formatXHTML：格式化XHTML代码
 {{{
 参数1：需要格式化的HTML代码，例：'<b>aaa</b>'，返回'<strong>aaa</strong>'
+参数2：是否代码缩进换行,true(执行缩进格式化),false(不执行缩进格式化),默认为false
 }}}
 
 toggleSource：在源代码模式和编辑模式之间切换
@@ -385,6 +415,12 @@ addShortcuts：添加快捷键
 备注：1.0.0 beta2新添加
 }}}
 
+exec：立即执行按钮及插件
+{{{
+参数1：工具按钮名称(不区分大小写)，例：Link、img
+说明：此函数可以在插件内部或者外部Javascript代码中进行调用
+}}}
+
 showModal:显示模式窗口
 {{{
 参数1：模式窗口的标题title
@@ -397,7 +433,7 @@ showModal:显示模式窗口
 showIframeModal:显示iframe式的模式窗口
 {{{
 参数1：模式窗口的标题
-参数2：iframe的地址ifmurl
+参数2：iframe的地址ifmurl，可使用内置变量：{editorRoot}，代表当前编辑器的根路径，例：{editorRoot}xheditor_plugins/test.html
 参数3：提供给目标iframe页面回调用的回调函数，可以在iframe页面中以这样的形式调用：callback('1.gif');
 参数4：模式窗口的宽度w
 参数5：模式窗口的高度h
@@ -441,7 +477,7 @@ focus和blur是编辑器聚焦和失去焦点时的回调函数
  * 自定义按钮：[http://xheditor.com/demos/demo02.html]
  * 皮肤选择：[http://xheditor.com/demos/demo03.html]
  * 其它选项：[http://xheditor.com/demos/demo04.html]
- * Javascript交互：[http://xheditor.com/demos/demo05.html]
+ * Javascript API交互：[http://xheditor.com/demos/demo05.html]
  * 非utf-8编码网页调用：[http://xheditor.com/demos/demo06.html]
  * UBB可视化编辑：[http://xheditor.com/demos/demo07.html]
  * Ajax图片上传：[http://xheditor.com/demos/demo08.html]
