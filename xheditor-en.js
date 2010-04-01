@@ -1,27 +1,35 @@
 /*!
  * xhEditor - WYSIWYG XHTML Editor
  * @requires jQuery v1.4.2
- * 
+ *
  * @author Yanis.Wang<yanis.wang@gmail.com>
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
- * 
- * @Version: 1.0.0 rc1 build 100301
+ *
+ * @Version: 1.0.0 rc2 build 100401
  */
 (function($){
-$.fn.xheditor=function(bInit,options)
+$.fn.xheditor=function(options)
 {
 	var arrSuccess=[];
 	this.each(function(){
-		if(this.tagName.toLowerCase()!='textarea')return;
-		if(bInit)//初始化
+		if(!$.nodeName(this,'textarea'))return;
+		if(options===false)//卸载
+		{
+			if(this.editor)
+			{
+				this.editor.remove();
+				this.editor=null;
+			}
+		}
+		else//初始化
 		{
 			if(!this.editor)
 			{
-				var tOptions=$(this).attr('xheditor');
+				var tOptions=/({.*})/.exec($(this).attr('class'));
 				if(tOptions)
 				{
-					try{tOptions=eval('('+tOptions+')');}catch(ex){};
+					try{tOptions=eval('('+tOptions[1]+')');}catch(ex){};
 					options=$.extend({},tOptions,options );
 				}
 				var editor=new $.xheditor(this,options);
@@ -30,34 +38,26 @@ $.fn.xheditor=function(bInit,options)
 					this.editor=editor;
 					arrSuccess.push(editor);
 				}
-				else editor=null;	
-			}
-		}
-		else//卸载
-		{
-			if(this.editor)
-			{
-				this.editor.remove();
-				this.editor=null;
+				else editor=null;
 			}
 		}
 	});
 	if(arrSuccess.length==0)arrSuccess=false;
 	if(arrSuccess.length==1)arrSuccess=arrSuccess[0];
 	return arrSuccess;
-	
+
 }
-var xCount=0,browerVer=$.browser.version,isIE=$.browser.msie,isMozilla=$.browser.mozilla,isSafari=$.browser.safari,bShowPanel=false,bClickCancel=true;
-var _jPanel,_jShadow,_jCntLine,_jPanelButton;
-var jsUrl;
+var xCount=0,browerVer=$.browser.version,isIE=$.browser.msie,isMozilla=$.browser.mozilla,isSafari=$.browser.safari,isOpera=$.browser.opera,bShowPanel=false,bClickCancel=true;
+var _jPanel,_jShadow,_jCntLine,_jPanelButton,_jTempIframe;
+var editorRoot;
 $('script[src*=xheditor]').each(function(){
 	var s=this.src;
-	if(s.match(/xheditor[^\/]*\.js/i)){jsUrl=s.replace(/[\?#].*$/, '').replace(/(^|[\/\\])[^\/]*$/, '$1');return false;}
+	if(s.match(/xheditor[^\/]*\.js/i)){editorRoot=s.replace(/[\?#].*$/, '').replace(/(^|[\/\\])[^\/]*$/, '$1');return false;}
 });
 
-var specialKeys={ 27: 'esc', 9: 'tab', 32:'space', 13: 'enter', 8:'backspace', 145: 'scroll', 
+var specialKeys={ 27: 'esc', 9: 'tab', 32:'space', 13: 'enter', 8:'backspace', 145: 'scroll',
           20: 'capslock', 144: 'numlock', 19:'pause', 45:'insert', 36:'home', 46:'del',
-          35:'end', 33: 'pageup', 34:'pagedown', 37:'left', 38:'up', 39:'right',40:'down', 
+          35:'end', 33: 'pageup', 34:'pagedown', 37:'left', 38:'up', 39:'right',40:'down',
           112:'f1',113:'f2', 114:'f3', 115:'f4', 116:'f5', 117:'f6', 118:'f7', 119:'f8', 120:'f9', 121:'f10', 122:'f11', 123:'f12' };
 var itemColors=['#FFFFFF','#CCCCCC','#C0C0C0','#999999','#666666','#333333','#000000','#FFCCCC','#FF6666','#FF0000','#CC0000','#990000','#660000','#330000','#FFCC99','#FF9966','#FF9900','#FF6600','#CC6600','#993300','#663300','#FFFF99','#FFFF66','#FFCC66','#FFCC33','#CC9933','#996633','#663333','#FFFFCC','#FFFF33','#FFFF00','#FFCC00','#999900','#666600','#333300','#99FF99','#66FF99','#33FF33','#33CC00','#009900','#006600','#003300','#99FFFF','#33FFFF','#66CCCC','#00CCCC','#339999','#336666','#003333','#CCFFFF','#66FFFF','#33CCFF','#3366FF','#3333FF','#000099','#000066','#CCCCFF','#9999FF','#6666CC','#6633FF','#6600CC','#333399','#330099','#FFCCFF','#FF99FF','#CC66CC','#CC33CC','#993399','#663366','#330033'];
 var arrBlocktag=[{n:'p',t:'Paragraph'},{n:'h1',t:'Heading 1'},{n:'h2',t:'Heading 2'},{n:'h3',t:'Heading 3'},{n:'h4',t:'Heading 4'},{n:'h5',t:'Heading 5'},{n:'h6',t:'Heading 6'},{n:'pre',t:'Preformatted'},{n:'address',t:'Address'}];
@@ -70,19 +70,20 @@ var htmlImg='<div>Img URL:&nbsp; <input type="text" id="xheImgSrc" value="http:/
 var htmlFlash='<div>Flash URL:<input type="text" id="xheFlashSrc" value="http://" class="xheText" /></div><div>Dimension:<input type="text" id="xheFlashWidth" style="width:40px;" value="480" /> x <input type="text" id="xheFlashHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
 var htmlMedia='<div>Media URL:<input type="text" id="xheMediaSrc" value="http://" class="xheText" /></div><div>Dimension:<input type="text" id="xheMediaWidth" style="width:40px;" value="480" /> x <input type="text" id="xheMediaHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
 var htmlTable='<div>Rows&Cols:&nbsp;&nbsp;<input type="text" id="xheTableRows" style="width:40px;" value="3" /> x <input type="text" id="xheTableColumns" style="width:40px;" value="2" /></div><div>Headers:&nbsp;&nbsp;&nbsp;&nbsp;<select id="xheTableHeaders"><option selected="selected" value="">None</option><option value="row">First row</option><option value="col">First column</option><option value="both">Both</option></select></div><div>Dimension:&nbsp;&nbsp;<input type="text" id="xheTableWidth" style="width:40px;" value="200" /> x <input type="text" id="xheTableHeight" style="width:40px;" value="" /></div><div>Border:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="xheTableBorder" style="width:40px;" value="1" /></div><div>CellSpacing:<input type="text" id="xheTableCellSpacing" style="width:40px;" value="1" /> CellPadding:<input type="text" id="xheTableCellPadding" style="width:40px;" value="1" /></div><div>Align:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="xheTableAlign"><option selected="selected" value="">Default</option><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></div><div>Caption:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="xheTableCaption" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
-var htmlAbout='<div style="width:200px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.0.0 rc1 build 100301</p><p>xhEditor is a simple,small,fast WYSWYG(What You See What You Get) XHTML editor based by jQuery.</p><p><a href="http://xheditor.com/" target="_blank">http://xheditor.com/</a></p></div>';
-var itemEmots={'default':{'name':'Default','width':25,'height':18,'line':6,'list':{'biggrin':'Big grin','smile':'Smile','titter':'Titter','lol':'Lol','call':'Call','victory':'Victory','shy':'Shy','handshake':'Handshake','kiss':'Kiss','sad':'Sad','cry':'Cry','huffy':'Huffy','mad':'Mad','tongue':'Tongue','sweat':'Sweat','shocked':'Shocked','time':'Time','hug':'Hug'}}};
-var arrTools={GStart:{},GEnd:{},Separator:{},Cut:{t:'Cut (Ctrl+X)'},Copy:{t:'Copy (Ctrl+C)'},Paste:{t:'Paste (Ctrl+V)'},Pastetext:{t:'Paste as plain text'},Blocktag:{t:'Block tag'},Fontface:{t:'Font family'},FontSize:{t:'Font size'},Bold:{t:'Bold (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'Italic (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'Underline (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'Strikethrough (Ctrl+S)',s:'Ctrl+S'},FontColor:{t:'Select text color'},BackColor:{t:'Select background color'},Removeformat:{t:'Remove formatting'},Align:{t:'Align'},List:{t:'List'},Outdent:{t:'Outdent (Shift+Tab)',s:'Shift+Tab'},Indent:{t:'Indent (Tab)',s:'Tab'},Link:{t:'Insert/edit link'},Unlink:{t:'Unlink'},Img:{t:'Insert/edit image'},Flash:{t:'Insert/edit flash'},Media:{t:'Insert/edit media'},Emot:{t:'Emotions'},Table:{t:'Insert a new table'},Source:{t:'Edit source code'},Preview:{t:'Preview'},Fullscreen:{t:'Toggle fullscreen (Esc)',s:'Esc'},About:{t:'About xhEditor'}};
+var htmlAbout='<div style="width:200px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.0.0 rc2 build 100401</p><p>xhEditor is a simple,small,fast WYSWYG(What You See What You Get) XHTML editor based by jQuery.</p><p><a href="http://xheditor.com/" target="_blank">http://xheditor.com/</a></p></div>';
+var itemEmots={'default':{name:'Default',width:25,height:18,line:6,list:{'biggrin':'Big grin','smile':'Smile','titter':'Titter','lol':'Lol','call':'Call','victory':'Victory','shy':'Shy','handshake':'Handshake','kiss':'Kiss','sad':'Sad','cry':'Cry','huffy':'Huffy','mad':'Mad','tongue':'Tongue','sweat':'Sweat','shocked':'Shocked','time':'Time','hug':'Hug'}}};
+var arrTools={GStart:{},GEnd:{},Separator:{},Cut:{t:'Cut (Ctrl+X)'},Copy:{t:'Copy (Ctrl+C)'},Paste:{t:'Paste (Ctrl+V)'},Pastetext:{t:'Paste as plain text',h:isIE?0:1},Blocktag:{t:'Block tag',h:1},Fontface:{t:'Font family',h:1},FontSize:{t:'Font size',h:1},Bold:{t:'Bold (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'Italic (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'Underline (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'Strikethrough (Ctrl+S)',s:'Ctrl+S'},FontColor:{t:'Select text color',h:1},BackColor:{t:'Select background color',h:1},Removeformat:{t:'Remove formatting'},Align:{t:'Align',h:1},List:{t:'List',h:1},Outdent:{t:'Outdent (Shift+Tab)',s:'Shift+Tab'},Indent:{t:'Indent (Tab)',s:'Tab'},Link:{t:'Insert/edit link',h:1},Unlink:{t:'Unlink'},Img:{t:'Insert/edit image',h:1},Flash:{t:'Insert/edit flash',h:1},Media:{t:'Insert/edit media',h:1},Emot:{t:'Emotions',s:'ctrl+e',h:1},Table:{t:'Insert a new table',h:1},Source:{t:'Edit source code'},Preview:{t:'Preview'},Fullscreen:{t:'Toggle fullscreen (Esc)',s:'Esc'},About:{t:'About xhEditor',h:1}};
 var toolsThemes={
 	mini:'GStart,Bold,Italic,Underline,Strikethrough,GEnd,Separator,GStart,Align,List,GEnd,Separator,GStart,Link,Img,About,GEnd',
 	simple:'GStart,Blocktag,Fontface,FontSize,Bold,Italic,Underline,Strikethrough,FontColor,BackColor,GEnd,Separator,GStart,Align,List,Outdent,Indent,GEnd,Separator,GStart,Link,Img,Emot,About,GEnd',
 	full:'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Blocktag,Fontface,FontSize,Bold,Italic,Underline,Strikethrough,FontColor,BackColor,Removeformat,GEnd,Separator,GStart,Align,List,Outdent,Indent,GEnd,Separator,GStart,Link,Unlink,Img,Flash,Media,Emot,Table,GEnd,Separator,GStart,Source,Preview,Fullscreen,About,GEnd'};
 $.xheditor=function(textarea,options)
 {
-	var defaults={skin:'default',tools:'full',clickCancelDialog:true,linkTag:false,internalScript:false,inlineScript:false,internalStyle:true,inlineStyle:true,showBlocktag:false,forcePtag:true,upLinkExt:"zip,rar,txt",upImgExt:"jpg,jpeg,gif,png",upFlashExt:"swf",upMediaExt:"wmv,avi,wma,mp3,mid",modalWidth:350,modalHeight:220,modalTitle:true,defLinkText:'Click to open link',layerShadow:3,emotMark:false,upBtnText:'Upload',wordDeepClean:true};
-	var _this=this,_text=textarea,_jText=$(_text),_jForm=_jText.closest('form'),_jTools,_jArea,_win,_jWin,_doc,_jDoc,_jTempIframe;
+	var defaults={skin:'default',tools:'full',clickCancelDialog:true,linkTag:false,internalScript:false,inlineScript:false,internalStyle:true,inlineStyle:true,showBlocktag:false,forcePtag:true,upLinkExt:"zip,rar,txt",upImgExt:"jpg,jpeg,gif,png",upFlashExt:"swf",upMediaExt:"wmv,avi,wma,mp3,mid",modalWidth:350,modalHeight:220,modalTitle:true,defLinkText:'Click to open link',layerShadow:3,emotMark:false,upBtnText:'Upload',wordDeepClean:true,hoverExecDelay:100};
+	var _this=this,_text=textarea,_jText=$(_text),_jForm=_jText.closest('form'),_jTools,_jArea,_win,_jWin,_doc,_jDoc;
 	var bookmark;
-	var bInit=false,bSource=false,bPreview=false,bFullscreen=false,bReadonly=false,bShowBlocktag=false,sLayoutStyle='',ev;
+	var bInit=false,bSource=false,bPreview=false,bFullscreen=false,bReadonly=false,bShowBlocktag=false,sLayoutStyle='',ev=null,timer,bDisableHoverExec=false,bQuickHoverExec=false;
+	var lastPoint=null,lastAngle=null;//鼠标悬停显示
 	var editHeight=0;
 	this.settings=$.extend({},defaults,options );
 	var plugins=_this.settings.plugins;
@@ -100,30 +101,31 @@ $.xheditor=function(textarea,options)
 	}
 	if(!_this.settings.tools.match(/(^|,)\s*About\s*(,|$)/i))_this.settings.tools+=',About';
 	_this.settings.tools=_this.settings.tools.split(',');
-	jsUrl=getLocalUrl(jsUrl,'abs');
+	editorRoot=getLocalUrl(editorRoot,'abs');
 
 	//基本控件名
-	var idCSS='xheCSS_'+_this.settings.skin,idContainer='xhe'+xCount+'_container',idTools='xhe'+xCount+'_Tool',idIframeArea='xhe'+xCount+'_iframearea',idIframe='xhe'+xCount+'_iframe';
-	var bodyClass='',skinPath=jsUrl+'xheditor_skin/'+_this.settings.skin+'/',arrEmots=itemEmots,emotPath=getLocalUrl(jsUrl,'rel')+'xheditor_emot/',selEmotGroup='';
+	var idCSS='xheCSS_'+_this.settings.skin,idContainer='xhe'+xCount+'_container',idTools='xhe'+xCount+'_Tool',idIframeArea='xhe'+xCount+'_iframearea',idIframe='xhe'+xCount+'_iframe',idFixFFCursor='xhe'+xCount+'_fixffcursor';
+	var bodyClass='',skinPath=editorRoot+'xheditor_skin/'+_this.settings.skin+'/',arrEmots=itemEmots,emotPath=getLocalUrl(editorRoot,'rel')+'xheditor_emot/',selEmotGroup='';
 	arrEmots=$.extend({},arrEmots,_this.settings.emots );
 	bShowBlocktag=_this.settings.showBlocktag;
 	if(bShowBlocktag)bodyClass+=' showBlocktag';
-	
+
 	var arrShortCuts=[];
 	this.init=function()
 	{
 		//加载样式表
-		if($('#'+idCSS).length==0)$('head').append('<link id="'+idCSS+'" rel="stylesheet" type="text/css" href="'+skinPath+'ui.css" />');	
+		if($('#'+idCSS).length==0)$('head').append('<link id="'+idCSS+'" rel="stylesheet" type="text/css" href="'+skinPath+'ui.css" />');
 		//初始化编辑器
 		var cw = _this.settings.width || _text.style.width || _jText.outerWidth();
-		editHeight = _this.settings.height || _jText.outerHeight();
-		if(editHeight<=0)//禁止对隐藏区域里的textarea初始化编辑器
+		editHeight = _this.settings.height || _text.style.height || _jText.outerHeight();
+		if(is(editHeight,'string'))editHeight=editHeight.replace(/[^\d]+/g,'');
+		if(cw<=0||editHeight<=0)//禁止对隐藏区域里的textarea初始化编辑器
 		{
 			alert('Current textarea is hidden, please make it show before initialization xhEditor, or directly initialize the height.');
-			return false;	
+			return false;
 		}
 		if(/^[0-9\.]+$/i.test(''+cw))cw+='px';
-		
+
 		//工具栏内容初始化
 		var sToolHtml='',tool,cn;
 		$.each(_this.settings.tools,function(i,n)
@@ -143,9 +145,9 @@ $.xheditor=function(textarea,options)
 		});
 		sToolHtml+='<br />';
 
-		_jText.after($('<span id="'+idContainer+'" class="xhe_'+_this.settings.skin+'" style="display:none"><table cellspacing="0" cellpadding="0" class="xheLayout" style="width:'+cw+';height:'+editHeight+'px;"><tbody><tr><td id="'+idTools+'" class="xheTool" style="height:1px;"></td></tr><tr><td id="'+idIframeArea+'" class="xheIframeArea"><iframe frameborder="0" id="'+idIframe+'" src="" style="width:100%;"></iframe></td></tr></tbody></table></span>'));
+		_jText.after($('<input type="text" id="'+idFixFFCursor+'" style="position:absolute;display:none;" /><span id="'+idContainer+'" class="xhe_'+_this.settings.skin+'" style="display:none"><table cellspacing="0" cellpadding="0" class="xheLayout" style="width:'+cw+';height:'+editHeight+'px;"><tbody><tr><td id="'+idTools+'" class="xheTool" style="height:1px;"></td></tr><tr><td id="'+idIframeArea+'" class="xheIframeArea"><iframe frameborder="0" id="'+idIframe+'" src="" style="width:100%;"></iframe></td></tr></tbody></table></span>'));
 		_jTools=$('#'+idTools);_jArea=$('#'+idIframeArea);
-		var iframeHTML='<html><head><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/><link rel="stylesheet" href="'+skinPath+'iframe.css"/>';
+		var iframeHTML='<html><head><base /><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/><link rel="stylesheet" href="'+skinPath+'iframe.css"/>';
 		if(_this.settings.loadCSS)
 		{
 			var loadCSS=_this.settings.loadCSS;
@@ -153,10 +155,10 @@ $.xheditor=function(textarea,options)
 			else iframeHTML+='<link rel="stylesheet" href="'+loadCSS+'"/>';
 		}
 		iframeHTML+='</head><body spellcheck="false" dir="ltr" class="editMode'+bodyClass+'"></body></html>';
-		_win=$('#'+idIframe)[0].contentWindow;
+		_this.win=_win=$('#'+idIframe)[0].contentWindow;
 		_jWin=$(_win);
 		try{
-			_doc = _win.document;_jDoc=$(_doc);
+			this.doc=_doc = _win.document;_jDoc=$(_doc);
 			_doc.open();
 			_doc.write(iframeHTML);
 			_doc.close();
@@ -165,63 +167,110 @@ $.xheditor=function(textarea,options)
 		}catch(e){}
 		setTimeout(_this.setOpts,300);
 		_this.setSource();
-		_win.setInterval=null;
-		
+		_win.setInterval=null;//针对jquery 1.3无法操作iframe window问题的hack
+
 		//添加工具栏
 		_jTools.append(sToolHtml);
 		_jTools.find('.xheButton').click(function(event)
 		{
-			_this.hidePanel();
-			_this.focus();
-			ev=event;
-			var aButton=$(this);
-			if(aButton.is('.xheEnabled'))_this.exec(aButton.attr('name'));
+			var jButton=$(this);
+			if(jButton.is('.xheEnabled'))
+			{
+				ev=event;
+				_this.exec(jButton.attr('name'));
+			}
 			return false;
+		}).hover(function(event){//鼠标悬停执行
+			var jButton=$(this),delay=_this.settings.hoverExecDelay;
+			var tAngle=lastAngle;lastAngle=null;
+			if(delay==-1||bDisableHoverExec||!jButton.is('.xheEnabled'))return false;
+			if(tAngle&&tAngle>10)//检测误操作
+			{
+				bDisableHoverExec=true;
+				setTimeout(function(){bDisableHoverExec=false;},100);
+				return false;
+			}
+			var cmd=jButton.attr('name'),bHover=arrTools[cmd].h==1;
+			if(!bHover)
+			{
+				_this.hidePanel();//移到非悬停按钮上隐藏面板
+				return false;
+			}
+			if(bQuickHoverExec)delay=0;
+			if(delay>=0)timer=setTimeout(function(){
+				ev=event;
+				lastPoint={x:ev.clientX,y:ev.clientY};
+				_this.exec(cmd);
+			},delay);
+		},function(event){lastPoint=null;if(timer)clearTimeout(timer);}).mousemove(function(event){
+			if(lastPoint)
+			{
+				var diff={x:event.clientX-lastPoint.x,y:event.clientY-lastPoint.y};
+				if(Math.abs(diff.x)>1||Math.abs(diff.y)>1)
+				{
+					if(diff.x>0&&diff.y>0)
+					{
+						var tAngle=Math.round(Math.atan(diff.y/diff.x)/0.017453293);
+						if(lastAngle)lastAngle=(lastAngle+tAngle)/2
+						else lastAngle=tAngle;
+					}
+					else lastAngle=null;
+					lastPoint={x:event.clientX,y:event.clientY};
+				}
+			}
 		}).mousedown(function(){return false;});
 		//初始化面板
 		_jPanel=$('#xhePanel');
 		_jShadow=$('#xheShadow');
 		_jCntLine=$('#xheCntLine');
+		_jTempIframe=$('#xheTempIframe');
 		if(_jPanel.length==0)
 		{
 			_jPanel=$('<div id="xhePanel"></div>').mousedown(function(ev){ev.stopPropagation()});
 			_jShadow=$('<div id="xheShadow"></div>');
-			_jCntLine=$('<div id="xheCntLine"><img src="'+skinPath+'img/spacer.gif" /></div>');
-			$(document.body).append(_jPanel).append(_jShadow).append(_jCntLine);
+			_jCntLine=$('<div id="xheCntLine"></div>');
+			_jTempIframe=$('<iframe id="xheTempIframe" class="xheHideArea" />');
+			$(document.body).append(_jPanel).append(_jShadow).append(_jCntLine).append(_jTempIframe);
 		}
 		$(document).mousedown(_this.clickCancelPanel);
 		_jDoc.mousedown(_this.clickCancelPanel);
-		//修正IE光标丢失
-		if(isIE)
-		{
-			_jDoc.bind('beforedeactivate',function(){if(isIE&&!bSource)bookmark=_this.getRng();});
-			_jWin.focus(function(){if(isIE&&!bSource&&bookmark){bookmark.select();bookmark=null;}});
-		}
-		//创建临时iframe
-		_jTempIframe=$('<iframe class="xheHideArea" />').appendTo('body');
-		
+
 		//切换显示区域
 		$('#'+idContainer).show();
 		_jArea.css('height',editHeight-_jTools.outerHeight());
 		_jText.hide();
-		
+
 		//绑定内核事件
 		_jText.focus(_this.focus);
-		_jForm.submit(_this.getSource).bind('reset', _this.setSource);
+		_jForm.submit(_this.getSource).bind('reset', _this.loadReset);
 		var jpWin=$(window);
 		jpWin.unload(_this.saveUnload).bind('beforeunload', _this.saveUnload);
 		jpWin.resize(_this.fixFullHeight);
 		_jWin.focus(function(){if(_this.settings.focus)_this.settings.focus();}).blur(function(){if(_this.settings.blur)_this.settings.blur();});
 		if(isSafari)_jWin.click(_this.fixAppleSel);
-		_jDoc.keydown(_this.checkShortcuts).keydown(_this.forcePtag).bind('mousedown click',function(ev){_jText.trigger(ev.type);});
+		_jDoc.keydown(_this.checkShortcuts).keypress(_this.forcePtag).bind('mousedown click',function(ev){_jText.trigger(ev.type);}).keyup(_this.triggerChange);
+		if(isIE)//修正IE拖动img大小不更新width和height属性值的问题
+		{
+			function fixResize(ev)
+			{
+				var jImg=$(ev.target),v;
+				if(v=jImg.css('width'))jImg.css('width','').attr('width',v.replace(/[^0-9%]+/g, ''));
+				if(v=jImg.css('height'))jImg.css('height','').attr('height',v.replace(/[^0-9%]+/g, ''));
+			}
+			_jDoc.bind('controlselect',function(ev){
+				ev=ev.target;if(ev.nodeName!='IMG')return
+				$(ev).unbind('resizeend',fixResize).bind('resizeend',fixResize);
+			});	
+		}
 		$('body',_jDoc).bind('paste',_this.cleanPaste);
-		
+
 		//添加用户快捷键
 		var shortcuts=_this.settings.shortcuts;
 		if(shortcuts)$.each(shortcuts,function(key,func){_this.addShortcuts(key,func);});
-		
+
 		xCount++;
 		bInit=true;
+		
 		if(_this.settings.fullscreen)_this.toggleFullscreen();
 		if(_this.settings.readonly)_this.toggleReadonly(true);
 		else if(_this.settings.sourceMode)setTimeout(_this.toggleSource,20);
@@ -229,19 +278,21 @@ $.xheditor=function(textarea,options)
 	}
 	this.remove=function()
 	{
-		if(bShowPanel)_this.hidePanel();
+		_this.hidePanel();
 		//取消绑定事件
 		_jText.unbind('focus',_this.focus);
-		_jForm.unbind('submit',_this.getSource).unbind('reset', _this.setSource);
+		_jForm.unbind('submit',_this.getSource).unbind('reset', _this.loadReset);
 		var jpWin=$(window);
 		jpWin.unbind('unload',_this.saveUnload).unbind('beforeunload', _this.saveUnload);
 		jpWin.unbind('resize',_this.fixFullHeight);
-		
+
 		$('#'+idContainer).remove();
 		_jText.show();
 		bInit=false;
 	}
+	this.loadReset=function(){setTimeout(_this.setSource,10);}
 	this.saveUnload=function(){_this.getSource();};
+	this.triggerChange=function(){_jText.trigger('change');}
 	this.cleanPaste=function()//清理粘贴内容中的代码
 	{
 		if(isIE&&!bSource)
@@ -251,6 +302,7 @@ $.xheditor=function(textarea,options)
 			tbody.createTextRange().execCommand("Paste");
 			sHtml=tbody.innerHTML;
 			if(sHtml.indexOf('&nbsp;')==0)sHtml=sHtml.substring(6);
+			sHtml=_this.formatXHTML(sHtml);
 			sHtml=_this.cleanWord(sHtml);
 			sHtml=_this.cleanHTML(sHtml);
 			_this.pasteHTML(sHtml);
@@ -285,7 +337,7 @@ $.xheditor=function(textarea,options)
 		}
 	}
 	this.fixFullHeight=function()
-	{		
+	{
 		if(!isMozilla&&!isSafari)
 		{
 			_jArea.height('100%');
@@ -304,12 +356,44 @@ $.xheditor=function(textarea,options)
 			sel.addRange(rng);
 		}
 	}
+	this.saveBookmark=function()
+	{
+		if(!bSource)bookmark=_this.getRng();
+	}
+	this.loadBookmark=function()
+	{
+		if(bSource)return;
+		_this.focus();
+		if(isIE)bookmark.select();
+		else
+		{
+			var sel=_this.getSel();
+			sel.removeAllRanges();
+			sel.addRange(bookmark);
+		}
+	}
 	this.focus=function()
 	{
 		if(!bSource)_jWin.focus();
 		else $('#sourceCode',_doc).focus();
 		return false;
-	} 
+	}
+	this.setCursorFirst=function(firstBlock)
+	{
+		_this.focus();_win.scrollTo(0,0);
+		var rng=_this.getRng(),_body=_doc.body,firstNode=_body,firstTag;
+		if(firstBlock&&firstNode.firstChild&&(firstTag=firstNode.firstChild.tagName)&&firstTag.match(/^p|div|h[1-6]$/i))firstNode=_body.firstChild;
+		if(isIE)
+		{
+			var cursor = _body.createTextRange();
+			cursor.moveToElementText(firstNode);
+			rng.setEndPoint('StartToStart', cursor);
+		}
+		else rng.setStart(firstNode,0);
+		rng.collapse(true);
+		if(isIE)rng.select();
+		else{var sel=_this.getSel();sel.removeAllRanges();sel.addRange(rng);}
+	}
 	this.getSel=function()
 	{
 		return _win.getSelection ? _win.getSelection() : _doc.selection;
@@ -317,10 +401,10 @@ $.xheditor=function(textarea,options)
 	this.getRng=function()
 	{
 		var sel=_this.getSel(),rng;
-		try{
+		try{//标准dom
 			rng = sel.rangeCount > 0 ? sel.getRangeAt(0) : (sel.createRange ? sel.createRange() : _doc.createRange());
 		}catch (ex){}
-		if(!rng)rng = isIE ? _doc.body.createTextRange() : _doc.createRange();	
+		if(!rng)rng = isIE ? _doc.body.createTextRange() : _doc.createRange();
 		return rng;
 	}
 	this.getParent=function(tag)
@@ -366,44 +450,46 @@ $.xheditor=function(textarea,options)
 		if (t == 'array' && (o.hasOwnProperty && o instanceof Array))return true;
 		return n == t;
 	}
-	this.pasteHTML=function(sHtml)
+	this.pasteHTML=function(sHtml,bStart)
 	{
 		if(bSource||bPreview)return false;
 		_this.focus();
 		sHtml=_this.processHTML(sHtml,'write');
 		var sel=_this.getSel(),rng=_this.getRng();
-		sHtml+='<span id="_xhe_temp" />';
+		if(bStart!=undefined)//非覆盖式插入
+		{
+			if(rng.item)
+			{
+				var n=rng.item(0);
+				rng=_doc.body.createTextRange();
+				rng.moveToElementText(n);
+				rng.select();
+			}
+			rng.collapse(bStart);
+		}
 		if(rng.insertNode)
 		{
 			rng.deleteContents();
-			rng.insertNode(rng.createContextualFragment(sHtml));
-		}
-		else
-		{
-			if(rng.item){_this._exec('delete');rng=_this.getRng()}
-			rng.pasteHTML(sHtml);
-		}
-
-		var jc=$('#_xhe_temp',_doc),c=jc[0];
-		if(isIE)
-		{
-			rng.moveToElementText(c);
-			rng.select();
-		}
-		else
-		{
-			rng.selectNode(c); 
+			var fragment=rng.createContextualFragment(sHtml),lastNode = fragment.lastChild;
+			rng.insertNode(fragment);
+			rng.setEndAfter(lastNode);
+			rng.collapse(false);
 			sel.removeAllRanges();
 			sel.addRange(rng);
 		}
-		jc.remove();
+		else
+		{
+			if(sel.type.toLowerCase()=='control'){sel.clear();rng=_this.getRng();};
+			rng.pasteHTML(sHtml);
+		}
+		_this.triggerChange();
 	}
-	this.pasteText=function(text)
+	this.pasteText=function(text,bStart)
 	{
 		if(!text)text='';
 		text=_this.domEncode(text);
 		text = text.replace(/\r?\n/g, '<br />');
-		_this.pasteHTML(text);
+		_this.pasteHTML(text,bStart);
 	}
 	this.appendHTML=function(sHtml)
 	{
@@ -418,12 +504,8 @@ $.xheditor=function(textarea,options)
 	}
 	this.setSource=function(sHtml)
 	{
-		setTimeout(function(){_this._setSource(sHtml);},10);
-	}
-	this._setSource=function(sHtml)
-	{
 		bookmark=null;
-		if(typeof sHtml!='string'&&sHtml!='')sHtml=_jText.val();
+		if(typeof sHtml!='string'&&sHtml!='')sHtml=_text.value;
 		if(bSource)$('#sourceCode',_doc).val(sHtml);
 		else
 		{
@@ -431,8 +513,9 @@ $.xheditor=function(textarea,options)
 			sHtml=_this.formatXHTML(sHtml);
 			sHtml=_this.cleanWord(sHtml);
 			sHtml=_this.cleanHTML(sHtml);
-			$(_doc.body)[0].innerHTML=_this.processHTML(sHtml,'write');
+			$(_doc.body).html(_this.processHTML(sHtml,'write'));
 		}
+		_this.triggerChange();
 	}
 	this.processHTML=function(sHtml,mode)
 	{
@@ -444,18 +527,18 @@ $.xheditor=function(textarea,options)
 				emot=emot.split(',');
 				if(!emot[1]){emot[1]=emot[0];emot[0]=''}
 				if(emot[0]=='default')emot[0]='';
-				return all.replace(/\s+src\s*=\s*(["']?).*?\1(\s|$|\/|>)/i,'$2').replace(attr,' src="'+emotPath+(emot[0]?emot[0]:'default')+'/'+emot[1]+'.gif"'+(_this.settings.emotMark?' emot="'+(emot[0]?emot[0]+',':'')+emot[1]+'"':''));
+				return all.replace(/\s+src\s*=\s*(["']?).*?\1(\s|$|\/|>)/i,'$2').replace(attr,' src="'+emotPath+(emot[0]?emot[0]:'default')+'/'+emot[1]+'.gif"'+(_this.settings.emotMark?' emot="'+(emot[0]?emot[0]+',':'')+emot[1]+'" alt="'+emot[1]+'"':''));
 			}
-			sHtml = sHtml.replace(/<img(?:\s+[^>]*?)?(\s+emot\s*=\s*(["']?)\s*(.+?)\s*\2)(?:\s+[^>]*?)?\/?>/ig,restoreEmot);
+			sHtml = sHtml.replace(/<img(?:\s+[^>]*?)?(\s+emot\s*=\s*(["']?)\s*(.*?)\s*\2)(?:\s+[^>]*?)?\/?>/ig,restoreEmot);
 			//保存属性值:src,href
 			function saveValue(all,tag,attr,n,q,v){return all.replace(attr,attr+' _xhe_'+n+'="'+v+'"');}
 			sHtml = sHtml.replace(/<(\w+(?:\:\w+)?)(?:\s+[^>]*?)?(\s+(src|href)\s*=\s*(["']?)\s*(.*?)\s*\4)(?:\s+[^>]*?)?\/?>/ig,saveValue);
-				
+
 			sHtml = sHtml.replace(/<(\/?)del(\s+[^>]*?)?>/ig,'<$1strike$2>');//编辑状态统一转为strike
 			if(isMozilla)
 			{
 				sHtml = sHtml.replace(/<(\/?)strong(\s+[^>]*?)?>/ig,'<$1b$2>');
-				sHtml = sHtml.replace(/<(\/?)em(\s+[^>]*?)?>/ig,'<$1i$2>');	
+				sHtml = sHtml.replace(/<(\/?)em(\s+[^>]*?)?>/ig,'<$1i$2>');
 			}
 			else if(isSafari)
 			{
@@ -481,7 +564,7 @@ $.xheditor=function(textarea,options)
 				sHtml = sHtml.replace(/\s+(disabled|checked|readonly|selected)\s*=\s*[\"\']?(false|0)[\"\']?/ig, '');
 			}
 			sHtml = sHtml.replace(/<a(\s+[^>]*?)?\/>/,'<a$1></a>');
-			
+
 			if(!isSafari)
 			{
 				//style转font
@@ -521,6 +604,7 @@ $.xheditor=function(textarea,options)
 				sHtml = sHtml.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,style2font);//第2层
 				sHtml = sHtml.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,style2font);//第3层
 			}
+			sHtml = sHtml.replace(/<img(?:\s+[^>]*?)?(\s+alt\s*=\s*(["']?)\s*(.*?)\s*\2)(?:\s+[^>]*?)?\/?>/ig,function(all,attr,q,alt){return alt?all:all.replace(attr,'');});//写浏览器前img强制去空alt以增加兼容性
 		}
 		else
 		{//read
@@ -557,43 +641,48 @@ $.xheditor=function(textarea,options)
 						}
 					}
 					if(newTag)return '<'+newTag+'>'+content+'</'+newTag+'>';
-					else return all;					
+					else return all;
 				}
 				sHtml = sHtml.replace(/<(span)(\s+[^>]*?)?\s+class\s*=\s*"Apple-style-span"(\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S])*?)<\/\1>/ig,replaceAppleSpan);//最里层
 				sHtml = sHtml.replace(/<(span)(\s+[^>]*?)?\s+class\s*=\s*"Apple-style-span"(\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,replaceAppleSpan);//第2层
 				sHtml = sHtml.replace(/<(span)(\s+[^>]*?)?\s+class\s*=\s*"Apple-style-span"(\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,replaceAppleSpan);//第3层
 			}
-			sHtml = sHtml.replace(/\s+(?:_xhe_|_moz_|_webkit_)[^=]+?\s*=\s*(["']?).*?\1([\s/>])/ig,'$2');
-			sHtml = sHtml.replace(/(<\w+[^>]*?)\s+class\s*=\s*(["']?)\s*(?:apple|webkit)\-.+?\s*\2([\s/>])/ig, "$1$3");
+			sHtml = sHtml.replace(/(<\w+(?:\s+[^>]*?)?)\s+(?:_xhe_|_moz_|_webkit_)[^=]+?\s*=\s*(["']?).*?\2([\s\/>])/ig,'$1$3');
+			sHtml = sHtml.replace(/(<\w+[^>]*?)\s+class\s*=\s*(["']?)\s*(?:apple|webkit)\-.+?\s*\2([\s\/>])/ig, "$1$3");
+			sHtml = sHtml.replace(/<img(\s+[^>]+?)\/?>/ig,function(all,attr){if(!attr.match(/\s+alt\s*(["']?).*?\1(\s|$)/i))attr+=' alt=""';return '<img'+attr+' />';});//img强制加alt
 		}
-		
+
 		return sHtml;
 	}
 	this.getSource=function(bFormat)
 	{
-		var sHtml;
-		if(bSource)sHtml=$('#sourceCode',_doc).val();
+		var sHtml,beforeGetSource=_this.settings.beforeGetSource;
+		if(bSource)
+		{
+			sHtml=$('#sourceCode',_doc).val();
+			if(!beforeGetSource)sHtml=sHtml.replace(/(\t*\r?\n\t*)+/g,'')//标准HTML模式清理缩进和换行
+		}
 		else
 		{
 			sHtml=_this.processHTML($(_doc.body).html(),'read');
-			sHtml=sHtml.replace(/^\s*(?:<(p|div)(?:\s+[^>]*?)?>)?\s*<br[^>]*>\s*(?:<\/\1>)?\s*$/ig, '');//修正Firefox在空内容情况下多出来的代码
+			sHtml=sHtml.replace(/^\s*(?:<(p|div)(?:\s+[^>]*?)?>)?\s*(<br(?:\s+[^>]*?)?>)*\s*(?:<\/\1>)?\s*$/i, '');//修正Firefox在空内容情况下多出来的代码
 			sHtml=_this.formatXHTML(sHtml,bFormat);
 			sHtml=_this.cleanWord(sHtml);
 			sHtml=_this.cleanHTML(sHtml);
-			if(_this.settings.beforeGetSource)sHtml=_this.settings.beforeGetSource(sHtml);
+			if(beforeGetSource)sHtml=beforeGetSource(sHtml);
 		}
-		_jText.val(sHtml);
+		_text.value=sHtml;
 		return sHtml;
-	}	
+	}
 	this.cleanWord=function(sHtml)
 	{
 		if(sHtml.match(/mso-|MsoNormal/i))
 		{
 			var deepClean=_this.settings.wordDeepClean;
-			
+
 			//格式化
 			sHtml = sHtml.replace(/(<link(?:\s+[^>]*?)?)\s+href\s*=\s*(["']?)\s*file:\/\/.+?\s*\2((?:\s+[^>]*?)?\s*\/?>)/ig, '');
-			
+
 			//区块标签清理
 			sHtml = sHtml.replace(/<!--[\s\S]*?-->|<!(--)?\[[\s\S]+?\](--)?>|<style(\s+[^>]*?)?>[\s\S]*?<\/style>/ig, '');
 			sHtml = sHtml.replace(/<\/?\w+:[^>]*>/ig, '');
@@ -616,41 +705,30 @@ $.xheditor=function(textarea,options)
 	{
 		sHtml = sHtml.replace(/<\??xml(:\w+)?(\s+[^>]*?)?>([\s\S]*?<\/xml>)?/ig, '');
 		sHtml = sHtml.replace(/<\/?(html|head|body|meta|title)(\s+[^>]*?)?>/ig, '');
-		
+
 		if(!_this.settings.linkTag)sHtml = sHtml.replace(/<link(\s+[^>]*?)?>/ig, '');
 		if(!_this.settings.internalScript)sHtml = sHtml.replace(/<script(\s+[^>]*?)?>[\s\S]*?<\/script>/ig, '');
 		if(!_this.settings.inlineScript)sHtml=sHtml.replace(/(<\w+)(\s+[^>]*?)?\s+on(?:click|dblclick|mousedown|mouseup|mousemove|mouseover|mouseout|mouseenter|mouseleave|keydown|keypress|keyup|change|select|submit|reset|blur|focus|load|unload)\s*=\s*(["']?).*?\3((?:\s+[^>]*?)?\/?>)/ig,'$1$2$4');
 		if(!_this.settings.internalStyle)sHtml = sHtml.replace(/<style(\s+[^>]*?)?>[\s\S]*?<\/style>/ig, '');
-		if(!_this.settings.inlineStyle)sHtml=sHtml.replace(/(<\w+)(\s+[^>]*?)?\s+style\s*=\s*(["']?).*?\3((?:\s+[^>]*?)?\/?>)/ig,'$1$2$4');
-		
-		for(var i=0;i<3;i++)sHtml=sHtml.replace(/<(strong|b|u|del|strike|s|em|i)(?:\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)([ \t\r\n]|&nbsp;))*?)<\/\1>/ig,function(all,tag,content){
-				if(content.match(/&nbsp;/i))return content.replace(/ +/g,'');
-				else return '';
-		});//内部空白的标签: <span|b|u|s|i> &nbsp;</b>
+		if(!_this.settings.inlineStyle)sHtml=sHtml.replace(/(<\w+)(\s+[^>]*?)?\s+(style|class)\s*=\s*(["']?).*?\3((?:\s+[^>]*?)?\/?>)/ig,'$1$2$4');
+
 		sHtml=sHtml.replace(/<\/(strong|b|u|strike|em|i)>((?:\s|<br\/?>|&nbsp;)*?)<\1(\s+[^>]*?)?>/ig,'$2');//连续相同标签
 
-		sHtml = sHtml.replace(/<(p|div)(?:\s+[^>]*?)?>(((?!<\1(?: [^>]+)?>)[\s\S])+?)<\/\1>/ig,function(all,tag,content){//p内空白显示
-			var temp=content.replace(/<\/?(span|strong|b|u|strike|em|i)(\s+[^>]*?)?>/ig,'');
-			temp=temp.replace(/([ \t\r\n]|&nbsp;)+/ig,'');
-			if(temp!='')return all;
-			else return '<'+tag+'></'+tag+'>';
-			});
-		
 		return sHtml;
 	}
 	this.formatXHTML=function(sHtml,bFormat)
 	{
-		var emptyTags = makeMap("area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed");	
-		var blockTags = makeMap("address,applet,blockquote,button,center,dd,dir,div,dl,dt,fieldset,form,frameset,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul");
+		var emptyTags = makeMap("area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed");
+		var blockTags = makeMap("address,applet,blockquote,button,center,dd,dir,div,dl,dt,fieldset,form,frameset,h1,h2,h3,h4,h5,h6,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul");
 		var inlineTags = makeMap("a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,del,strong,sub,sup,textarea,tt,u,var");
 		var closeSelfTags = makeMap("colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr");
 		var fillAttrsTags = makeMap("checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected");
 		var specialTags = makeMap("script,style");
 		var tagReplac={'b':'strong','i':'em','s':'del','strike':'del'};
-		var startTag = /^<(\w+(?:\:\w+)?)((?:\s+[\w-\:]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/;
+		var startTag = /^<\??(\w+(?:\:\w+)?)((?:\s+[\w-\:]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/;
 		var endTag = /^<\/(\w+(?:\:\w+)?)[^>]*>/;
 		var attr = /([\w-(?:\:\w+)?]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
-		var skip=0,stack=[],last=sHtml.replace(/\t*\r?\n\t*/g,''),results=Array(),lvl=-1,lastTag='body';
+		var skip=0,stack=[],last=sHtml,results=Array(),lvl=-1,lastTag='body',lastTagStart,stopFormat=false;
 		stack.last = function(){return this[ this.length - 1 ];};
 		while(last.length>0)
 		{
@@ -671,7 +749,7 @@ $.xheditor=function(textarea,options)
 					match = last.match( endTag );
 					if(match)
 					{
-						match[0].replace(endTag,parseEndTag );
+						parseEndTag(match[1]);
 						skip = match[0].length;
 					}
 				}
@@ -680,7 +758,7 @@ $.xheditor=function(textarea,options)
 					match = last.match( startTag );
 					if(match)
 					{
-						match[0].replace(startTag,parseStartTag);
+						parseStartTag(match[1],match[2],match[3]);
 						skip = match[0].length;
 					}
 				}
@@ -699,10 +777,10 @@ $.xheditor=function(textarea,options)
 					addHtmlFrag(script);
 					return ''
 				});
-				parseEndTag('',stack.last());
+				parseEndTag(stack.last());
 			}
 		}
-		parseEndTag();
+		parseEndTag('');
 		sHtml=results.join('');
 		results=null;
 		function makeMap(str)
@@ -722,14 +800,14 @@ $.xheditor=function(textarea,options)
 			else tagName='';
 			return tagName;
 		}
-		function parseStartTag( all, tagName, rest, unary )
+		function parseStartTag(tagName,rest,unary)
 		{
 			tagName=processTag(tagName);
 			if(blockTags[tagName])while(stack.last()&&inlineTags[stack.last()])parseEndTag("",stack.last());
 			if(closeSelfTags[tagName]&&stack.last()==tagName )parseEndTag("",tagName);
 			unary = emptyTags[ tagName ] || !!unary;
 			if (!unary)stack.push(tagName);
-			all=Array();
+			var all=Array();
 			all.push('<' + tagName);
 			rest.replace(attr, function(match, name)
 			{
@@ -738,12 +816,12 @@ $.xheditor=function(textarea,options)
 						arguments[3] ? arguments[3] :
 						arguments[4] ? arguments[4] :
 						fillAttrsTags[name] ? name : "";
-				if(value)all.push(" "+name+'="'+value.replace(/(^|[^\\])"/g, '$1\\\"')+'"');
+				all.push(' '+name+'="'+value+'"');
 			});
 			all.push((unary ? " /" : "") + ">");
 			addHtmlFrag(all.join(''),tagName,true);
 		}
-		function parseEndTag(all, tagName)
+		function parseEndTag(tagName)
 		{
 			if(!tagName)var pos = 0;
 			else
@@ -759,29 +837,33 @@ $.xheditor=function(textarea,options)
 		}
 		function addHtmlFrag(html,tagName,bStart)
 		{
-			if(bFormat)
+			if(tagName=='pre'&&!bStart)stopFormat=false;//恢复格式化
+			if(!stopFormat)html=html.replace(/(\t*\r?\n\t*)+/g,'');//清理换行符和相邻的制表符
+			if(bFormat==true&&!stopFormat)
 			{
-				if(html.match(/^[\s\t]*$/))return;
+				if(html.match(/^\s*$/))return;//不格式化空内容的标签
 				var bBlock=blockTags[tagName],tag=bBlock?tagName:'',tabs;
 				if(bBlock)
 				{
 					if(bStart)lvl++;//块开始
 					if(lastTag=='')lvl--;//补文本结束
 				}
-				else if(lastTag)lvl++;//文本开始		
+				else if(lastTag)lvl++;//文本开始
 				if(tag!=lastTag||bBlock)
 				{
-					results.push("\r\n");
+					results.push('\r\n');
 					if(lvl>0){tabs=lvl;while(tabs--)results.push("\t");}
 				}
 				results.push(html);
 				if(tagName=='br')//回车强制换行
 				{
-					results.push("\r\n");
+					results.push('\r\n');
 					if(lvl>0){tabs=lvl;while(tabs--)results.push("\t");}
 				}
 				if(bBlock&&!bStart)lvl--;//块结束
+				if(lastTag=='pre'&&lastTagStart)stopFormat=true;//禁止对pre内部的元素进行格式化
 				lastTag=bBlock?tagName:'';
+				lastTagStart=bStart;
 			}
 			else results.push(html);
 		}
@@ -798,13 +880,13 @@ $.xheditor=function(textarea,options)
 			style=attrs.match(/ style\s*=\s*"\s*([^"]+)\s*"/i);
 			if(style)styles+=style[1];
 			if(styles)content='<span style="'+styles+'">'+content+'</span>';
-			return content;			
+			return content;
 		}
 		sHtml = sHtml.replace(/<(font)(\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S])*?)<\/\1>/ig,font2style);//最里层
 		sHtml = sHtml.replace(/<(font)(\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,font2style);//第2层
 		sHtml = sHtml.replace(/<(font)(\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,font2style);//第3层
 		sHtml = sHtml.replace(/^(\s*\r?\n)+|(\s*\r?\n)+$/g,'');//清理首尾换行
-
+		sHtml = sHtml.replace(/(\t*\r?\n)+/g,'\r\n');//多行变一行
 		return sHtml;
 	}
 	this.toggleShowBlocktag=function(state)
@@ -838,32 +920,52 @@ $.xheditor=function(textarea,options)
 			_jTools.find('[name=Preview]').toggleClass('xheEnabled').toggleClass('xheActive');
 			if(bPreview)_this.togglePreview();
 		}
-		
 	}
 	this.toggleSource=function(state)
 	{
 		if(bPreview||bSource===state)return;
 		_jTools.find('[name=Source]').toggleClass('xheEnabled').toggleClass('xheActive');
-		if(bShowPanel)_this.hidePanel();
-		var jBody=$(_doc.body),sHtml=_this.getSource(!bSource);
-		bSource=!bSource;
-		if(bSource)
+		var _body=_doc.body,jBody=$(_body),sHtml;
+		var sourceCode,cursorMark='_xhe_cursor'+new Date().getTime(),cursorPos=0;
+		if(!bSource)
 		{//转为源代码模式
-			if(isIE)_doc.body.contentEditable='false';
+			_this.pasteHTML(cursorMark,true);//标记当前位置
+			sHtml=_this.getSource(true);
+			cursorPos=sHtml.indexOf(cursorMark);
+			if(!isOpera)cursorPos=sHtml.substring(0,cursorPos).replace(/\r/g,'').length;//修正非opera光标定位点
+			sHtml=sHtml.replace(cursorMark,'');
+			if(isIE)_body.contentEditable='false';
 			else _doc.designMode = 'Off';
 			jBody.attr('scroll','no').attr('class','sourceMode').html('<textarea id="sourceCode" wrap="soft" spellcheck="false" height="100%" />');
-			jBody.find('#sourceCode').blur(_this.getSource);
-			_this._setSource(sHtml);
+			sourceCode=$('#sourceCode',jBody).blur(_this.getSource)[0];
 		}
 		else
 		{//转为编辑模式
+			sHtml=_this.getSource();
 			jBody.find('#sourceCode').remove();
 			jBody.removeAttr('scroll').attr('class','editMode'+bodyClass);
-			if(isIE)_doc.body.contentEditable='true';
+			if(isIE)_body.contentEditable='true';
 			else _doc.designMode = 'On';
-			_this._setSource(sHtml);
-			setTimeout(function(){_win.scrollTo(0,0);},10);
+			if(isMozilla)
+			{
+				_this._exec("inserthtml","-");//修正firefox源代码切换回来无法删除文字的问题
+				$('#'+idFixFFCursor).show().focus().hide();//临时修正Firefox 3.6光标丢失问题
+			}
 		}
+		bSource=!bSource;
+		_this.setSource(sHtml);
+		if(bSource)//光标定位源码
+		{
+			_this.focus();
+			if(sourceCode.setSelectionRange)sourceCode.setSelectionRange(cursorPos, cursorPos);
+			else
+			{
+				var rng = sourceCode.createTextRange();
+				rng.move("character",cursorPos);
+				rng.select();
+			}
+		}
+		else _this.setCursorFirst(true);//定位最前面
 		_jTools.find('[name=Source]').toggleClass('xheEnabled');
 		_jTools.find('.xheButton').not('[name=Source],[name=Fullscreen],[name=About]').toggleClass('xheEnabled');
 		setTimeout(_this.setOpts,300);
@@ -875,21 +977,22 @@ $.xheditor=function(textarea,options)
 		var jBody=$(_doc.body);
 		if(!bPreview)
 		{//转预览模式
+			jBody.attr('class','previewMode');
+			$('head base',_doc).attr('target','_blank');
 			if(isIE)_doc.body.contentEditable='false';
 			else _doc.designMode = 'Off';
-			jBody.attr('class','previewMode');		
 			jBody[0].innerHTML=jBody.html();
-			$('head base',_doc).attr('target','_blank');
 		}
 		else
 		{//转编辑模式
+			jBody.attr('class','editMode'+bodyClass);
+			$('head base',_doc).removeAttr('target');
 			if(isIE)_doc.body.contentEditable='true';
 			else _doc.designMode = 'On';
-			jBody.attr('class','editMode'+bodyClass);
 			jBody[0].innerHTML=jBody.html();
-			$('head base',_doc).removeAttr('target');
 		}
 		bPreview=!bPreview;
+		_this.setCursorFirst();
 		_jTools.find('[name=Preview]').toggleClass('xheEnabled');
 		_jTools.find('.xheButton').not('[name=Preview],[name=Fullscreen],[name=About]').toggleClass('xheEnabled');
 		setTimeout(_this.setOpts,300);
@@ -897,7 +1000,6 @@ $.xheditor=function(textarea,options)
 	this.toggleFullscreen=function(state)
 	{
 		if(bFullscreen===state)return;
-		if(bShowPanel)_this.hidePanel();
 		var jLayout=$('#'+idContainer).find('.xheLayout'),jContainer=$('#'+idContainer);
 		if(bFullscreen)
 		{//取消全屏
@@ -911,6 +1013,11 @@ $.xheditor=function(textarea,options)
 			_jArea.height('100%');
 			setTimeout(_this.fixFullHeight,100);
 		}
+		if(isMozilla)//临时修正Firefox 3.6源代码光标丢失问题
+		{
+			$('#'+idFixFFCursor).show().focus().hide();
+			setTimeout(_this.focus,1);
+		}
 		bFullscreen=!bFullscreen;
 		jContainer.toggleClass('xhe_Fullscreen');
 		$('html').toggleClass('xhe_Fullfix');
@@ -921,7 +1028,7 @@ $.xheditor=function(textarea,options)
 	{
 		var jMenu=$('<div class="xheMenu"></div>'),jItem;
 		$.each(menuitems,function(n,v){
-			jItem=$('<a href="javascript:void(0);" title="'+(v.t?v.t:v.s)+'">'+v.s+'</a>').click(function(){_this.focus();callback(v.v);_this.hidePanel();return false;});
+			jItem=$('<a href="javascript:void(0);" title="'+(v.t?v.t:v.s)+'">'+v.s+'</a>').click(function(){callback(v.v);_this.hidePanel();return false;}).mousedown(function(){return false;});
 			jMenu.append(jItem);
 		});
 		_this.showPanel(jMenu);
@@ -933,13 +1040,13 @@ $.xheditor=function(textarea,options)
 		$.each(itemColors,function(n,v)
 		{
 			c++;
-			jItem=$('<a href="javascript:void(0);" title="'+v+'" style="background:'+v+'"><img src="'+skinPath+'img/spacer.gif" /></a>').click(function(){_this.focus();callback(v);_this.hidePanel();return false;});
+			jItem=$('<a href="javascript:void(0);" title="'+v+'" style="background:'+v+'"></a>').click(function(){callback(v);_this.hidePanel();return false;}).mousedown(function(){return false;});
 			jLine.append(jItem);
 			if(c%7==0)
 			{
 				jColor.append(jLine);
 				jLine=$('<div></div>');
-			}	
+			}
 		});
 		jColor.append(jLine);
 		_this.showPanel(jColor);
@@ -948,7 +1055,7 @@ $.xheditor=function(textarea,options)
 	{
 		var jPastetext=$(htmlPastetext),jValue=$('#xhePastetextValue',jPastetext),jSave=$('#xheSave',jPastetext);
 		jSave.click(function(){
-			_this.focus();
+			_this.loadBookmark();
 			var sValue=jValue.val();
 			if(sValue)_this.pasteText(sValue);
 			_this.hidePanel();
@@ -967,12 +1074,16 @@ $.xheditor=function(textarea,options)
 		else if(selHtml=='')jText.val(_this.settings.defLinkText).closest('div').show();
 		if(_this.settings.upLinkUrl)_this.uploadInit(jHref,_this.settings.upLinkUrl,_this.settings.upLinkExt);
 		jSave.click(function(){
-			_this.focus();
-			var url=jHref.val();
+			var url=jHref.val(),linkExt;
+			if(linkExt=_this.settings.linkExt)
+			{
+				
+			}
+			_this.loadBookmark();
 			if(url==''||jParent.length==0)_this._exec('unlink');
 			if(url!=''&&url!='http://')
 			{
-				var aUrl=url.split('|'),sTarget=jTarget.val(),sText=jText.val();
+				var aUrl=url.split('\t'),sTarget=jTarget.val(),sText=jText.val();
 				if(aUrl.length>1)
 				{//批量插入
 					_this._exec('unlink');//批量前删除当前链接并重新获取选择内容
@@ -997,20 +1108,18 @@ $.xheditor=function(textarea,options)
 				else
 				{//单url模式
 					url=aUrl[0].split(',');
+					if(!sText)sText=url[0];
+					sText=url[1]?url[1]:(selHtml!='')?'':sText?sText:url[0];
 					if(jParent.length==0)
 					{
-						if(selHtml=='')
-						{
-							if(!sText)sText=url[0];
-							_this.pasteHTML('<a href="#xhe_tmpurl">'+sText+'</a>');
-						}
+						if(sText)_this.pasteHTML('<a href="#xhe_tmpurl">'+sText+'</a>');
 						else _this._exec('createlink','#xhe_tmpurl');
 						jParent=$('a[href$="#xhe_tmpurl"]',_doc);
 					}
 					_this.attr(jParent,'href',url[0]);
 					if(sTarget!='')jParent.attr('target',sTarget);
 					else jParent.removeAttr('target');
-					if(url[1])jParent.text(url[1]);
+					if(sText&&!isSafari)jParent.text(sText);//safari改写文本会导致光标丢失
 				}
 			}
 			_this.hidePanel();
@@ -1035,11 +1144,11 @@ $.xheditor=function(textarea,options)
 		}
 		if(_this.settings.upImgUrl)_this.uploadInit(jSrc,_this.settings.upImgUrl,_this.settings.upImgExt);
 		jSave.click(function(){
-			_this.focus();
+			_this.loadBookmark();
 			var url=jSrc.val();
 			if(url!=''&&url!='http://')
 			{
-				var aUrl=url.split('|'),sAlt=jAlt.val(),sAlign=jAlign.val(),sWidth=jWidth.val(),sHeight=jHeight.val(),sBorder=jBorder.val(),sVspace=jVspace.val(),sHspace=jHspace.val();;
+				var aUrl=url.split('\t'),sAlt=jAlt.val(),sAlign=jAlign.val(),sWidth=jWidth.val(),sHeight=jHeight.val(),sBorder=jBorder.val(),sVspace=jVspace.val(),sHspace=jHspace.val();;
 				if(aUrl.length>1)
 				{//批量插入
 					var sTemplate='<img src="xhe_tmpurl"',sImg;
@@ -1077,7 +1186,6 @@ $.xheditor=function(textarea,options)
 						}
 						_this.attr(jParent,'src',url[0])
 						if(sAlt!='')jParent.attr('alt',sAlt);
-						else jParent.removeAttr('alt');
 						if(sAlign!='')jParent.attr('align',sAlign);
 						else jParent.removeAttr('align');
 						if(sWidth!='')jParent.attr('width',sWidth);
@@ -1106,7 +1214,7 @@ $.xheditor=function(textarea,options)
 			}
 			else if(jParent.length==1)jParent.remove();
 			_this.hidePanel();
-			return false;			
+			return false;
 		});
 		_this.showDialog(jImg);
 	}
@@ -1122,14 +1230,14 @@ $.xheditor=function(textarea,options)
 			jHeight.val(jParent.attr('height'));
 		}
 		jSave.click(function(){
-			_this.focus();
+			_this.loadBookmark();
 			var url=jSrc.val();
 			if(url!=''&&url!='http://')
 			{
 				var w=jWidth.val(),h=jHeight.val(),reg=/^[0-9]+$/;
 				if(!reg.test(w))w=412;if(!reg.test(h))h=300;
 				var sBaseCode='<embed type="'+sMime+'" classid="'+sClsID+'" src="xhe_tmpurl"'+sBaseAttrs;
-				var aUrl=url.split('|');
+				var aUrl=url.split('\t');
 				if(aUrl.length>1)
 				{//批量插入
 					var sTemplate=sBaseCode+'',sEmbed;
@@ -1159,16 +1267,16 @@ $.xheditor=function(textarea,options)
 			}
 			else if(jParent.length==1)jParent.remove();
 			_this.hidePanel();
-			return false;	
+			return false;
 		});
 	}
 	this.showEmot=function(group)
 	{
 		var jEmot=$('<div class="xheEmot"></div>');
-		
+
 		group=group?group:(selEmotGroup?selEmotGroup:'default');
 		var arrEmot=arrEmots[group];
-		
+
 		var sEmotPath=emotPath+group+'/',n=0,arrList=[],jList='';
 		var ew=arrEmot.width,eh=arrEmot.height,line=arrEmot.line,count=arrEmot.count,list=arrEmot.list;
 		if(count)
@@ -1176,7 +1284,7 @@ $.xheditor=function(textarea,options)
 			for(var i=1;i<=count;i++)
 			{
 				n++;
-				arrList.push('<a href="javascript:void(0);" style="background-image:url('+sEmotPath+i+'.gif);" emot="'+group+','+i+'">&nbsp;</a>');
+				arrList.push('<a href="javascript:void(0);" style="background-image:url('+sEmotPath+i+'.gif);" emot="'+group+','+i+'" title='+i+'>&nbsp;</a>');
 				if(n%line==0)arrList.push('<br />');
 			}
 		}
@@ -1192,9 +1300,9 @@ $.xheditor=function(textarea,options)
 		var w=line*(ew+12),h=Math.ceil(n/line)*(eh+12),mh=w*0.75;
 		if(h<=mh)mh='';
 		jList=$('<style>'+(mh?'.xheEmot div{width:'+(w+20)+'px;height:'+mh+'px;}':'')+'.xheEmot div a{width:'+ew+'px;height:'+eh+'px;}</style><div>'+arrList.join('')+'</div>');
-		$('a',jList).click(function(){_this.focus();_this.pasteHTML('<img emot="'+$(this).attr('emot')+'">');_this.hidePanel();return false;});
+		$('a',jList).click(function(){var jA=$(this);_this.pasteHTML('<img emot="'+jA.attr('emot')+'" alt="'+jA.attr('title')+'">');_this.hidePanel();return false;});
 		jEmot.append(jList);
-		
+
 		var gcount=0,arrGroup=['<ul>'],jGroup;//表情分类
 		$.each(arrEmots,function(g,v){
 			gcount++;
@@ -1204,17 +1312,17 @@ $.xheditor=function(textarea,options)
 		{
 			arrGroup.push('</ul><br style="clear:both;" />');
 			jGroup=$(arrGroup.join(''));
-			$('a',jGroup).click(function(){selEmotGroup=$(this).attr('group');_this.showEmot(selEmotGroup);return false;});
+			$('a',jGroup).click(function(){selEmotGroup=$(this).attr('group');_this.exec('Emot');return false;});
 			jEmot.append(jGroup);
 		}
-		
+
 		_this.showPanel(jEmot);
 	}
 	this.showTable=function()
 	{
 		var jTable=$(htmlTable),jRows=$('#xheTableRows',jTable),jColumns=$('#xheTableColumns',jTable),jHeaders=$('#xheTableHeaders',jTable),jWidth=$('#xheTableWidth',jTable),jHeight=$('#xheTableHeight',jTable),jBorder=$('#xheTableBorder',jTable),jCellSpacing=$('#xheTableCellSpacing',jTable),jCellPadding=$('#xheTableCellPadding',jTable),jAlign=$('#xheTableAlign',jTable),jCaption=$('#xheTableCaption',jTable),jSave=$('#xheSave',jTable);
 		jSave.click(function(){
-			_this.focus();
+			_this.loadBookmark();
 			var sCaption=jCaption.val(),sBorder=jBorder.val(),sRows=jRows.val(),sCols=jColumns.val(),sHeaders=jHeaders.val(),sWidth=jWidth.val(),sHeight=jHeight.val(),sCellSpacing=jCellSpacing.val(),sCellPadding=jCellPadding.val(),sAlign=jAlign.val();
 			var i,j,htmlTable='<table'+(sBorder!=''?' border="'+sBorder+'"':'')+(sWidth!=''?' width="'+sWidth+'"':'')+(sHeight!=''?' width="'+sHeight+'"':'')+(sCellSpacing!=''?' cellspacing="'+sCellSpacing+'"':'')+(sCellPadding!=''?' cellpadding="'+sCellPadding+'"':'')+(sAlign!=''?' align="'+sAlign+'"':'')+'>';
 			if(sCaption!='')htmlTable+='<caption>'+sCaption+'</caption>';
@@ -1239,18 +1347,13 @@ $.xheditor=function(textarea,options)
 			htmlTable+='</tbody></table>';
 			_this.pasteHTML(htmlTable);
 			_this.hidePanel();
-			return false;	
+			return false;
 		});
 		_this.showDialog(jTable);
 	}
 	this.showAbout=function()
 	{
-		var jAbout=$(htmlAbout),jSave=$('#xheSave',jAbout);
-		jSave.click(function(){
-			_this.focus();
-			_this.hidePanel();
-			return false;	
-		});
+		var jAbout=$(htmlAbout);
 		_this.showDialog(jAbout);
 	}
 	this.attr=function(jObj,n,v)
@@ -1269,10 +1372,9 @@ $.xheditor=function(textarea,options)
 	this.checkShortcuts=function(event)
 	{
 		if(bSource||bPreview)return true;
-		ev = event;
-		var code=ev.which,special=specialKeys[code],sChar=special?special:String.fromCharCode(code).toLowerCase();
+		var code=event.which,special=specialKeys[code],sChar=special?special:String.fromCharCode(code).toLowerCase();
 		sKey='';
-		sKey+=ev.ctrlKey?'ctrl+':'';sKey+=ev.altKey?'alt+':'';sKey+=ev.shiftKey?'shift+':'';sKey+=sChar;
+		sKey+=event.ctrlKey?'ctrl+':'';sKey+=event.altKey?'alt+':'';sKey+=event.shiftKey?'shift+':'';sKey+=sChar;
 
 		var cmd=arrShortCuts[sKey];
 		if(cmd)
@@ -1288,6 +1390,7 @@ $.xheditor=function(textarea,options)
 	{
 		var jUpload=$('<span class="xheUpload"><input type="text" style="visibility:hidden;" tabindex="-1" /><input type="button" value="'+_this.settings.upBtnText+'" class="xheBtn" tabindex="-1" /></span>'),jUpBtn=$('.xheBtn',jUpload);
 		jText.after(jUpload);jUpBtn.before(jText);
+		tourl=tourl.replace('{editorRoot}',editorRoot);
 		if(tourl.substr(0,1)=='!')//自定义上传管理页
 		{
 			jUpBtn.click(function(){
@@ -1306,12 +1409,14 @@ $.xheditor=function(textarea,options)
 					if(sFile.match(new RegExp('\.('+upext.replace(/,/g,'|')+')$','i')))
 					{
 						bShowPanel=false;//防止按钮面板被关闭
-						var modal=_this.showModal('Upload file','<div style="margin:22px 0;text-align:center;line-height:30px;">File uploading,please wait...<br /><img src="'+skinPath+'img/loading.gif"></div>',320,150,function(){bShowPanel=true;});
-						_this.ajaxUpload(jFile,tourl,function(data){
-							modal.remove();
+						var upload;
+						upload=new _this.ajaxUpload(jFile,tourl,function(data){
+							_this.removeModal();
 							if(data.err)alert(data.err);
 							else setUploadUrl(data.msg);
-						},function(){modal.remove();});
+						},function(){_this.removeModal();});
+						_this.showModal('File uploading(Esc cancel)','<div style="margin:22px 0;text-align:center;line-height:30px;">File uploading,please wait...<br /><img src="'+skinPath+'img/loading.gif"></div>',320,150,function(){bShowPanel=true;upload.remove();});
+						upload.start();
 					}
 					else alert('Upload file extension required for this:'+upext);
 				}
@@ -1329,31 +1434,43 @@ $.xheditor=function(textarea,options)
 	}
 	this.ajaxUpload=function(fromfile,tourl,callback,onError)
 	{
-		var uid = new Date().getTime(),idIO='jUploadFrame'+uid;
+		var uid = new Date().getTime(),idIO='jUploadFrame'+uid,_this=this;
 		var jIO=$('<iframe name="'+idIO+'" class="xheHideArea" />').appendTo('body');
 		var jForm=$('<form action="'+tourl+'" target="'+idIO+'" method="post" enctype="multipart/form-data" class="xheHideArea"></form>').appendTo('body');
 		var jOldFile = $(fromfile),jNewFile = jOldFile.clone().attr('disabled','true');
 		jOldFile.before(jNewFile).appendTo(jForm);
-		jForm.submit();
-		jIO.load(function(){
-			setTimeout(function(){
+		this.remove=function()
+		{
+			if(_this!=null)//防止重复调用
+			{
 				jNewFile.before(jOldFile).remove();
 				jIO.remove();jForm.remove();
-			},100);
+				_this=null;
+			}
+		}
+		this.onLoad=function()
+		{
 			var strText=$(jIO[0].contentWindow.document.body).text(),data=Object;
+			_this.remove();
 			try{data=eval('('+strText+')');}catch(ex){};
 			if(data.err!=undefined&&data.msg!=undefined)callback(data);
 			else{alert(tourl+' upload interface error!\r\n\r\nreturn error:\r\n\r\n'+strText);onError();}
-		});
+		}		
+		this.start=function()
+		{
+			jForm.submit();
+			jIO.load(_this.onLoad);
+		}
+		return this;
 	}
 	this.showIframeModal=function(title,ifmurl,callback,w,h,onRemove)
 	{
-		var jContent=$('<iframe frameborder="0" src="'+ifmurl+'" style="width:100%;height:100%;display:none;" /><div class="xheModalIfmWait"></div>'),jIframe=$(jContent[0]),jWait=$(jContent[1]);
-		var modal=_this.showModal(title,jContent,w,h,onRemove);
+		var jContent=$('<iframe frameborder="0" src="'+ifmurl.replace('{editorRoot}',editorRoot)+'" style="width:100%;height:100%;display:none;" /><div class="xheModalIfmWait"></div>'),jIframe=$(jContent[0]),jWait=$(jContent[1]);
+		_this.showModal(title,jContent,w,h,onRemove);
 		jIframe.load(function(){
 			var modalWin=jIframe[0].contentWindow,jModalDoc=$(modalWin.document);
-			modalWin.callback=function(v){jModalDoc.unbind('keydown',modal.escCheck);modal.remove();callback(v);};
-			jModalDoc.keydown(modal.escCheck);
+			modalWin.callback=function(v){_this.removeModal();callback(v);};
+			jModalDoc.keydown(_this.modalEscCheck);
 			jIframe.show();jWait.remove();
 		});
 	}
@@ -1366,26 +1483,25 @@ $.xheditor=function(textarea,options)
 		jModal=$('<div class="xheModal" style="width:'+(w-1)+'px;height:'+h+'px;margin-left:-'+Math.ceil(w/2)+'px;'+(isIE&&browerVer<=7.0?'':'margin-top:-'+Math.ceil(h/2)+'px')+'">'+(_this.settings.modalTitle?'<div class="xheModalTitle"><span class="xheModalClose" title="Close (Esc)"></span>'+title+'</div>':'')+'<div class="xheModalContent"></div></div>').appendTo('body');
 		jOverlay=$('<div class="xheModalOverlay"></div>').appendTo('body');
 		if(layerShadow>0)jModalShadow=$('<div class="xheModalShadow" style="width:'+jModal.outerWidth()+'px;height:'+jModal.outerHeight()+'px;margin-left:-'+(Math.ceil(w/2)-layerShadow-2)+'px;'+(isIE&&browerVer<=7.0?'':'margin-top:-'+(Math.ceil(h/2)-layerShadow-2)+'px')+'"></div>').appendTo('body');
-		
+
 		$('.xheModalContent',jModal).css('height',h-(_this.settings.modalTitle?$('.xheModalTitle').outerHeight():0)).html(content);
-		
+
 		if(isIE&&browerVer==6.0)jHideSelect=$('select:visible').css('visibility','hidden');//隐藏覆盖的select
-		
-		function remove(){if(jHideSelect)jHideSelect.css('visibility','visible');$(document).unbind('keydown',escCheck);jModal.remove();if(layerShadow>0)jModalShadow.remove();jOverlay.remove();if(onRemove)onRemove();};this.remove=remove;
-		function escCheck(ev){if(ev.which==27){remove();return false;}};this.escCheck=escCheck;
-		$(document).keydown(escCheck);
-		
-		$('.xheModalClose',jModal).click(this.remove);
-		
+
+		this.removeModal=function(){if(jHideSelect)jHideSelect.css('visibility','visible');$(document).unbind('keydown',_this.modalEscCheck);jModal.remove();if(layerShadow>0)jModalShadow.remove();jOverlay.remove();if(onRemove)onRemove();};
+		this.modalEscCheck=function(ev){if(ev.which==27){_this.removeModal();return false;}};
+		$(document).keydown(_this.modalEscCheck);
+
+		$('.xheModalClose',jModal).click(_this.removeModal);
+
 		jOverlay.show();if(layerShadow>0)jModalShadow.show();jModal.show();
-		return this;
 	}
 	this.showDialog=function(content)
 	{
 		var jDialog=$('<div class="xheDialog"></div>'),jContent=$(content),jSave=$('#xheSave',jContent);
 		if(jSave.length==1)
 		{
-			jContent.find('input[type=text]').keypress(function(ev){if(ev.which==13){jSave.click();return false;}});
+			jContent.find('input,select').keypress(function(ev){if(ev.which==13){jSave.click();return false;}});
 			jSave.after(' <input type="button" id="xheCancel" value="Cancel" />');
 			$('#xheCancel',jContent).click(_this.hidePanel);
 			if(!_this.settings.clickCancelDialog)
@@ -1395,6 +1511,7 @@ $.xheditor=function(textarea,options)
 				var xy=_jArea.offset();
 				jFixCancel.css({'left':xy.left,'top':xy.top,width:_jArea.outerWidth(),height:_jArea.outerHeight()})
 			}
+			jDialog.mousedown(function(){bDisableHoverExec=true;})//点击对话框禁止悬停执行
 		}
 		jDialog.append(jContent);
 		_this.showPanel(jDialog);
@@ -1402,24 +1519,37 @@ $.xheditor=function(textarea,options)
 	this.clickCancelPanel=function(){if(bClickCancel)_this.hidePanel();}
 	this.showPanel=function(content)
 	{
-		if(bShowPanel)_this.hidePanel();
+		if(!ev.target)return false;
 		_jPanel.empty().append(content).css('left',0).css('top',0);
-		_jPanelButton=$(ev.target).closest('a');
+		_jPanelButton=$(ev.target).closest('a').addClass('xheActive');
 		var xy=_jPanelButton.offset();
 		var x=xy.left,y=xy.top;y+=_jPanelButton.outerHeight()-1;
-		_jPanelButton.addClass('xheActive');
 		_jCntLine.css({'left':x+1,'top':y}).show();
 		if((x+_jPanel.outerWidth())>document.body.clientWidth)x-=(_jPanel.outerWidth()-_jPanelButton.outerWidth());//向左显示面板
 		var layerShadow=_this.settings.layerShadow;
 		if(layerShadow>0)_jShadow.css({'left':x+layerShadow,'top':y+layerShadow,'width':_jPanel.outerWidth(),'height':_jPanel.outerHeight()}).show();
 		_jPanel.css('left',x).css('top',y).show();
-		bShowPanel=true;
+		bQuickHoverExec=bShowPanel=true;
 	}
-	this.hidePanel=function(){if(bShowPanel){_jPanelButton.removeClass('xheActive');_jShadow.hide();_jCntLine.hide();_jPanel.hide();bShowPanel=false;if(!bClickCancel){$('.xheFixCancel').remove();bClickCancel=true;}}}
+	this.hidePanel=function(){if(bShowPanel){_jPanelButton.removeClass('xheActive');_jShadow.hide();_jCntLine.hide();_jPanel.hide();bShowPanel=false;if(!bClickCancel){$('.xheFixCancel').remove();bClickCancel=true;};bQuickHoverExec=bDisableHoverExec=false;lastAngle=null;}}
 	this.exec=function(cmd)
 	{
-		var e=arrTools[cmd].e;
-		if(e)return e.call(_this);
+		_this.hidePanel();
+		_this.focus();
+		_this.saveBookmark();
+		var tool=arrTools[cmd];
+		if(!tool)return false;//无效命令
+		if(ev==null)//非鼠标点击
+		{
+			ev={};
+			var btn=_jTools.find('.xheButton[name='+cmd+']');
+			if(btn.length==1)ev.target=btn;//设置当前事件焦点
+		}
+		if(tool.e)
+		{
+			tool.e.call(_this)
+			return ev=null;
+		}
 		cmd=cmd.toLowerCase();
 		switch(cmd)
 		{
@@ -1451,7 +1581,7 @@ $.xheditor=function(textarea,options)
 				break;
 			case 'fontsize':
 				var menuFontsize=[];
-				$.each(arrFontsize,function(n,v){menuFontsize.push({s:'<span style="font-size:'+v.s+'">'+v.t+'('+v.s+')</span>',v:n+1,t:v.t});});
+				$.each(arrFontsize,function(n,v){menuFontsize.push({s:'<span style="font-size:'+v.s+';">'+v.t+'('+v.s+')</span>',v:n+1,t:v.t});});
 				_this.showMenu(menuFontsize,function(v){_this._exec('fontsize',v);});
 				break;
 			case 'fontcolor':
@@ -1470,7 +1600,7 @@ $.xheditor=function(textarea,options)
 				_this.showLink();
 				break;
 			case 'img':
-				_this.showImg();		
+				_this.showImg();
 				break;
 			case 'flash':
 				_this.showEmbed('Flash',htmlFlash,'application/x-shockwave-flash','clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000',' wmode="opaque" quality="high" menu="false" play="true" loop="true"',_this.settings.upFlashUrl,_this.settings.upFlashExt);
@@ -1500,11 +1630,15 @@ $.xheditor=function(textarea,options)
 				_this._exec(cmd);
 				break;
 		}
+		ev=null;
 	}
 	this._exec=function(cmd,param)
 	{
-		if(param!=undefined)return _doc.execCommand(cmd,false,param);
-		else return _doc.execCommand(cmd,false,null);
+		var state;
+		if(param!=undefined)state=_doc.execCommand(cmd,false,param);
+		else state=_doc.execCommand(cmd,false,null);
+		_this.triggerChange();
+		return state;
 	}
 	function getLocalUrl(url,urlType)//绝对地址：abs,根地址：root,相对地址：rel
 	{
@@ -1517,12 +1651,14 @@ $.xheditor=function(textarea,options)
 		if(urlType!='rel')if(!url.match(/^((https?|file):\/\/|\/)/i))url=path+url;
 		if(urlType=='abs')if(!url.match(/(https?|file):\/\//i))url=protocol+'//'+location.host+url;
 		return url;
-	}	
+	}
 }
 $(function(){
-$('textarea.xheditor,textarea[xheditor]').xheditor(true);
-$('textarea.xheditor-mini').xheditor(true,{tools:'mini'});
-$('textarea.xheditor-simple').xheditor(true,{tools:'simple'});
+$.fn.oldVal=$.fn.val;
+$.fn.val=function(value){var editor;return (this[0]&&(editor=this[0].editor))?(value===undefined?editor.getSource():editor.setSource(value)):this.oldVal(value);}
+$('textarea.xheditor').xheditor();
+$('textarea.xheditor-mini').xheditor({tools:'mini'});
+$('textarea.xheditor-simple').xheditor({tools:'simple'});
 });
 
 })(jQuery);

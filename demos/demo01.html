@@ -14,32 +14,33 @@
 		<li><a href="demo02.html"><span>自定义按钮</span></a></li>
 		<li><a href="demo03.html"><span>皮肤选择</span></a></li>
 		<li><a href="demo04.html"><span>其它选项</span></a></li>
-		<li><a href="demo05.html"><span>JS交互</span></a></li>
+		<li><a href="demo05.html"><span>API交互</span></a></li>
 		<li><a href="demo06.html"><span>非utf-8编码调用</span></a></li>
 		<li><a href="demo07.html"><span>UBB可视化</span></a></li>
 		<li><a href="demo08.html"><span>Ajax上传</span></a></li>
 		<li><a href="demo09.html"><span>插件扩展</span></a></li>
 		<li><a href="demo10.html"><span>iframe调用上传</span></a></li>
 		<li><a href="demo11.html"><span>异步加载</span></a></li>
+		<li><a href="../wizard.html" target="_blank"><span>生成代码</span></a></li>
 	</ul>
 </div>
 <form method="post" action="show.php">
 	<h3>xhEditor demo1 : 默认模式</h3>
 	1,xheditor(默认完全):<br />
 	<textarea id="elm1" name="elm1" class="xheditor" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的HTML代码为：&lt;/p&gt;&lt;p&gt;&amp;lt;textarea id="elm1" name="elm1" class="xheditor" rows="12" cols="80" style="width: 80%"&amp;gt;&lt;/p&gt;
+&lt;p&gt;当前实例调用的HTML代码为：&lt;/p&gt;&lt;p&gt;&amp;lt;textarea id=&quot;elm1&quot; name=&quot;elm1&quot; &lt;span style=&quot;color:#ff0000;&quot;&gt;class=&quot;xheditor&quot;&lt;/span&gt; rows=&quot;12&quot; cols=&quot;80&quot; style=&quot;width: 80%&quot;&amp;gt;&lt;/p&gt;
 	</textarea><br /><br />
 	2,xheditor-simple(简单):<br />
 	<textarea id="elm2" name="elm2" class="xheditor-simple" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的HTML代码为：&lt;/p&gt;&lt;p&gt;&amp;lt;textarea id="elm2" name="elm2" class="xheditor-simple" rows="12" cols="80" style="width: 80%"&amp;gt;&lt;/p&gt;
+&lt;p&gt;当前实例调用的HTML代码为：&lt;/p&gt;&lt;p&gt;&amp;lt;textarea id=&quot;elm2&quot; name=&quot;elm2&quot; &lt;span style=&quot;color:#ff0000;&quot;&gt;class=&quot;xheditor-simple&quot;&lt;/span&gt; rows=&quot;12&quot; cols=&quot;80&quot; style=&quot;width: 80%&quot;&amp;gt;&lt;/p&gt;
 	</textarea><br /><br />
 	3,xheditor-mini(迷你):<br />
 	<textarea id="elm3" name="elm3" class="xheditor-mini" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的HTML代码为：&lt;/p&gt;&lt;p&gt;&amp;lt;textarea id="elm3" name="elm3" class="xheditor-mini" rows="12" cols="80" style="width: 80%"&amp;gt;&lt;/p&gt;
+&lt;p&gt;当前实例调用的HTML代码为：&lt;/p&gt;&lt;p&gt;&amp;lt;textarea id=&quot;elm3&quot; name=&quot;elm3&quot; &lt;span style=&quot;color:#ff0000;&quot;&gt;class=&quot;xheditor-mini&quot;&lt;/span&gt; rows=&quot;12&quot; cols=&quot;80&quot; style=&quot;width: 80%&quot;&amp;gt;&lt;/p&gt;
 	</textarea><br /><br />
-	4,专有属性xheditor:<br />
-	<textarea id="elm4" name="elm4" xheditor="{tools:'GStart,Source,Preview,Fullscreen,About,GEnd',skin:'default'}" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的HTML代码为：&lt;/p&gt;&lt;p&gt;&amp;lt;textarea id="elm4" name="elm4"&lt;br /&gt;xheditor="{tools:'GStart,Source,Preview,Fullscreen,About,GEnd',skin:'default'}"&lt;br /&gt;rows="12" cols="80" style="width: 80%"&amp;gt; &lt;br /&gt;&lt;/p&gt;&lt;p&gt;利用专有属性&lt;span style="color:#fe2419;"&gt;&lt;strong&gt;xheditor&lt;/strong&gt;&lt;/span&gt;作为参数来初始化编辑器，此种模式下的参数，除了插件可能工作不太正常，其它都能完美的工作。此模式缺点在于xheditor是非标准属性，如果您希望页面能够通过W3C标准化校验，那么您可以选择使用Javascript来初始化。&lt;/p&gt;
+	4,自定义详细参数:<br />
+	<textarea id="elm4" name="elm4" class="xheditor {tools:'GStart,Bold,Italic,Underline,Strikethrough,About,GEnd',skin:'default'}" rows="12" cols="80" style="width: 80%">
+&lt;p&gt;当前实例调用的HTML代码为：&lt;/p&gt;&lt;p&gt;&amp;lt;textarea id=&quot;elm4&quot; name=&quot;elm4&quot; &lt;span style=&quot;color:#ff0000;&quot;&gt;class=&quot;xheditor {tools:'GStart,Bold,Italic,Underline,Strikethrough,About,GEnd',skin:'default'}&quot;&lt;/span&gt; rows=&quot;12&quot; cols=&quot;80&quot; style=&quot;width: 80%&quot;&amp;gt; &lt;br /&gt;&lt;/p&gt;&lt;p&gt;在以上3个参数的基础上，可以在后面接一个json格式的详细参数，参数和Javascript初始化模式中的完全一致。前面主参数为xheditor-simple或者xheditor-mini的情况下，后面参数中tools参数值是无效的，以前面的主参数为主。&lt;/p&gt;&lt;p&gt;特别说明：&lt;span style=&quot;color:#ff0000;&quot;&gt;json参数中请尽可能不要出现空格&lt;/span&gt;&lt;br /&gt;&lt;/p&gt;
 	</textarea>
 	<br/><br />
 	<input type="submit" name="save" value="Submit" />

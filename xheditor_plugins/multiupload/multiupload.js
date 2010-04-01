@@ -91,10 +91,18 @@ function uploadSuccess(file, serverData)//单文件上传成功
 	try{eval("data=" + serverData);}catch(ex){};
 	if(data.err!=undefined&&data.msg!=undefined)
 	{
-		uploadSize+=file.size;
-		var url=(typeof msg=='string')?data.msg:data.msg.url;
-		setFileState(file.id,'上传成功');
-		arrSuccessUrl.push(url);
+		if(!data.err)
+		{
+			uploadSize+=file.size;
+			var url=(typeof data.msg=='string')?data.msg:data.msg.url;
+			setFileState(file.id,'上传成功');
+			arrSuccessUrl.push(url);
+		}
+		else
+		{
+			setFileState(file.id,'上传失败');
+			alert(data.err);
+		}
 	}
 	else setFileState(file.id,'上传失败！');
 }
@@ -109,7 +117,7 @@ function uploadComplete(file)//文件上传周期结束
 }
 function uploadAllComplete()//全部文件上传成功
 {
-	var strUrl=arrSuccessUrl.join('|');
+	var strUrl=arrSuccessUrl.join('\t');
 	strUrl='!'+strUrl;
 	callback(strUrl);
 }

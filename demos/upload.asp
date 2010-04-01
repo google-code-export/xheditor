@@ -73,12 +73,12 @@ function uploadfile(inputname)
 			if msgtype=1 then
 				msg="'"+target+"'"
 			else
-				msg="{url:'"+target+"',localname:'"+upfile.file(inputname).FileName+"',id:'1'}"
+				msg="{'url':'"+target+"','localname':'"+upfile.file(inputname).FileName+"','id':'1'}"
 			end if
 		end if
 	end if
 	set upfile=nothing
-	uploadfile="{err:'"+jsonString(err)+"',msg:"+msg+"}"
+	uploadfile="{'err':'"+jsonString(err)+"','msg':"+msg+"}"
 end function
 
 function jsonString(str)
@@ -306,7 +306,7 @@ Public Sub GetData (MaxSize)
 				oUpFileStream.CopyTo tStream,iFormStart-iInfoEnd-2
 				tStream.Position = 0
 				tStream.Type = 2
-				tStream.CharSet = "gb2312"
+				tStream.CharSet = "utf-8"
 				sFormValue = tStream.ReadText
 				If Form.Exists (sFormName) Then
 					Form (sFormName) = Form (sFormName) & ", " & sFormValue

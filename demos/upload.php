@@ -12,11 +12,10 @@
  * 注：本程序仅为演示用，请您根据自己需求进行相应修改，或者重开发。
  */
 header('Content-Type: text/html; charset=UTF-8');
-error_reporting(0);
 
 function uploadfile($inputname)
 {
-	$immediate=$_GET['immediate'];
+	$immediate=isset($_GET['immediate'])?$_GET['immediate']:0;
 	$attachdir='upload';//上传文件保存路径，结尾不要带/
 	$dirtype=1;//1:按天存入目录 2:按月存入目录 3:按扩展名存目录  建议使用按天存
 	$maxattachsize=2097152;//最大上传大小，默认是2M
@@ -25,6 +24,7 @@ function uploadfile($inputname)
 	
 	$err = "";
 	$msg = "";
+	if(!isset($_FILES[$inputname]))return array('err'=>'文件域的name错误或者没选择文件','msg'=>$msg);
 	$upfile=$_FILES[$inputname];
 	if(!empty($upfile['error']))
 	{
