@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>xhEditor初始化代码生成向导 for xhEditor 1.0.0 rc2</title>
+<title>xhEditor初始化代码生成向导 for xhEditor 1.0.0 RC3</title>
 <script type="text/javascript" src="jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="xheditor-zh-cn.js"></script>
 <script type="text/javascript">
@@ -13,7 +13,7 @@ function pageInit()
 	$('#update').click(updateAll);
 	$('#varSetup').find('input,select').focus(function(){$(this).select();}).keypress(function(ev){if(ev.which==13)updateAll();});
 	$('#source').focus(function(){$(this).select();});
-	$('#frmSetup').bind('reset',function(){setTimeout(updateAll,10);});
+	$('#frmSetup').submit(function(){return false;}).bind('reset',function(){setTimeout(updateAll,10);});
 	updateAll();
 }
 function toggleDisplay(id){$('#'+id).toggle(100);}
@@ -63,7 +63,7 @@ body{
 </style>
 </head>
 <body>
-	<h1 class="top">xhEditor初始化代码生成向导 for xhEditor 1.0.0 rc2</h1>
+	<h1 class="top">xhEditor初始化代码生成向导 for xhEditor 1.0.0 RC3</h1>
 	<h2>1: 选择编辑器初始化模式</h2>
 	<div class="section"><select id="editorMode"><option value="1" selected="selected">Class初始化</option><option value="2">Javascript初始化</option></select></div>
 	<h2>2: 更改初始化参数</h2>
@@ -73,7 +73,7 @@ body{
 				<legend><a href="javascript:toggleDisplay('group1')">基本参数</a></legend>
 				<div id="group1">
 					<p><label><acronym title="需要初始化的textarea ID">textareaID</acronym></label><input type="text" class="text" value="elem1" name="id"> <span>需要初始化为编辑器的textarea的id值</span></p>
-					<p><label><acronym title="按钮自定义选择，留空默认full按钮组">tools</acronym></label><input type="text" class="text" value="" name="tools"> <span>工具栏组：full,simple,mini，或者自定义每个按钮，<a href="http://code.google.com/p/xheditor/wiki/Help" target="_blank">点击查看完整按钮表</a></span></p>
+					<p><label><acronym title="按钮自定义选择，留空默认full按钮组">tools</acronym></label><input type="text" class="text" value="" name="tools"> <span>工具栏组：full,mfull,simple,mini，或者自定义每个按钮，<a href="http://code.google.com/p/xheditor/wiki/Help" target="_blank">点击查看完整按钮表</a></span></p>
 					<p><label><acronym title="皮肤风格选择">skin</acronym></label><select name="skin" class="text"><option value="default" selected="selected">默认 (default)</option><option value="o2007blue">Office 2007 蓝色</option><option value="o2007silver">Office 2007 银色</option><option value="vista">Vista</option></select> <span>皮肤选择，留空默认default皮肤</span></p>
 					<p><label><acronym title="编辑器宽度，留空默认读取textarea的宽度">width</acronym></label><input type="text" class="text" value="" name="width"> <span>编辑器宽度，留空读取textarea宽度</span></p>
 					<p><label><acronym title="编辑器高度，留空默认读取textarea的高度">height</acronym></label><input type="text" class="text" value="" name="height"> <span>编辑器高度，留空读取textarea高度</span></p>
@@ -109,6 +109,7 @@ body{
 				<legend><a href="javascript:toggleDisplay('group4')">上传相关参数</a></legend>
 				<div id="group4" style="display: none;">
 					<p><label><acronym title="上传按钮的文字">upBtnText</acronym></label><input type="text" class="text" value="" name="upBtnText"> <span>上传按钮的文本，可以定义为任意文字，默认：“上传”</span></p>
+					<p><label><acronym title="是否允许多文件选择上传">upMultiple</acronym></label><select name="upMultiple"><option value="" selected="selected">开启 (default)</option><option value="false">关闭</option></select> <span>是否允许多文件选择上传，默认：允许，此选项需要浏览器支持HTML5上传功能</span></p>
 					<p><label><acronym title="超链接文件上传接收URL">upLinkUrl</acronym></label><input type="text" class="text" value="" name="upLinkUrl"> <span>超链接文件上传接收URL，例：upload.php，可使用内置变量{editorRoot}</span></p>
 					<p><label><acronym title="超链接上传前限制本地文件扩展名">upLinkExt</acronym></label><input type="text" class="text" value="" name="upLinkExt"> <span>超链接上传前限制本地文件扩展名，默认：zip,rar,txt</span></p>
 					<p><label><acronym title="图片文件上传接收URL">upImgUrl</acronym></label><input type="text" class="text" value="" name="upImgUrl"> <span>图片文件上传接收URL，例：upload.php，可使用内置变量{editorRoot}</span></p>

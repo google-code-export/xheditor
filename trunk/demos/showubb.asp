@@ -14,7 +14,7 @@ function showCode(sHtml)
 		t=t.toLowerCase();
 		if(!t)t='plain';
 		c=c.replace(/[<>]/g,function(c){return {'<':'&lt;','>':'&gt;'}[c];});
-		return '<pre class="brush: '+t+';">'+c+'</pre>';
+		return '<pre name="code" class="'+t+'">'+c+'</pre>';
 	});
 	return sHtml;
 }
@@ -34,6 +34,7 @@ function showFlv(sHtml)
 <style type="text/css">
 body{margin:5px;border:2px solid #ccc;padding:5px;}
 </style>
+<link type="text/css" rel="stylesheet" href="syntaxhighlighter/SyntaxHighlighter.css"/>
 <script type="text/javascript" src="syntaxhighlighter/shCore.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushXml.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushJScript.js"></script>
@@ -43,18 +44,13 @@ body{margin:5px;border:2px solid #ccc;padding:5px;}
 <script type="text/javascript" src="syntaxhighlighter/shBrushCpp.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushJava.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushPython.js"></script>
-<script type="text/javascript" src="syntaxhighlighter/shBrushPerl.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushRuby.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushVb.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushDelphi.js"></script>
-<script type="text/javascript" src="syntaxhighlighter/shBrushAS3.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushSql.js"></script>
-<script type="text/javascript" src="syntaxhighlighter/shBrushPlain.js"></script>	
-<link type="text/css" rel="stylesheet" href="syntaxhighlighter/shCore.css"/>
-<link type="text/css" rel="stylesheet" href="syntaxhighlighter/shThemeDefault.css"/>
+<script type="text/javascript" src="syntaxhighlighter/shBrushPlain.js"></script>
 <script type="text/javascript">
-	SyntaxHighlighter.config.clipboardSwf = 'syntaxhighlighter/clipboard.swf';
-	SyntaxHighlighter.all();
+window.onload=function(){dp.SyntaxHighlighter.HighlightAll('code');}
 </script>
 <body>
 	<%=sHtml%>

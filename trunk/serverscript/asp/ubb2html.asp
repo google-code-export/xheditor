@@ -7,7 +7,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.6 build 100321
+ * @Version: 0.9.7 (build 100505)
  */
 function ubb2html(sUBB)
 {
@@ -15,11 +15,11 @@ function ubb2html(sUBB)
 	
 	var i,sHtml=String(sUBB),arrcode=new Array(),cnum=0;
 	
-	sHtml=sHtml.replace(/\[code\s*(?:=\s*((?:(?!")[\s\S])+?)(?:"[\s\S]*?)?)?\]([\s\S]*?)\[\/code\]/ig,function(all,t,c){//code特殊处理
+	sHtml=sHtml.replace(/\[code\s*(?:=\s*([^\]]+?))?\]([\s\S]*?)\[\/code\]/ig,function(all,t,c){//code特殊处理
 		cnum++;arrcode[cnum]=all;
 		return "[\tubbcodeplace_"+cnum+"\t]";
 	});
-
+	
 	sHtml=sHtml.replace(/&/ig, '&amp;');
 	sHtml=sHtml.replace(/[<>]/g,function(c){return {'<':'&lt;','>':'&gt;'}[c];});
 	sHtml=sHtml.replace(/\r?\n/g,"<br />");
@@ -32,11 +32,11 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/\[back\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,'<span style="background-color:$1;">');
 	sHtml=sHtml.replace(/\[\/back\]/ig,'</span>');
 	for(i=0;i<3;i++)sHtml=sHtml.replace(/\[align\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/ig,'<p align="$1">$2</p>');
-	sHtml=sHtml.replace(/\[img\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/ig,'<img src="$1" />');
-	sHtml=sHtml.replace(/\[img\s*=(?:\s*(\d*%?)\s*,\s*(\d*%?)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*)?\s*\[\/img\]/ig,function(all,p1,p2,p3,src){
-		var str='<img src="'+src+'"',a=p3?p3:(isNaN(p1)?p1:'');
-		if(!isNaN(p1))str+=' width="'+p1+'"';
-		if(!isNaN(p2))str+=' height="'+p2+'"'
+	sHtml=sHtml.replace(/\[img\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/ig,'<img src="$1" alt="" />');
+	sHtml=sHtml.replace(/\[img\s*=([^,\]]*)(?:\s*,\s*(\d*%?)\s*,\s*(\d*%?)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*)?\s*\[\/img\]/ig,function(all,alt,p1,p2,p3,src){
+		var str='<img src="'+src+'" alt="'+alt+'"',a=p3?p3:(!isNum(p1)?p1:'');
+		if(isNum(p1))str+=' width="'+p1+'"';
+		if(isNum(p2))str+=' height="'+p2+'"'
 		if(a)str+=' align="'+a+'"';
 		str+=' />';
 		return str;
@@ -44,7 +44,7 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/\[emot\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\/\]/ig,function(all,emot){
 		emot=emot.split(',');
 		if(!emot[1]){emot[1]=emot[0];emot[0]='default';}
-		return '<img src="'+emotPath+emot[0]+'/'+emot[1]+'.gif" />';
+		return '<img src="'+emotPath+emot[0]+'/'+emot[1]+'.gif" alt="'+emot[1]+'" />';
 	});
 	sHtml=sHtml.replace(/\[url\]\s*(((?!")[\s\S])*?)(?:"[\s\S]*?)?\s*\[\/url\]/ig,'<a href="$1">$1</a>');
 	sHtml=sHtml.replace(/\[url\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]\s*([\s\S]*?)\s*\[\/url\]/ig,'<a href="$1">$2</a>');
@@ -86,6 +86,7 @@ function ubb2html(sUBB)
 	sHtml=sHtml.replace(/(^|<\/?\w+(?:\s+[^>]*?)?>)([^<$]+)/ig, function(all,tag,text){
 		return tag+text.replace(/[\t ]/g,function(c){return {'\t':'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',' ':'&nbsp;'}[c];});
 	});
+	function isNum(s){if(s!=null&&s!='')return !isNaN(s);else return false;}
 	
 	return sHtml;
 }
@@ -134,6 +135,9 @@ function html2ubb(sHtml)
 	}
 	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(div|p)(?:\s+[^>]*?)?[\s"';]\s*(?:text-)?align\s*[=:]\s*(["']?)\s*(left|center|right)\s*\2[^>]*>(((?!<\1(\s+[^>]*?)?>)[\s\S])+?)<\/\1>/ig,'[align=$3]$4[/align]');
 	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(center)(?:\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S])*?)<\/\1>/ig,'[align=center]$2[/align]');
+	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(p|div)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)*\s*text-align\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,style,content){
+		
+	});
 	sUBB=sUBB.replace(/<a(?:\s+[^>]*?)?\s+href=(["'])\s*(.+?)\s*\1[^>]*>\s*([\s\S]*?)\s*<\/a>/ig,function(all,q,url,text){
 		if(!(url&&text))return '';
 		var tag='url',str;
@@ -149,13 +153,14 @@ function html2ubb(sHtml)
 	sUBB=sUBB.replace(/<img(\s+[^>]*?)\/?>/ig,function(all,attr){
 		var emot=attr.match(/\s+emot\s*=\s*(["']?)\s*(.+?)\s*\1(\s|$)/i);
 		if(emot)return '[emot='+emot[2]+'/]';
-		var url=attr.match(regSrc),w=attr.match(regWidth),h=attr.match(regHeight),a=attr.match(/\s+align\s*=\s*(["']?)\s*(\w+)\s*\1(\s|$)/i),str='[img',p='';
+		var url=attr.match(regSrc),alt=attr.match(/\s+alt\s*=\s*(["']?)\s*(.*?)\s*\1(\s|$)/i),w=attr.match(regWidth),h=attr.match(regHeight),align=attr.match(/\s+align\s*=\s*(["']?)\s*(\w+)\s*\1(\s|$)/i),str='[img',p='';
 		if(!url)return '';
-		if(w||h)p+=(w?w[2]:'')+','+(h?h[2]:'');
-		if(a)p+=(w||h?',':'')+a[2];
+		p+=alt[2];
+		if(w||h)p+=','+(w?w[2]:'')+','+(h?h[2]:'');
+		if(align)p+=','+align[2];
 		if(p)str+='='+p;
-		str+=']'+url[2];
-		return str+'[/img]';
+		str+=']'+url[2]+'[/img]';
+		return str;
 	});
 	sUBB=sUBB.replace(/<blockquote(?:\s+[^>]*?)?>([\s\S]+?)<\/blockquote>/ig,'[quote]$1[/quote]');
 	sUBB=sUBB.replace(/<embed((?:\s+[^>]*?)?(?:\s+type\s*=\s*"\s*application\/x-shockwave-flash\s*"|\s+classid\s*=\s*"\s*clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000\s*")[^>]*?)\/>/ig,function(all,attr){

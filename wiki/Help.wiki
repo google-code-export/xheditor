@@ -38,12 +38,10 @@ $('#elm1').xheditor({tools:'full',skin:'default',showBlocktag:true,readonly:fals
 
 tools：自定义工具按钮
 {{{
-参数值：full(完全),simple(简单),mini(迷你)
-或者自定义字符串，例如：'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Source,Preview,Fullscreen,About,GEnd'
+参数值：full(完全),mfull(多行完全),simple(简单),mini(迷你)
+或者自定义字符串，例如：'Cut,Copy,Paste,Pastetext,Separator,Source,Preview,Fullscreen,About'
 
 完整按钮表：
-GStart：组开始
-GEnd：组结束
 Separator：分隔符
 BtnBr：强制换行
 Cut：剪切
@@ -59,6 +57,7 @@ Underline：下划线
 Strikethrough：中划线
 FontColor：字体颜色
 BackColor：字体背景色
+SelectAll：全选
 Removeformat：删除文字格式
 Align：对齐
 List：列表
@@ -73,13 +72,14 @@ Emot：表情
 Table：表格
 Source：切换源代码模式
 Preview：切换预览模式
+Print：打印
 Fullscreen：切换全屏模式
 About：关于xhEditor
 }}}
 
 skin：皮肤风格选择
 {{{
-参数值：default(默认风格),o2007blue(Office 2007 蓝色),o2007silver(Office 2007 银色)
+参数值：default(默认风格),o2007blue(Office 2007 蓝色),o2007silver(Office 2007 银色),vista(Vista)
 }}}
 
 layerShadow:阴影的深度(按钮面板和模式窗口的背景阴影)
@@ -134,7 +134,8 @@ height：编辑器高度
 
 loadCSS：加载样式
 {{{
-参数值：样式表网址字符串，例如：'1.css'，或者是字符串数组，例如：['1.css','2.css']
+参数值：URL地址、URL数组以及直接内部样式，例如：'1.css'、['1.css','2.css']、'<style>body{font-size:20px;}</style>'
+备注：1.0.0 RC3新添加加载内部样式功能
 }}}
 
 fullscreen：默认全屏显示
@@ -231,6 +232,13 @@ upBtnText:上传按钮的文字
 {{{
 参数值：任意字符串,默认值：“上传”
 备注：1.0.0 beta2新添加
+}}}
+
+upMultiple:是否允许选择多个文件上传
+{{{
+参数值：true(允许),false(不允许),默认为true允许
+说明：本功能需要浏览器支持HTML5上传
+备注：1.0.0 RC2新添加
 }}}
 
 upLinkUrl:超链接文件上传接收URL

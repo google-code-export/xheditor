@@ -3,83 +3,81 @@
 ' @requires xhEditor
 ' 
 ' @author Yanis.Wang<yanis.wang@gmail.com>
-' @site http://pirate9.com/
+' @site http://xheditor.com/
 ' @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
 ' 
-' @Version: 0.9.2 build 100225
+' @Version: 0.9.3 (build 100504)
 '
-' 注：本程序仅为演示用，请您根据自己需求进行相应修改，或者重开发。
+' 注1：本程序仅为演示用，请您根据自己需求进行相应修改，或者重开发
+' 注2：本程序调用的无惧上传类 V2.2为xhEditor特别针对HTML5上传而修改过的版本
 
 'option explicit
 
 response.charset="UTF-8"
 
-response.write uploadfile("filedata")
+dim inputname,immediate,attachdir,dirtype,maxattachsize,upext,msgtype
+inputname="filedata"'表单文件域name
+attachdir="upload"'上传文件保存路径，结尾不要带/
+dirtype=1'1:按天存入目录 2:按月存入目录 3:按扩展名存目录  建议使用按天存
+maxattachsize=2097152'最大上传大小，默认是2M
+upext="txt,rar,zip,jpg,jpeg,gif,png,swf,wmv,avi,wma,mp3,mid"'上传扩展名
+msgtype=2'返回上传参数的格式：1，只返回url，2，返回参数数组
+immediate=Request.QueryString("immediate")'立即上传模式，仅为演示用
 
-function uploadfile(inputname)
-	dim immediate,attachdir,dirtype,maxattachsize,upext,msgtype
-	immediate=Request.QueryString("immediate")
-	attachdir="upload"'上传文件保存路径，结尾不要带/
-	dirtype=1'1:按天存入目录 2:按月存入目录 3:按扩展名存目录  建议使用按天存
-	maxattachsize=2097152'最大上传大小，默认是2M
-	upext="txt,rar,zip,jpg,jpeg,gif,png,swf,wmv,avi,wma,mp3,mid"'上传扩展名
-	msgtype=2'返回上传参数的格式：1，只返回url，2，返回参数数组
-	
-	dim err,msg,upfile
-	err = ""
-	msg = "''"
-	
-	set upfile=new upfile_class
-	upfile.AllowExt=replace(upext,",",";")+";"
-	upfile.GetData(maxattachsize)
-	if upfile.isErr then
-		select case upfile.isErr
+dim err,msg,upfile
+err = ""
+msg = "''"
+
+set upfile=new upfile_class
+upfile.AllowExt=replace(upext,",",";")+";"
+upfile.GetData(maxattachsize)
+if upfile.isErr then
+	select case upfile.isErr
+	case 1
+		err="无数据提交"
+	case 2
+		err="文件大小超过 "+cstr(maxattachsize)+"字节"
+	case else
+		err=upfile.ErrMessage
+	end select
+else
+	dim attach_dir,attach_subdir,filename,extension,target,tmpfile
+	extension=upfile.file(inputname).FileExt
+	select case dirtype
 		case 1
-			err="无数据提交"
+			attach_subdir="day_"+DateFormat(now,"yymmdd")
 		case 2
-			err="文件大小超过 "+cstr(maxattachsize)+"字节"
-		case else
-			err=upfile.ErrMessage
-		end select
-	else
-		dim attach_dir,attach_subdir,filename,extension,target,tmpfile
-		extension=upfile.file(inputname).FileExt
-		select case dirtype
-			case 1
-				attach_subdir="day_"+DateFormat(now,"yymmdd")
-			case 2
-				attach_subdir="month_"+DateFormat(now,"yymm")
-			case 3
-				attach_subdir="ext_"+extension
-		end select
-		attach_dir=attachdir+"/"+attach_subdir+"/"
-		'建文件夹
-		CreateFolder attach_dir
-		tmpfile=upfile.AutoSave(inputname,Server.mappath(attach_dir)+"\")
-		if upfile.isErr then
-			if upfile.isErr=3 then
-				err="上传文件扩展名必需为："+upext
-			else
-				err=upfile.ErrMessage
-			end if
+			attach_subdir="month_"+DateFormat(now,"yymm")
+		case 3
+			attach_subdir="ext_"+extension
+	end select
+	attach_dir=attachdir+"/"+attach_subdir+"/"
+	'建文件夹
+	CreateFolder attach_dir
+	tmpfile=upfile.AutoSave(inputname,Server.mappath(attach_dir)+"\")
+	if upfile.isErr then
+		if upfile.isErr=3 then
+			err="上传文件扩展名必需为："+upext
 		else
-			'生成随机文件名并改名
-			Randomize timer
-			filename=DateFormat(now,"yyyymmddhhnnss")+cstr(cint(9999*Rnd))+"."+extension
-			target=attach_dir+filename
-			moveFile attach_dir+tmpfile,target
-			if immediate="1" then target="!"+target
-			target=jsonString(target)
-			if msgtype=1 then
-				msg="'"+target+"'"
-			else
-				msg="{'url':'"+target+"','localname':'"+upfile.file(inputname).FileName+"','id':'1'}"
-			end if
+			err=upfile.ErrMessage
+		end if
+	else
+		'生成随机文件名并改名
+		Randomize timer
+		filename=DateFormat(now,"yyyymmddhhnnss")+cstr(cint(9999*Rnd))+"."+extension
+		target=attach_dir+filename
+		moveFile attach_dir+tmpfile,target
+		if immediate="1" then target="!"+target
+		target=jsonString(target)
+		if msgtype=1 then
+			msg="'"+target+"'"
+		else
+			msg="{'url':'"+target+"','localname':'"+jsonString(upfile.file(inputname).FileName)+"','id':'1'}"
 		end if
 	end if
-	set upfile=nothing
-	uploadfile="{'err':'"+jsonString(err)+"','msg':"+msg+"}"
-end function
+end if
+set upfile=nothing
+response.write "{'err':'"+jsonString(err)+"','msg':"+msg+"}"
 
 function jsonString(str)
 	str=replace(str,"\","\\")
@@ -137,7 +135,7 @@ End Function
  
 '----------------------------------------------------------------------
 '转发时请保留此声明信息,这段声明不并会影响你的速度!
-'*******************	 无惧上传类 V2.2	************************************
+'*******************	 无惧上传类 V2.2 xheditor特别修改版	************************************
 '作者:梁无惧
 '网站:http://www.25cn.com
 '电子邮件:yjlrb@21cn.com
@@ -224,7 +222,7 @@ Public Sub GetData (MaxSize)
 	 '定义变量
 	on error Resume Next
 	if isGetData_=false then 
-		Dim RequestBinDate,sSpace,bCrLf,sInfo,iInfoStart,iInfoEnd,tStream,iStart,oFileInfo
+		Dim RequestBinData,sSpace,bCrLf,sInfo,iInfoStart,iInfoEnd,tStream,iStart,oFileInfo
 		Dim sFormValue,sFileName
 		Dim iFindStart,iFindEnd
 		Dim iFormStart,iFormEnd,sFormName
@@ -255,71 +253,90 @@ Public Sub GetData (MaxSize)
 		oUpFileStream.Open 
 		oUpFileStream.Write Request.BinaryRead (Request.TotalBytes)
 		oUpFileStream.Position = 0
-		RequestBinDate = oUpFileStream.Read 
-		iFormEnd = oUpFileStream.Size
-		bCrLf = ChrB (13) & ChrB (10)
-		'取得每个项目之间的分隔符
-		sSpace = MidB (RequestBinDate,1, InStrB (1,RequestBinDate,bCrLf)-1)
-		iStart = LenB(sSpace)
-		iFormStart = iStart+2
-		'分解项目
-		Do
-			iInfoEnd = InStrB (iFormStart,RequestBinDate,bCrLf & bCrLf)+3
-			tStream.Type = 1
-			tStream.Mode = 3
-			tStream.Open
-			oUpFileStream.Position = iFormStart
-			oUpFileStream.CopyTo tStream,iInfoEnd-iFormStart
-			tStream.Position = 0
-			tStream.Type = 2
-			tStream.CharSet = "utf-8"
-			sInfo = tStream.ReadText			
-			'取得表单项目名称
-			iFormStart = InStrB (iInfoEnd,RequestBinDate,sSpace)-1
-			iFindStart = InStr (22,sInfo,"name=""",1)+6
-			iFindEnd = InStr (iFindStart,sInfo,"""",1)
-			sFormName = Mid(sinfo,iFindStart,iFindEnd-iFindStart)
-			'如果是文件
-			If InStr (45,sInfo,"filename=""",1) > 0 Then
-				Set oFileInfo = new FileInfo_Class
-				'取得文件属性
-				iFindStart = InStr (iFindEnd,sInfo,"filename=""",1)+10
-				iFindEnd = InStr (iFindStart,sInfo,""""&vbCrLf,1)
-				sFileName = Trim(Mid(sinfo,iFindStart,iFindEnd-iFindStart))
-				oFileInfo.FileName = GetFileName(sFileName)
-				oFileInfo.FilePath = GetFilePath(sFileName)
-				oFileInfo.FileExt = GetFileExt(sFileName)
-				iFindStart = InStr (iFindEnd,sInfo,"Content-Type: ",1)+14
-				iFindEnd = InStr (iFindStart,sInfo,vbCr)
-				oFileInfo.FileMIME = Mid(sinfo,iFindStart,iFindEnd-iFindStart)
-				oFileInfo.FileStart = iInfoEnd
-				oFileInfo.FileSize = iFormStart -iInfoEnd -2
-				oFileInfo.FormName = sFormName
-				file.add sFormName,oFileInfo
-			else
-			'如果是表单项目
-				tStream.Close
+		RequestBinData = oUpFileStream.Read
+		Dim html5FileInfo
+		sHtml5FileInfo=Request.ServerVariables("HTTP_CONTENT_DISPOSITION")
+		If sHtml5FileInfo<>"" Then'针对Html5上传特别修正
+			iFindStart = InStr (1,sHtml5FileInfo,"name=""",1)+6
+			iFindEnd = InStr (iFindStart,sHtml5FileInfo,"""",1)
+			sFormName=Trim(Mid(sHtml5FileInfo,iFindStart,iFindEnd-iFindStart))
+			iFindStart = InStr (iFindStart,sHtml5FileInfo,"filename=""",1)+10
+			iFindEnd = InStr (iFindStart,sHtml5FileInfo,"""",1)
+			sFileName = Trim(Mid(sHtml5FileInfo,iFindStart,iFindEnd-iFindStart))
+			Set oFileInfo = new FileInfo_Class
+			oFileInfo.FileName = GetFileName(sFileName)
+			oFileInfo.FilePath = GetFilePath(sFileName)
+			oFileInfo.FileExt = GetFileExt(sFileName)
+			oFileInfo.FileStart = 0
+			oFileInfo.FileSize = Request.TotalBytes
+			oFileInfo.FormName = sFormName
+			file.add sFormName,oFileInfo
+		Else
+			iFormEnd = oUpFileStream.Size
+			bCrLf = ChrB (13) & ChrB (10)
+			'取得每个项目之间的分隔符
+			sSpace = MidB (RequestBinData,1, InStrB (1,RequestBinData,bCrLf)-1)
+			iStart = LenB(sSpace)
+			iFormStart = iStart+2
+			'分解项目
+			Do
+				iInfoEnd = InStrB (iFormStart,RequestBinData,bCrLf & bCrLf)+3
 				tStream.Type = 1
 				tStream.Mode = 3
 				tStream.Open
-				oUpFileStream.Position = iInfoEnd 
-				oUpFileStream.CopyTo tStream,iFormStart-iInfoEnd-2
+				oUpFileStream.Position = iFormStart
+				oUpFileStream.CopyTo tStream,iInfoEnd-iFormStart
 				tStream.Position = 0
 				tStream.Type = 2
 				tStream.CharSet = "utf-8"
-				sFormValue = tStream.ReadText
-				If Form.Exists (sFormName) Then
-					Form (sFormName) = Form (sFormName) & ", " & sFormValue
-					else
-					Form.Add sFormName,sFormValue
+				sInfo = tStream.ReadText			
+				'取得表单项目名称
+				iFormStart = InStrB (iInfoEnd,RequestBinData,sSpace)-1
+				iFindStart = InStr (22,sInfo,"name=""",1)+6
+				iFindEnd = InStr (iFindStart,sInfo,"""",1)
+				sFormName = Mid(sinfo,iFindStart,iFindEnd-iFindStart)
+				'如果是文件
+				If InStr (45,sInfo,"filename=""",1) > 0 Then
+					Set oFileInfo = new FileInfo_Class
+					'取得文件属性
+					iFindStart = InStr (iFindEnd,sInfo,"filename=""",1)+10
+					iFindEnd = InStr (iFindStart,sInfo,""""&vbCrLf,1)
+					sFileName = Trim(Mid(sinfo,iFindStart,iFindEnd-iFindStart))
+					oFileInfo.FileName = GetFileName(sFileName)
+					oFileInfo.FilePath = GetFilePath(sFileName)
+					oFileInfo.FileExt = GetFileExt(sFileName)
+					iFindStart = InStr (iFindEnd,sInfo,"Content-Type: ",1)+14
+					iFindEnd = InStr (iFindStart,sInfo,vbCr)
+					oFileInfo.FileMIME = Mid(sinfo,iFindStart,iFindEnd-iFindStart)
+					oFileInfo.FileStart = iInfoEnd
+					oFileInfo.FileSize = iFormStart -iInfoEnd -2
+					oFileInfo.FormName = sFormName
+					file.add sFormName,oFileInfo
+				else
+				'如果是表单项目
+					tStream.Close
+					tStream.Type = 1
+					tStream.Mode = 3
+					tStream.Open
+					oUpFileStream.Position = iInfoEnd 
+					oUpFileStream.CopyTo tStream,iFormStart-iInfoEnd-2
+					tStream.Position = 0
+					tStream.Type = 2
+					tStream.CharSet = "utf-8"
+					sFormValue = tStream.ReadText
+					If Form.Exists (sFormName) Then
+						Form (sFormName) = Form (sFormName) & ", " & sFormValue
+						else
+						Form.Add sFormName,sFormValue
+					End If
 				End If
-			End If
-			tStream.Close
-			iFormStart = iFormStart+iStart+2
-			'如果到文件尾了就退出
-		Loop Until (iFormStart+2) >= iFormEnd 
-		if Err.number<>0 then OutErr("分解上传数据时发生错误,可能客户端的上传数据不正确或不符合上传数据规则")
-		RequestBinDate = ""
+				tStream.Close
+				iFormStart = iFormStart+iStart+2
+				'如果到文件尾了就退出
+			Loop Until (iFormStart+2) >= iFormEnd 
+			if Err.number<>0 then OutErr("分解上传数据时发生错误,可能客户端的上传数据不正确或不符合上传数据规则")
+		End if
+		RequestBinData = ""
 		Set tStream = Nothing
 		isGetData_=true
 	end if

@@ -6,9 +6,9 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.1
+ * @Version: 0.9.2 (build 100505)
  */
-var swfu,selQueue=[],selectID,arrSuccessUrl=[],allSize=0,uploadSize=0;
+var swfu,selQueue=[],selectID,arrMsg=[],allSize=0,uploadSize=0;
 function removeFile()
 {
 	var file;
@@ -87,16 +87,15 @@ function uploadProgress(file, bytesLoaded, bytesTotal)//单文件上传进度
 }
 function uploadSuccess(file, serverData)//单文件上传成功
 {
-	var data;
+	var data=Object;
 	try{eval("data=" + serverData);}catch(ex){};
 	if(data.err!=undefined&&data.msg!=undefined)
 	{
 		if(!data.err)
 		{
 			uploadSize+=file.size;
-			var url=(typeof data.msg=='string')?data.msg:data.msg.url;
+			arrMsg.push(data.msg);
 			setFileState(file.id,'上传成功');
-			arrSuccessUrl.push(url);
 		}
 		else
 		{
@@ -117,9 +116,7 @@ function uploadComplete(file)//文件上传周期结束
 }
 function uploadAllComplete()//全部文件上传成功
 {
-	var strUrl=arrSuccessUrl.join('\t');
-	strUrl='!'+strUrl;
-	callback(strUrl);
+	callback(arrMsg);
 }
 function formatBytes(bytes) {
 	var s = ['Byte', 'KB', 'MB', 'GB', 'TB', 'PB'];

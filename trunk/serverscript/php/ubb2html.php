@@ -7,7 +7,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.7 build 100302
+ * @Version: 0.9.8 (build 100505)
  */
 function ubb2html($sUBB)
 {	
@@ -44,15 +44,15 @@ function ubb2html($sUBB)
 	$sHtml=preg_replace("/\[\/(color|size|font|back)\]/i",'</span>',$sHtml);
 	
 	for($i=0;$i<3;$i++)$sHtml=preg_replace('/\[align\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/','<p align="$1">$2</p>',$sHtml);
-	$sHtml=preg_replace('/\[img\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/i','<img src="$1" />',$sHtml);
+	$sHtml=preg_replace('/\[img\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/i','<img src="$1" alt="" />',$sHtml);
 	if(!$bUbb2htmlFunctionInit){
 	function getImg($match)
 	{
-		$p1=$match[1];$p2=$match[2];$p3=$match[3];$src=$match[4];
+		$alt=$match[1];$p1=$match[2];$p2=$match[3];$p3=$match[4];$src=$match[5];
 		$a=$p3?$p3:(!is_numeric($p1)?$p1:'');
-		return '<img src="'.$src.'"'.(is_numeric($p1)?' width="'.$p1.'"':'').(is_numeric($p2)?' height="'.$p2.'"':'').($a?' align="'.$a.'"':'').' />';
+		return '<img src="'.$src.'" alt="'.$alt.'"'.(is_numeric($p1)?' width="'.$p1.'"':'').(is_numeric($p2)?' height="'.$p2.'"':'').($a?' align="'.$a.'"':'').' />';
 	}}
-	$sHtml=preg_replace_callback('/\[img\s*=(?:\s*(\d*%?)\s*,\s*(\d*%?)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/i','getImg',$sHtml);
+	$sHtml=preg_replace_callback('/\[img\s*=([^,\]]*)(?:\s*,\s*(\d*%?)\s*,\s*(\d*%?)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*)?\s*\[\/img\]/i','getImg',$sHtml);
 	if(!$bUbb2htmlFunctionInit){
 	function getEmot($match)
 	{
@@ -60,7 +60,7 @@ function ubb2html($sUBB)
 		$arr=split(',',$match[1]);
 		if(!isset($arr[1])){$arr[1]=$arr[0];$arr[0]='default';}
 		$path=$emotPath.$arr[0].'/'.$arr[1].'.gif';
-		return '<img src="'.$path.'" />';
+		return '<img src="'.$path.'" alt="'.$arr[1].'" />';
 	}}
 	$sHtml=preg_replace_callback('/\[emot\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\/\]/i','getEmot',$sHtml);
 	$sHtml=preg_replace('/\[url\]\s*(((?!")[\s\S])*?)(?:"[\s\S]*?)?\s*\[\/url\]/i','<a href="$1">$1</a>',$sHtml);

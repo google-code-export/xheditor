@@ -7,7 +7,7 @@
 
 .xhe_vista span.xheGStart{display:block;width:4px;height:22px;background:url(img/buttonbg.gif) -22px 0;}
 .xhe_vista span.xheGEnd{display:block;width:4px;height:22px;background:url(img/buttonbg.gif) -26px 0;}
-.xhe_vista span.xheSeparator{display:block;height:22px;width:4px;padding:0 2px}
+.xhe_vista span.xheSeparator{display:block;height:22px;width:4px;}
 
 .xhe_vista a.xheButton{display:block;padding:1px;width:20px;height:20px;border:0px;background:url(img/buttonbg.gif);cursor:pointer;}
 .xhe_vista a.xheButton span{opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30);}
@@ -31,26 +31,28 @@
 .xhe_vista span.xheBtnStrikethrough {background-position:-200px 0}
 .xhe_vista span.xheBtnFontColor {background-position:-220px 0}
 .xhe_vista span.xheBtnBackColor {background-position:-240px 0}
-.xhe_vista span.xheBtnRemoveformat {background-position:-260px 0}
+.xhe_vista span.xheBtnSelectAll {background-position:-260px 0}
+.xhe_vista span.xheBtnRemoveformat {background-position:-280px 0}
 
-.xhe_vista span.xheBtnAlign {background-position:-280px 0}
-.xhe_vista span.xheBtnList {background-position:-300px 0}
-.xhe_vista span.xheBtnOutdent {background-position:-320px 0}
-.xhe_vista span.xheBtnIndent {background-position:-340px 0}
+.xhe_vista span.xheBtnAlign {background-position:-300px 0}
+.xhe_vista span.xheBtnList {background-position:-320px 0}
+.xhe_vista span.xheBtnOutdent {background-position:-340px 0}
+.xhe_vista span.xheBtnIndent {background-position:-360px 0}
 
-.xhe_vista span.xheBtnLink {background-position:-360px 0}
-.xhe_vista span.xheBtnUnlink {background-position:-380px 0}
-.xhe_vista span.xheBtnImg {background-position:-400px 0}
-.xhe_vista span.xheBtnFlash {background-position:-420px 0}
-.xhe_vista span.xheBtnMedia {background-position:-440px 0}
-.xhe_vista span.xheBtnEmot {background-position:-460px 0}
-.xhe_vista span.xheBtnTable {background-position:-480px 0}
+.xhe_vista span.xheBtnLink {background-position:-380px 0}
+.xhe_vista span.xheBtnUnlink {background-position:-400px 0}
+.xhe_vista span.xheBtnImg {background-position:-420px 0}
+.xhe_vista span.xheBtnFlash {background-position:-440px 0}
+.xhe_vista span.xheBtnMedia {background-position:-460px 0}
+.xhe_vista span.xheBtnEmot {background-position:-480px 0}
+.xhe_vista span.xheBtnTable {background-position:-500px 0}
 
-.xhe_vista span.xheBtnSource {background-position:-500px 0}
-.xhe_vista span.xheBtnPreview {background-position:-520px 0}
-.xhe_vista span.xheBtnFullscreen {background-position:-540px 0}
+.xhe_vista span.xheBtnSource {background-position:-520px 0}
+.xhe_vista span.xheBtnPreview {background-position:-540px 0}
+.xhe_vista span.xheBtnPrint {background-position:-560px 0}
+.xhe_vista span.xheBtnFullscreen {background-position:-580px 0}
 
-.xhe_vista span.xheBtnAbout {background-position:-560px 0}
+.xhe_vista span.xheBtnAbout {background-position:-600px 0}
 
 .xhe_vista .xheIframeArea{height:100%;}
 .xhe_vista iframe {display:block;background:#fff;width:100%;height:100%;}
@@ -87,13 +89,14 @@
 .xheDialog a:hover{text-decoration:underline;color:#00f}
 .xheDialog div{padding:2px 0px;}
 .xheDialog input{
-	border-width:1px;border-style:solid;font-size:12px;
+	margin:0;border-width:1px;border-style:solid;font-size:12px;
 	*padding:expression((type=="text")?'1px':'auto');*width:expression((type=="text")?'160px':'auto');*border-color:expression((type=="text")?'#ABADB3':'#fff #888 #888 #fff');*background:expression((type=="button")?'#F0F0F0':'#FFFFFF');*cursor:expression((type=="button")?'pointer':'');*font-size:expression((type=="button")?'13px':'12px');
 }
+.xheDialog textarea{font-size:12px;}
 .xheDialog input[type=text]{padding:1px;width:160px;border-color:#ABADB3;}
 .xheDialog input[type=button]{margin:0;border-color:#fff #888 #888 #fff;background:#F0F0F0;cursor:pointer;font-size:13px;}
 .xheDialog input[type=file]{font-size:13px;}
-.xheDialog select{border:1px #ABADB3 solid;}
+.xheDialog select{margin:0;border:1px #ABADB3 solid;}
 .xheDialog .xheUpload{position: relative;display:inline-block;width:164px;}
 .xheDialog .xheUpload .xheBtn{position: absolute;top: 0px;left: 114px;width:50px;z-index: 1000001;padding:0;}
 .xheDialog .xheUpload .xheFile{cursor:pointer;position: absolute;top: 0px;left: 0px;width:164px;opacity:0;-ms-filter:'alpha(opacity=0)';filter:alpha(opacity=0);z-index: 1000002;}
@@ -114,6 +117,10 @@
 	position: fixed;z-index:1000008;top: 0px;left: 0px;height:100%;width:100%;background-color:#000;opacity:0.2; -ms-filter:'alpha(opacity=20)'; filter:alpha(opacity=20);
 	*position:absolute;*height:expression(Math.max(document.documentElement.clientHeight,document.documentElement.scrollHeight)+'px');*width:expression(Math.max(document.documentElement.clientWidth,document.documentElement.scrollWidth)+'px');
 }
+
+.xheProgress{position:relative;width:280px;margin:auto;border:1px solid #C1C1C1;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;background:url(img/progressbg.gif) #E9E9E9;}
+.xheProgress span{position:absolute;left:0;top:0;width:100%;text-align:center;line-height:15px;font-size:12px;color:#000;text-shadow: 1px 1px 0 #eee;}
+.xheProgress div{height:15px;width:1px;background:url(img/progress.gif) #31C135;}
 
 .xhe_Fullfix{overflow:hidden;}
 .xhe_Fullfix body{width:100%;height:100%;}
