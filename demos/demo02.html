@@ -11,10 +11,11 @@ $(pageInit);
 function pageInit()
 {
 	$('#elm1').xheditor({tools:'full',shortcuts:{'ctrl+enter':submitForm}});
-	$('#elm2').xheditor({tools:'simple',shortcuts:{'ctrl+enter':submitForm}});
-	$('#elm3').xheditor({tools:'mini',shortcuts:{'ctrl+enter':submitForm}});
-	$('#elm4').xheditor({tools:'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Source,Preview,Fullscreen,About,GEnd',shortcuts:{'ctrl+enter':submitForm}});
-	$('#elm5').xheditor({tools:'GStart,Cut,Copy,Paste,Pastetext,GEnd,BtnBr,GStart,Source,Preview,Fullscreen,About,GEnd',shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm2').xheditor({tools:'mfull',shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm3').xheditor({tools:'simple',shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm4').xheditor({tools:'mini',shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm5').xheditor({tools:'Cut,Copy,Paste,Pastetext,Separator,Source,Preview,Fullscreen,About',shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm6').xheditor({tools:'Cut,Copy,Paste,Pastetext,BtnBr,Source,Preview,Fullscreen,About',shortcuts:{'ctrl+enter':submitForm}});
 }
 function submitForm(){$('#frmDemo').submit();}
 </script>
@@ -42,21 +43,25 @@ function submitForm(){$('#frmDemo').submit();}
 	<textarea id="elm1" name="elm1" rows="12" cols="80" style="width: 80%">
 &lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm1').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'full'&lt;/span&gt;});&lt;/p&gt;
 	</textarea><br /><br />
-	2,simple(简单):<br />
+	2,mfull(多行完全):<br />
 	<textarea id="elm2" name="elm2" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm2').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'simple'&lt;/span&gt;});&lt;/p&gt;
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm2').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'mfull'&lt;/span&gt;});&lt;/p&gt;
 	</textarea><br /><br />
-	3,mini(迷你):<br />
+	3,simple(简单):<br />
 	<textarea id="elm3" name="elm3" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm3').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'mini'&lt;/span&gt;});&lt;/p&gt;
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm3').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'simple'&lt;/span&gt;});&lt;/p&gt;
 	</textarea><br /><br />
-	4,custom(自定义):<br />
+	4,mini(迷你):<br />
 	<textarea id="elm4" name="elm4" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm4').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'GStart,Cut,Copy,Paste,Pastetext,GEnd,Separator,GStart,Source,Preview,Fullscreen,About,GEnd'&lt;/span&gt;});&lt;/p&gt;
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm4').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'mini'&lt;/span&gt;});&lt;/p&gt;
 	</textarea><br /><br />
-	5,多行模式:<br />
+	5,custom(自定义):<br />
 	<textarea id="elm5" name="elm5" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm4').xheditor({tools:'GStart,Cut,Copy,Paste,Pastetext,GEnd,&lt;span style=&quot;color:#ff0000;&quot;&gt;BtnBr&lt;/span&gt;,GStart,Source,Preview,Fullscreen,About,GEnd'});&lt;/p&gt;
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm5').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'Cut,Copy,Paste,Pastetext,Separator,Source,Preview,Fullscreen,About'&lt;/span&gt;});&lt;/p&gt;
+	</textarea><br /><br />
+	6,自定义多行模式:<br />
+	<textarea id="elm6" name="elm6" rows="12" cols="80" style="width: 80%">
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm6').xheditor({tools:'Cut,Copy,Paste,Pastetext,&lt;span style=&quot;color:#ff0000;&quot;&gt;BtnBr&lt;/span&gt;,Source,Preview,Fullscreen,About'});&lt;/p&gt;
 	</textarea>
 	<br/><br />
 	<input type="submit" name="save" value="Submit" />

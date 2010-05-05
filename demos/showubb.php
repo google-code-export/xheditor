@@ -9,7 +9,7 @@ function showCode($match)
 	if(!$match[1])$match[1]='plain';
 	$match[2]=preg_replace("/</",'&lt;',$match[2]);
 	$match[2]=preg_replace("/>/",'&gt;',$match[2]);
-	return '<pre class="brush: '.$match[1].';">'.$match[2].'</pre>';
+	return '<pre name="code" class="'.$match[1].'">'.$match[2].'</pre>';
 }
 $sHtml=preg_replace_callback('/\[code\s*(?:=\s*((?:(?!")[\s\S])+?)(?:"[\s\S]*?)?)?\]([\s\S]*?)\[\/code\]/i','showCode',$sHtml);
 function showFlv($match)
@@ -25,15 +25,9 @@ $sHtml=preg_replace_callback('/\[flv\s*(?:=\s*(\d+)\s*,\s*(\d+)\s*)?\]\s*(((?!")
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>UBB文章显示测试页</title>
 <style type="text/css">
-pre1 {
-margin: 5px 20px !important;
-border-color:#2080D0 !important;
-border-style:solid !important;
-border-width:1px 1px 1px 4px !important;
-padding: 5px !important;
-background: #f8f8f8 !important;
-word-break:break-word;word-wrap:break-word;white-space:-moz-pre-wrap;white-space:-hp-pre-wrap;white-space:-o-pre-wrap;white-space:-pre-wrap;white-space:pre;white-space:pre-wrap;white-space:pre-line;
+body{margin:5px;border:2px solid #ccc;padding:5px;}
 </style>
+<link type="text/css" rel="stylesheet" href="syntaxhighlighter/SyntaxHighlighter.css"/>
 <script type="text/javascript" src="syntaxhighlighter/shCore.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushXml.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushJScript.js"></script>
@@ -43,18 +37,13 @@ word-break:break-word;word-wrap:break-word;white-space:-moz-pre-wrap;white-space
 <script type="text/javascript" src="syntaxhighlighter/shBrushCpp.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushJava.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushPython.js"></script>
-<script type="text/javascript" src="syntaxhighlighter/shBrushPerl.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushRuby.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushVb.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushDelphi.js"></script>
-<script type="text/javascript" src="syntaxhighlighter/shBrushAS3.js"></script>
 <script type="text/javascript" src="syntaxhighlighter/shBrushSql.js"></script>
-<script type="text/javascript" src="syntaxhighlighter/shBrushPlain.js"></script>	
-<link type="text/css" rel="stylesheet" href="syntaxhighlighter/shCore.css"/>
-<link type="text/css" rel="stylesheet" href="syntaxhighlighter/shThemeDefault.css"/>
+<script type="text/javascript" src="syntaxhighlighter/shBrushPlain.js"></script>
 <script type="text/javascript">
-	SyntaxHighlighter.config.clipboardSwf = 'syntaxhighlighter/clipboard.swf';
-	SyntaxHighlighter.all();
+window.onload=function(){dp.SyntaxHighlighter.HighlightAll('code');}
 </script>
 <body>
 	<?php echo $sHtml?>

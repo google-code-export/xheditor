@@ -25,7 +25,7 @@ function pageInit()
 {
 	$('#elm1').xheditor({plugins:{Code:{c:'btnCode',t:'插入代码',h:1,e:function(){
 			var _this=this;
-			var htmlCode='<div><select id="xheCodeType"><option value="html">HTML/XML</option><option value="javascript">JavaScript</option><option value="css">CSS</option><option value="php">PHP</option><option value="csharp">C#</option><option value="cpp">C++</option><option value="java">Java</option><option value="perl">Perl</option><option value="python">Python</option><option value="ruby">Ruby</option><option value="vb">Visual Basic</option><option value="delphi">Delphi</option><option value="as3">Action Script 3</option><option value="sql">SQL</option><option value="plain">其它</option></select></div><div><textarea id="xheCodeValue" wrap="soft" spellcheck="false" style="width:300px;height:100px;" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="确定" /></div>';			var jCode=$(htmlCode),jType=$('#xheCodeType',jCode),jValue=$('#xheCodeValue',jCode),jSave=$('#xheSave',jCode);
+			var htmlCode='<div><select id="xheCodeType"><option value="html">HTML/XML</option><option value="javascript">JavaScript</option><option value="css">CSS</option><option value="php">PHP</option><option value="csharp">C#</option><option value="cpp">C++</option><option value="java">Java</option><option value="python">Python</option><option value="ruby">Ruby</option><option value="vb">Visual Basic</option><option value="delphi">Delphi</option><option value="sql">SQL</option><option value="plain">其它</option></select></div><div><textarea id="xheCodeValue" wrap="soft" spellcheck="false" style="width:300px;height:100px;" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="确定" /></div>';			var jCode=$(htmlCode),jType=$('#xheCodeType',jCode),jValue=$('#xheCodeValue',jCode),jSave=$('#xheSave',jCode);
 			jSave.click(function(){
 				_this.loadBookmark();
 				_this.pasteText('[code='+jType.val()+']\r\n'+jValue.val()+'\r\n[/code]');
@@ -45,19 +45,7 @@ function pageInit()
 			});
 			_this.showDialog(jFlv);
 		}}},
-		tools:'full',showBlocktag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb,emots:{qq:{name:'QQ',count:55,width:25,height:25,line:11},msn:{name:'MSN',count:40,width:22,height:22,line:8}},emotMark:true,shortcuts:{'ctrl+enter':submitForm}});
-	$('#elm1').change(countSize);//绑定编辑器change事件
-	_countSize();//预统计长度
-}
-var countTimer;
-function countSize()
-{
-	if(countTimer)clearTimeout(countTimer);
-	countTimer=setTimeout(_countSize,500);//延迟统计以提高代码执行效率
-}
-function _countSize()
-{
-	$('#spanCount').text($('#elm1').val().length);
+		tools:'full',showBlocktag:false,forcePtag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb,emots:{qq:{name:'QQ',count:55,width:25,height:25,line:11},msn:{name:'MSN',count:40,width:22,height:22,line:8}},emotMark:true,shortcuts:{'ctrl+enter':submitForm}});
 }
 function submitForm(){$('#frmDemo').submit();}
 </script>
@@ -91,11 +79,11 @@ function submitForm(){$('#frmDemo').submit();}
 [size=3]文字大小为 3[/size]
 [font=FangSong_GB2312]字体为仿宋[/font]
 [align=Center]内容居中[/align]
-[img]img/demo.gif[/img]
-[img=238,66]img/demo.gif[/img]
-[url]http://pirate9.com/[/url]
-[url=http://pirate9.com/]第9海盗[/url]
-[url=http://pirate9.com/][img]img/demo.gif[/img][/url]
+[img]img/xheditor.gif[/img]
+[img=,221,79]img/xheditor.gif[/img]
+[url]http://xheditor.com/[/url]
+[url=http://xheditor.com/]xhEditor[/url]
+[url=http://xheditor.com/][img]img/xheditor.gif[/img][/url]
 [email]yanis.wang@gmail.com[/email]
 [email=yanis.wang@gmail.com]Yanis.Wang[/email]
 X[sup]2[/sup]
@@ -119,7 +107,6 @@ else $str='Hello PHP';
 echo $str;//输出文字
 ?&gt;
 [/code]</textarea>
-	<br /><br />您当前输入了<span id="spanCount" style="color:#f00;font-weight:bold;">0</span>个字节(统计结果包括UBB代码)
 	<br/><br />
 	<input type="submit" name="save" value="Submit" />
 	<input type="reset" name="reset" value="Reset" />

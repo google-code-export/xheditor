@@ -1,1 +1,1 @@
-{err:'',msg:'!img\/demo.gif,img\/demo.gif'}
+{err:'',msg:'!img\/xheditor.gif,img\/xheditor.gif'}
