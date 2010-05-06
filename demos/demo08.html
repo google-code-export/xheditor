@@ -19,6 +19,7 @@ function pageInit()
 }
 function insertUpload(msg)
 {
+	msg=msg[0];
 	 $("#uploadList").append('<option value="'+msg.id+'">'+msg.localname+'</option>');
 }
 function submitForm(){$('#frmDemo').submit();}
