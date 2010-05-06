@@ -33,13 +33,13 @@ $('#elm1').xheditor(false);
 
 初始化示例代码：
 {{{
-$('#elm1').xheditor({tools:'full',skin:'default',showBlocktag:true,readonly:false,internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",plugins:{}});
+$('#elm1').xheditor({tools:'full',skin:'default',showBlocktag:true,internalScript:false,internalStyle:false,width:300,height:200,loadCSS:'http://pirate9.com/test.css',fullscreen:true,sourceMode:true,forcePtag:true,upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",plugins:{}});
 }}}
 
 tools：自定义工具按钮
 {{{
 参数值：full(完全),mfull(多行完全),simple(简单),mini(迷你)
-或者自定义字符串，例如：'Cut,Copy,Paste,Pastetext,Separator,Source,Preview,Fullscreen,About'
+或者自定义字符串，例如：'Cut,Copy,Paste,Pastetext,Separator,Source,Fullscreen,About'
 
 完整按钮表：
 Separator：分隔符
@@ -71,7 +71,6 @@ Media：Windows media player视频
 Emot：表情
 Table：表格
 Source：切换源代码模式
-Preview：切换预览模式
 Print：打印
 Fullscreen：切换全屏模式
 About：关于xhEditor
@@ -141,11 +140,6 @@ loadCSS：加载样式
 fullscreen：默认全屏显示
 {{{
 参数值：true(全屏大小),false(标准大小)
-}}}
-
-readonly：默认只读模式
-{{{
-参数值：true(只读模式),false(可编辑模式)
 }}}
 
 sourceMode:默认源代码模式
@@ -339,9 +333,7 @@ editor.pasteHTML('<p>aaa</p>')
 editor.pasteText('str')
 sHtml=editor.formatXHTML('<b>aaa</b>')
 editor.toggleSource()
-editor.togglePreview()
 editor.toggleFullscreen()
-editor.toggleReadonly()
 alert(editor.settings.upImgExt);
 editor.settings.upImgExt='txt,doc';
 }}}
@@ -395,19 +387,9 @@ toggleSource：在源代码模式和编辑模式之间切换
 参数1：空(切换),true(显示源代码模式),false(显示编辑模式)
 }}}
 
-togglePreview：在预览模式和编辑模式之间切换
-{{{
-参数1：空(切换),true(显示预览模式),false(显示编辑模式)
-}}}
-
 toggleFullscreen：在全屏模式和标准大小之间切换
 {{{
 参数1：空(切换),true(显示全屏模式),false(显示标准模式)
-}}}
-
-toggleReadonly：在只读模式和可编辑模式之间切换
-{{{
-参数1：空(切换),true(切换为只读模式),false(切换为可编辑模式)
 }}}
 
 toggleShowBlocktag：切换块标签显示状态

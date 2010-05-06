@@ -14,8 +14,8 @@ function pageInit()
 	$('#elm2').xheditor({tools:'mfull',shortcuts:{'ctrl+enter':submitForm}});
 	$('#elm3').xheditor({tools:'simple',shortcuts:{'ctrl+enter':submitForm}});
 	$('#elm4').xheditor({tools:'mini',shortcuts:{'ctrl+enter':submitForm}});
-	$('#elm5').xheditor({tools:'Cut,Copy,Paste,Pastetext,Separator,Source,Preview,Fullscreen,About',shortcuts:{'ctrl+enter':submitForm}});
-	$('#elm6').xheditor({tools:'Cut,Copy,Paste,Pastetext,BtnBr,Source,Preview,Fullscreen,About',shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm5').xheditor({tools:'Cut,Copy,Paste,Pastetext,Separator,Source,Fullscreen,About',shortcuts:{'ctrl+enter':submitForm}});
+	$('#elm6').xheditor({tools:'Cut,Copy,Paste,Pastetext,BtnBr,Source,Fullscreen,About',shortcuts:{'ctrl+enter':submitForm}});
 }
 function submitForm(){$('#frmDemo').submit();}
 </script>
@@ -57,11 +57,11 @@ function submitForm(){$('#frmDemo').submit();}
 	</textarea><br /><br />
 	5,custom(自定义):<br />
 	<textarea id="elm5" name="elm5" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm5').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'Cut,Copy,Paste,Pastetext,Separator,Source,Preview,Fullscreen,About'&lt;/span&gt;});&lt;/p&gt;
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm5').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;tools:'Cut,Copy,Paste,Pastetext,Separator,Source,Fullscreen,About'&lt;/span&gt;});&lt;/p&gt;
 	</textarea><br /><br />
 	6,自定义多行模式:<br />
 	<textarea id="elm6" name="elm6" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm6').xheditor({tools:'Cut,Copy,Paste,Pastetext,&lt;span style=&quot;color:#ff0000;&quot;&gt;BtnBr&lt;/span&gt;,Source,Preview,Fullscreen,About'});&lt;/p&gt;
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm6').xheditor({tools:'Cut,Copy,Paste,Pastetext,&lt;span style=&quot;color:#ff0000;&quot;&gt;BtnBr&lt;/span&gt;,Source,Fullscreen,About'});&lt;/p&gt;
 	</textarea>
 	<br/><br />
 	<input type="submit" name="save" value="Submit" />
