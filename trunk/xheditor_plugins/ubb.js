@@ -6,7 +6,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.6 (build 100505)
+ * @Version: 0.9.6 (build 100513)
  */
 function ubb2html(sUBB)
 {
@@ -122,7 +122,7 @@ function html2ubb(sHtml)
 	function formatColor(c)
 	{
 		var matchs;
-		if(matchs=c.match(/\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i)){c='#';for(var i=1;i<=3;i++)c+=(matchs[i]-0).toString(16);}
+		if(matchs=c.match(/\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i)){c=(matchs[1]*65536+matchs[2]*256+matchs[3]*1).toString(16);while(c.length<6)c='0'+c;c='#'+c;}
 		c=c.replace(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/i,'#$1$1$2$2$3$3');
 		return c;
 	}

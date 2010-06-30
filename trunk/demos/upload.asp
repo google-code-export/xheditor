@@ -254,7 +254,7 @@ Public Sub GetData (MaxSize)
 		oUpFileStream.Write Request.BinaryRead (Request.TotalBytes)
 		oUpFileStream.Position = 0
 		RequestBinData = oUpFileStream.Read
-		Dim html5FileInfo
+		Dim sHtml5FileInfo
 		sHtml5FileInfo=Request.ServerVariables("HTTP_CONTENT_DISPOSITION")
 		If sHtml5FileInfo<>"" Then'针对Html5上传特别修正
 			iFindStart = InStr (1,sHtml5FileInfo,"name=""",1)+6
