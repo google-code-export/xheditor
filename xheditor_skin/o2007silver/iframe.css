@@ -11,7 +11,7 @@ body{background-color: #FFFFFF;word-break:break-word;word-wrap:break-word;white-
 .editMode embed[type="application/x-mplayer2"]{background:url(img/wmp.gif) center center no-repeat;}
 
 .sourceMode{margin:0px;padding:0px;overflow:hidden;height:100%;}
-.sourceMode textarea{border:0px;margin:0px;padding:0px;width:100%;height:100%;overflow-y:auto;font-family:'Courier New',Courier,monospace !important;font-size:10pt;}
+.sourceMode textarea{border:0px;margin:0px;padding:0px;width:100%;height:100%;overflow-y:auto;font-family:'Courier New',Courier,monospace !important;font-size:10pt;resize:none;}
 
 .previewMode{margin:5px;padding:0px;}
 

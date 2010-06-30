@@ -6,7 +6,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  *
- * @Version: 1.0.0 RC3 (build 100506)
+ * @Version: 1.0.0 Final (build 100701)
  */
 (function($){
 if($.xheditor)return false;//防止JS重复加载
@@ -70,9 +70,9 @@ var htmlImg='<div>Img URL:&nbsp; <input type="text" id="xheImgSrc" value="http:/
 var htmlFlash='<div>Flash URL:<input type="text" id="xheFlashSrc" value="http://" class="xheText" /></div><div>Dimension:<input type="text" id="xheFlashWidth" style="width:40px;" value="480" /> x <input type="text" id="xheFlashHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
 var htmlMedia='<div>Media URL:<input type="text" id="xheMediaSrc" value="http://" class="xheText" /></div><div>Dimension:<input type="text" id="xheMediaWidth" style="width:40px;" value="480" /> x <input type="text" id="xheMediaHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
 var htmlTable='<div>Rows&Cols:&nbsp;&nbsp;<input type="text" id="xheTableRows" style="width:40px;" value="3" /> x <input type="text" id="xheTableColumns" style="width:40px;" value="2" /></div><div>Headers:&nbsp;&nbsp;&nbsp;&nbsp;<select id="xheTableHeaders"><option selected="selected" value="">None</option><option value="row">First row</option><option value="col">First column</option><option value="both">Both</option></select></div><div>Dimension:&nbsp;&nbsp;<input type="text" id="xheTableWidth" style="width:40px;" value="200" /> x <input type="text" id="xheTableHeight" style="width:40px;" value="" /></div><div>Border:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="xheTableBorder" style="width:40px;" value="1" /></div><div>CellSpacing:<input type="text" id="xheTableCellSpacing" style="width:40px;" value="1" /> CellPadding:<input type="text" id="xheTableCellPadding" style="width:40px;" value="1" /></div><div>Align:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="xheTableAlign"><option selected="selected" value="">Default</option><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></div><div>Caption:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="xheTableCaption" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
-var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.0.0 RC3 (build 100506)</p><p>xhEditor is a platform independent WYSWYG XHTML editor based by jQuery,released as Open Source under <a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>.</p><p>Copyright © <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
-var itemEmots={'default':{name:'Default',width:25,height:18,line:6,list:{'biggrin':'Big grin','smile':'Smile','titter':'Titter','lol':'Lol','call':'Call','victory':'Victory','shy':'Shy','handshake':'Handshake','kiss':'Kiss','sad':'Sad','cry':'Cry','huffy':'Huffy','mad':'Mad','tongue':'Tongue','sweat':'Sweat','shocked':'Shocked','time':'Time','hug':'Hug'}}};
-var arrTools={Cut:{t:'Cut (Ctrl+X)'},Copy:{t:'Copy (Ctrl+C)'},Paste:{t:'Paste (Ctrl+V)'},Pastetext:{t:'Paste as plain text',h:isIE?0:1},Blocktag:{t:'Block tag',h:1},Fontface:{t:'Font family',h:1},FontSize:{t:'Font size',h:1},Bold:{t:'Bold (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'Italic (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'Underline (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'Strikethrough (Ctrl+S)',s:'Ctrl+S'},FontColor:{t:'Select text color',h:1},BackColor:{t:'Select background color',h:1},SelectAll:{t:'SelectAll (Ctrl+A)'},Removeformat:{t:'Remove formatting'},Align:{t:'Align',h:1},List:{t:'List',h:1},Outdent:{t:'Outdent (Shift+Tab)',s:'Shift+Tab'},Indent:{t:'Indent (Tab)',s:'Tab'},Link:{t:'Insert/edit link',h:1},Unlink:{t:'Unlink'},Img:{t:'Insert/edit image',h:1},Flash:{t:'Insert/edit flash',h:1},Media:{t:'Insert/edit media',h:1},Emot:{t:'Emotions',s:'ctrl+e',h:1},Table:{t:'Insert a new table',h:1},Source:{t:'Edit source code'},Print:{t:'Print (Ctrl+P)',s:'Ctrl+P'},Fullscreen:{t:'Toggle fullscreen (Esc)',s:'Esc'},About:{t:'About xhEditor',h:1}};
+var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.0.0 Final (build 100701)</p><p>xhEditor is a platform independent WYSWYG XHTML editor based by jQuery,released as Open Source under <a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>.</p><p>Copyright © <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
+var itemEmots={'default':{name:'Default',width:24,height:24,line:7,list:{'smile':'Smile','tongue':'Tongue','titter':'Titter','laugh':'Laugh','sad':'Sad','wronged':'Wronged','fastcry':'Fast cry','cry':'Cry','wail':'Wail','mad':'Mad','knock':'Knock','curse':'Curse','crazy':'Crazy','angry':'Angry','ohmy':'Oh my','awkward':'Awkward','panic':'Panic','shy':'Shy','cute':'Cute','envy':'Envy','proud':'Proud','struggle':'Struggle','quiet':'Quiet','shutup':'Shut up','doubt':'Doubt','despise':'Despise','sleep':'Sleep','bye':'Bye'}}};
+var arrTools={Cut:{t:'Cut (Ctrl+X)'},Copy:{t:'Copy (Ctrl+C)'},Paste:{t:'Paste (Ctrl+V)'},Pastetext:{t:'Paste as plain text',h:isIE?0:1},Blocktag:{t:'Block tag',h:1},Fontface:{t:'Font family',h:1},FontSize:{t:'Font size',h:1},Bold:{t:'Bold (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'Italic (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'Underline (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'Strikethrough (Ctrl+S)',s:'Ctrl+S'},FontColor:{t:'Select text color',h:1},BackColor:{t:'Select background color',h:1},SelectAll:{t:'SelectAll (Ctrl+A)'},Removeformat:{t:'Remove formatting'},Align:{t:'Align',h:1},List:{t:'List',h:1},Outdent:{t:'Outdent (Shift+Tab)',s:'Shift+Tab'},Indent:{t:'Indent (Tab)',s:'Tab'},Link:{t:'Insert/edit link',h:1},Unlink:{t:'Unlink'},Img:{t:'Insert/edit image',h:1},Flash:{t:'Insert/edit flash',h:1},Media:{t:'Insert/edit media',h:1},Emot:{t:'Emotions',s:'ctrl+e',h:1},Table:{t:'Insert a new table',h:1},Source:{t:'Edit source code'},Print:{t:'Print (Ctrl+P)',s:'Ctrl+P'},Fullscreen:{t:'Toggle fullscreen (Esc)',s:'Esc'},About:{t:'About xhEditor'}};
 var toolsThemes={
 	mini:'Bold,Italic,Underline,Strikethrough,Separator,Align,List,Separator,Link,Img,About',
 	simple:'Blocktag,Fontface,FontSize,Bold,Italic,Underline,Strikethrough,FontColor,BackColor,Separator,Align,List,Outdent,Indent,Separator,Link,Img,Emot,About',
@@ -80,7 +80,7 @@ var toolsThemes={
 toolsThemes.mfull=toolsThemes.full.replace(/Separator(,Align)/i,'BtnBr$1');
 $.xheditor=function(textarea,options)
 {
-	var defaults={skin:'default',tools:'full',clickCancelDialog:true,linkTag:false,internalScript:false,inlineScript:false,internalStyle:true,inlineStyle:true,showBlocktag:false,forcePtag:true,upLinkExt:"zip,rar,txt",upImgExt:"jpg,jpeg,gif,png",upFlashExt:"swf",upMediaExt:"wmv,avi,wma,mp3,mid",modalWidth:350,modalHeight:220,modalTitle:true,defLinkText:'Click to open link',layerShadow:3,emotMark:false,upBtnText:'Upload',wordDeepClean:true,hoverExecDelay:100,upMultiple:true};
+	var defaults={skin:'default',tools:'full',clickCancelDialog:true,linkTag:false,internalScript:false,inlineScript:false,internalStyle:true,inlineStyle:true,showBlocktag:false,forcePtag:true,upLinkExt:"zip,rar,txt",upImgExt:"jpg,jpeg,gif,png",upFlashExt:"swf",upMediaExt:"wmv,avi,wma,mp3,mid",modalWidth:350,modalHeight:220,modalTitle:true,defLinkText:'Click to open link',layerShadow:3,emotMark:false,upBtnText:'Upload',wordDeepClean:true,hoverExecDelay:100,html5Upload:true,upMultiple:99};
 	var _this=this,_text=textarea,_jText=$(_text),_jForm=_jText.closest('form'),_jTools,_jArea,_win,_jWin,_doc,_jDoc;
 	var bookmark;
 	var bInit=false,bSource=false,bFullscreen=false,outerScroll,bShowBlocktag=false,sLayoutStyle='',ev=null,timer,bDisableHoverExec=false,bQuickHoverExec=false;
@@ -127,25 +127,25 @@ $.xheditor=function(textarea,options)
 		if(/^[0-9\.]+$/i.test(''+cw))cw+='px';
 
 		//工具栏内容初始化
-		var sToolHtml='<span class="xheGStart"/>',tool,cn,regSeparator=/Separator|BtnBr/i;
+		var arrToolsHtml=['<span class="xheGStart"/>'],tool,cn,regSeparator=/Separator|BtnBr/i;
 		$.each(_this.settings.tools,function(i,n)
 		{
 			tool=arrTools[n];
-			if(n.match(regSeparator))sToolHtml+='<span class="xheGEnd"/>';
-			if(n=='Separator')sToolHtml+='<span class="xheSeparator"/>';
-			else if(n=='BtnBr')sToolHtml+='<br />';
+			if(n.match(regSeparator))arrToolsHtml.push('<span class="xheGEnd"/>');
+			if(n=='Separator')arrToolsHtml.push('<span class="xheSeparator"/>');
+			else if(n=='BtnBr')arrToolsHtml.push('<br />');
 			else
 			{
 				if(tool.c)cn=tool.c;
 				else cn='xheIcon xheBtn'+n;
-				sToolHtml+='<span><a href="javascript:void(0);" title="'+tool.t+'" name="'+n+'" class="xheButton xheEnabled" tabindex="-1"><span class="'+cn+'"/></a></span>';
+				arrToolsHtml.push('<span><a href="javascript:void(0);" title="'+tool.t+'" name="'+n+'" class="xheButton xheEnabled" tabindex="-1"><span class="'+cn+'" unselectable="on" /></a></span>');
 				if(tool.s)_this.addShortcuts(tool.s,n);
 			}
-			if(n.match(regSeparator))sToolHtml+='<span class="xheGStart"/>';
+			if(n.match(regSeparator))arrToolsHtml.push('<span class="xheGStart"/>');
 		});
-		sToolHtml+='<span class="xheGEnd"/><br />';
+		arrToolsHtml.push('<span class="xheGEnd"/><br />');
 
-		_jText.after($('<input type="text" id="'+idFixFFCursor+'" style="position:absolute;display:none;" /><span id="'+idContainer+'" class="xhe_'+_this.settings.skin+'" style="display:none"><table cellspacing="0" cellpadding="0" class="xheLayout" style="width:'+cw+';height:'+editHeight+'px;"><tbody><tr><td id="'+idTools+'" class="xheTool" style="height:1px;"></td></tr><tr><td id="'+idIframeArea+'" class="xheIframeArea"><iframe frameborder="0" id="'+idIframe+'" src="" style="width:100%;"></iframe></td></tr></tbody></table></span>'));
+		_jText.after($('<input type="text" id="'+idFixFFCursor+'" style="position:absolute;display:none;" /><span id="'+idContainer+'" class="xhe_'+_this.settings.skin+'" style="display:none"><table cellspacing="0" cellpadding="0" class="xheLayout" style="width:'+cw+';height:'+editHeight+'px;"><tbody><tr><td id="'+idTools+'" class="xheTool" unselectable="on" style="height:1px;"></td></tr><tr><td id="'+idIframeArea+'" class="xheIframeArea"><iframe frameborder="0" id="'+idIframe+'" src="javascript:;" style="width:100%;"></iframe></td></tr></tbody></table></span>'));
 		_jTools=$('#'+idTools);_jArea=$('#'+idIframeArea);
 		var iframeHTML='<html><head><base /><meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/><link rel="stylesheet" href="'+skinPath+'iframe.css"/>';
 		var loadCSS=_this.settings.loadCSS;
@@ -169,22 +169,22 @@ $.xheditor=function(textarea,options)
 			if(isIE)_doc.body.contentEditable='true';
 			else _doc.designMode = 'On';
 		}catch(e){}
-		setTimeout(_this.setOpts,300);
+		setTimeout(setOpts,300);
 		_this.setSource();
 		_win.setInterval=null;//针对jquery 1.3无法操作iframe window问题的hack
 
 		//添加工具栏
-		_jTools.append(sToolHtml).bind('mousedown contextmenu',function(){return false;});
-		_jTools.find('.xheButton').click(function(event)
+		_jTools.append(arrToolsHtml.join('')).bind('mousedown contextmenu',returnFalse).click(function(event)
 		{
-			var jButton=$(this);
+			var jButton=$(event.target).closest('a');
 			if(jButton.is('.xheEnabled'))
 			{
 				ev=event;
 				_this.exec(jButton.attr('name'));
 			}
 			return false;
-		}).hover(function(event){//鼠标悬停执行
+		});
+		_jTools.find('.xheButton').hover(function(event){//鼠标悬停执行
 			var jButton=$(this),delay=_this.settings.hoverExecDelay;
 			var tAngle=lastAngle;lastAngle=null;
 			if(delay==-1||bDisableHoverExec||!jButton.is('.xheEnabled'))return false;
@@ -233,11 +233,13 @@ $.xheditor=function(textarea,options)
 			_jPanel=$('<div id="xhePanel"></div>').mousedown(function(ev){ev.stopPropagation()});
 			_jShadow=$('<div id="xheShadow"></div>');
 			_jCntLine=$('<div id="xheCntLine"></div>');
-			$(document.body).append(_jPanel).append(_jShadow).append(_jCntLine);
-			if(isIE)$(document.body).append(_jTempIframe=$('<iframe id="xheTempIframe" style="display:none;" />'));
+			setTimeout(function(){
+				$(document.body).append(_jPanel).append(_jShadow).append(_jCntLine);
+				if(isIE)$(document.body).append(_jTempIframe=$('<iframe id="xheTempIframe" class="xheHideArea" />'));
+			},10);
 		}
-		$(document).mousedown(_this.clickCancelPanel);
-		_jDoc.mousedown(_this.clickCancelPanel);
+		$(document).mousedown(clickCancelPanel);
+		_jDoc.mousedown(clickCancelPanel);
 
 		//切换显示区域
 		$('#'+idContainer).show();
@@ -246,27 +248,14 @@ $.xheditor=function(textarea,options)
 
 		//绑定内核事件
 		_jText.focus(_this.focus);
-		_jForm.submit(_this.saveResult).bind('reset', _this.loadReset);
+		_jForm.submit(saveResult).bind('reset', loadReset);
 		var jpWin=$(window);
-		jpWin.unload(_this.saveResult).bind('beforeunload', _this.saveResult);
-		jpWin.resize(_this.fixFullHeight);
+		jpWin.unload(saveResult).bind('beforeunload', saveResult);
+		jpWin.resize(fixFullHeight);
 		_jWin.focus(function(){if(_this.settings.focus)_this.settings.focus();}).blur(function(){if(_this.settings.blur)_this.settings.blur();});
-		if(isSafari)_jWin.click(_this.fixAppleSel);
-		_jDoc.keydown(_this.checkShortcuts).keypress(_this.forcePtag).bind('mousedown click',function(ev){_jText.trigger(ev.type);});
-		if(isIE)//修正IE拖动img大小不更新width和height属性值的问题
-		{
-			function fixResize(ev)
-			{
-				var jImg=$(ev.target),v;
-				if(v=jImg.css('width'))jImg.css('width','').attr('width',v.replace(/[^0-9%]+/g, ''));
-				if(v=jImg.css('height'))jImg.css('height','').attr('height',v.replace(/[^0-9%]+/g, ''));
-			}
-			_jDoc.bind('controlselect',function(ev){
-				ev=ev.target;if(!$.nodeName(ev,'IMG'))return;
-				$(ev).unbind('resizeend',fixResize).bind('resizeend',fixResize);
-			});	
-		}
-		$('body',_jDoc).bind('paste',_this.cleanWordPaste);
+		if(isSafari)_jWin.click(fixAppleSel);
+		_jDoc.keydown(checkShortcuts).keypress(forcePtag).bind('mousedown click',function(ev){_jText.trigger(ev.type);});
+		$('body',_jDoc).bind('paste',cleanWordPaste);
 
 		//添加用户快捷键
 		var shortcuts=_this.settings.shortcuts;
@@ -274,7 +263,7 @@ $.xheditor=function(textarea,options)
 
 		xCount++;
 		bInit=true;
-		
+
 		if(_this.settings.fullscreen)_this.toggleFullscreen();
 		else if(_this.settings.sourceMode)setTimeout(_this.toggleSource,20);
 		return true;
@@ -282,83 +271,18 @@ $.xheditor=function(textarea,options)
 	this.remove=function()
 	{
 		_this.hidePanel();
-		_this.saveResult();//卸载前同步最新内容到textarea
+		saveResult();//卸载前同步最新内容到textarea
 		//取消绑定事件
 		_jText.unbind('focus',_this.focus);
-		_jForm.unbind('submit',_this.saveResult).unbind('reset', _this.loadReset);
+		_jForm.unbind('submit',saveResult).unbind('reset', loadReset);
 		var jpWin=$(window);
-		jpWin.unbind('unload',_this.saveResult).unbind('beforeunload', _this.saveResult);
-		jpWin.unbind('resize',_this.fixFullHeight);
+		jpWin.unbind('unload',saveResult).unbind('beforeunload', saveResult);
+		jpWin.unbind('resize',fixFullHeight);
 
 		$('#'+idContainer).remove();
+		$('#'+idFixFFCursor).remove();
 		_jText.show();
 		bInit=false;
-	}
-	this.loadReset=function(){setTimeout(_this.setSource,10);}
-	this.saveResult=function(){_this.getSource();};
-	this.cleanWordPaste=function()//清理粘贴内容中的Word代码
-	{
-		if(isIE&&!bSource)
-		{			
-			var sHtml,tbody=_jTempIframe[0].contentWindow.document.body;
-			tbody.innerHTML = '';
-			tbody.createTextRange().execCommand("Paste");
-			sHtml=tbody.innerHTML;
-			if(!sHtml.match(/mso-|MsoNormal/i))return true;
-			if(sHtml.indexOf('&nbsp;')==0)sHtml=sHtml.substring(6);
-			sHtml=_this.cleanHTML(sHtml);
-			sHtml=_this.formatXHTML(sHtml);
-			sHtml=_this.cleanWord(sHtml);
-			_this.pasteHTML(sHtml);
-			return false;
-		}
-	}
-	this.setCSS=function(css)
-	{
-		try{_this._exec('styleWithCSS',css,true);}
-		catch(e)
-		{try{_this._exec('useCSS',!css,true);}catch(e){}}
-	}
-	this.setOpts=function()
-	{
-		if(bInit&&!bSource)
-		{
-			_this.setCSS(false);
-			try{_this._exec('enableObjectResizing',true,true);}catch(e){}
-			//try{_this._exec('enableInlineTableEditing',false,true);}catch(e){}
-			if(isIE)try{_this._exec('BackgroundImageCache',true,true);}catch(e){}
-		}
-	}
-	this.forcePtag=function(ev)
-	{
-		if(bSource||ev.which!=13||ev.shiftKey||ev.ctrlKey||ev.altKey)return true;
-		var pNode=_this.getParent('p,h1,h2,h3,h4,h5,h6,pre,address,div,li');
-		if(pNode.is('li'))return true;
-		if(_this.settings.forcePtag){if(pNode.length==0)_this._exec('formatblock','<p>');}
-		else
-		{
-			_this.pasteHTML('<br />');
-			return false;
-		}
-	}
-	this.fixFullHeight=function()
-	{
-		if(!isMozilla&&!isSafari)
-		{
-			if(bFullscreen)_jArea.height('100%').css('height',_jArea.outerHeight()-_jTools.outerHeight());
-			if(isIE)_jTools.hide().show();
-		}
-	}
-	this.fixAppleSel=function(e)
-	{
-		e=e.target;
-		if(e.tagName.match(/(img|embed)/i))
-		{
-			var sel=_this.getSel(),rng=_this.getRng();
-			rng.selectNode(e);
-			sel.removeAllRanges();
-			sel.addRange(rng);
-		}
 	}
 	this.saveBookmark=function(){if(!bSource)bookmark=_this.getRng();}
 	this.loadBookmark=function()
@@ -661,7 +585,7 @@ $.xheditor=function(textarea,options)
 	}
 	this.cleanWord=function(sHtml)
 	{
-		if(sHtml.match(/mso-|MsoNormal/i))
+		if(sHtml.match(/mso(-|normal)/i))
 		{
 			var deepClean=_this.settings.wordDeepClean;
 
@@ -679,7 +603,7 @@ $.xheditor=function(textarea,options)
 			sHtml = sHtml.replace(/(<\w+(?:\s+[^>]*?)?)\s+align\s*=\s*(["']?)\s*left\s*\2((?:\s+[^>]*?)?\s*\/?>)/ig, "$1$3");//取消align=left
 
 			//样式清理
-			sHtml = sHtml.replace(/<\w+(?:\s+[^>]*?)?(\s+style\s*=\s*(["']?)\s*(.*?)\s*\2)(?:\s+[^>]*?)?\s*\/?>/ig,function(all,attr,p,styles){
+			sHtml = sHtml.replace(/<\w+(?:\s+[^>]*?)?(\s+style\s*=\s*(["']?)\s*([\s\S]*?)\s*\2)(?:\s+[^>]*?)?\s*\/?>/ig,function(all,attr,p,styles){
 				styles=$.trim(styles.replace(/\s*(mso-[^:]+:.+?|margin\s*:\s*0cm 0cm 0pt\s*|(text-align|font-variant|line-height)\s*:\s*.+?)(;|$)\s*/ig,''));
 				return all.replace(attr,deepClean?'':styles?' style="'+styles+'"':'');
 			});
@@ -688,7 +612,7 @@ $.xheditor=function(textarea,options)
 	}
 	this.cleanHTML=function(sHtml)
 	{
-		sHtml = sHtml.replace(/<!?\/?(DOCTYPE|html|body)(\s+[^>]*?)?>/ig, '');
+		sHtml = sHtml.replace(/<!?\/?(DOCTYPE|html|body|meta)(\s+[^>]*?)?>/ig, '');
 		var arrHeadSave;sHtml = sHtml.replace(/<head(?:\s+[^>]*?)?>([\s\S]*?)<\/head>/i, function(all,content){arrHeadSave=content.match(/<(script|style)(\s+[^>]*?)?>[\s\S]*?<\/\1>/ig);return '';});
 		if(arrHeadSave)sHtml=arrHeadSave.join('')+sHtml;
 		sHtml = sHtml.replace(/<\??xml(:\w+)?(\s+[^>]*?)?>([\s\S]*?<\/xml>)?/ig, '');
@@ -697,7 +621,7 @@ $.xheditor=function(textarea,options)
 		if(!_this.settings.internalScript)sHtml = sHtml.replace(/<script(\s+[^>]*?)?>[\s\S]*?<\/script>/ig, '');
 		if(!_this.settings.inlineScript)sHtml=sHtml.replace(/(<\w+)(\s+[^>]*?)?\s+on(?:click|dblclick|mousedown|mouseup|mousemove|mouseover|mouseout|mouseenter|mouseleave|keydown|keypress|keyup|change|select|submit|reset|blur|focus|load|unload)\s*=\s*(["']?).*?\3((?:\s+[^>]*?)?\/?>)/ig,'$1$2$4');
 		if(!_this.settings.internalStyle)sHtml = sHtml.replace(/<style(\s+[^>]*?)?>[\s\S]*?<\/style>/ig, '');
-		if(!_this.settings.inlineStyle)sHtml=sHtml.replace(/(<\w+)(\s+[^>]*?)?\s+(style|class)\s*=\s*(["']?).*?\3((?:\s+[^>]*?)?\/?>)/ig,'$1$2$4');
+		if(!_this.settings.inlineStyle)sHtml=sHtml.replace(/(<\w+)(\s+[^>]*?)?\s+(style|class)\s*=\s*(["']?).*?\4((?:\s+[^>]*?)?\/?>)/ig,'$1$2$5');
 
 		sHtml=sHtml.replace(/<\/(strong|b|u|strike|em|i)>((?:\s|<br\/?>|&nbsp;)*?)<\1(\s+[^>]*?)?>/ig,'$2');//连续相同标签
 
@@ -839,7 +763,7 @@ $.xheditor=function(textarea,options)
 				results.push(html);
 				if(tagName=='br')addIndent();//回车强制换行
 				if(bBlock&&(emptyTags[tagName]||!bStart))lvl--;//块结束
-				lastTag=bBlock?tagName:'';lastTagStart=bStart;				
+				lastTag=bBlock?tagName:'';lastTagStart=bStart;
 			}
 			else results.push(html);
 		}
@@ -929,7 +853,7 @@ $.xheditor=function(textarea,options)
 		else _this.setCursorFirst(true);//定位最前面
 		_jTools.find('[name=Source]').toggleClass('xheEnabled');
 		_jTools.find('.xheButton').not('[name=Source],[name=Fullscreen],[name=About]').toggleClass('xheEnabled');
-		setTimeout(_this.setOpts,300);
+		setTimeout(setOpts,300);
 	}
 	this.toggleFullscreen=function(state)
 	{
@@ -947,7 +871,7 @@ $.xheditor=function(textarea,options)
 			sLayoutStyle=jLayout.attr('style');
 			jLayout.removeAttr('style');
 			_jArea.height('100%');
-			setTimeout(_this.fixFullHeight,100);
+			setTimeout(fixFullHeight,100);
 		}
 		if(isMozilla)//临时修正Firefox 3.6源代码光标丢失问题
 		{
@@ -958,14 +882,14 @@ $.xheditor=function(textarea,options)
 		jContainer.toggleClass('xhe_Fullscreen');
 		$('html').toggleClass('xhe_Fullfix');
 		_jTools.find('[name=Fullscreen]').toggleClass('xheActive');
-		setTimeout(_this.setOpts,300);
+		setTimeout(setOpts,300);
 	}
 	this.showMenu=function(menuitems,callback)
 	{
 		var jMenu=$('<div class="xheMenu"></div>'),arrItem=[];
 		$.each(menuitems,function(n,v){arrItem.push('<a href="javascript:void(0);" title="'+(v.t?v.t:v.s)+'" v="'+v.v+'">'+v.s+'</a>');});
 		jMenu.append(arrItem.join(''));
-		jMenu.click(function(ev){callback($(ev.target).closest('a').attr('v'));_this.hidePanel();return false;}).mousedown(function(){return false;});
+		jMenu.click(function(ev){callback($(ev.target).closest('a').attr('v'));_this.hidePanel();return false;}).mousedown(returnFalse);
 		_this.showPanel(jMenu);
 	}
 	this.showColor=function(callback)
@@ -974,12 +898,12 @@ $.xheditor=function(textarea,options)
 		$.each(itemColors,function(n,v)
 		{
 			if(count%7==0)arrItem.push((count>0?'</div>':'')+'<div>');
-			arrItem.push('<a href="javascript:void(0);" title="'+v+'" style="background:'+v+'"></a>');
+			arrItem.push('<a href="javascript:void(0);" xhev="'+v+'" title="'+v+'" style="background:'+v+'"></a>');
 			count++;
 		});
 		arrItem.push('</div>');
 		jColor.append(arrItem.join(''));
-		jColor.click(function(ev){ev=ev.target;if(!$.nodeName(ev,'A'))return;callback($(ev).attr('title'));_this.hidePanel();return false;}).mousedown(function(){return false;});
+		jColor.click(function(ev){ev=ev.target;if(!$.nodeName(ev,'A'))return;callback($(ev).attr('xhev'));_this.hidePanel();return false;}).mousedown(returnFalse);
 		_this.showPanel(jColor);
 	}
 	this.showPastetext=function()
@@ -999,7 +923,7 @@ $.xheditor=function(textarea,options)
 		var jLink=$(htmlLink),jParent=_this.getParent('a'),jText=$('#xheLinkText',jLink),jHref=$('#xheLinkHref',jLink),jTarget=$('#xheLinkTarget',jLink),jSave=$('#xheSave',jLink),selHtml=_this.getSelect();
 		if(jParent.length==1)
 		{
-			jHref.val(_this.attr(jParent,'href'));
+			jHref.val(xheAttr(jParent,'href'));
 			jTarget.attr('value',jParent.attr('target'));
 		}
 		else if(selHtml=='')jText.val(_this.settings.defLinkText).closest('div').show();
@@ -1024,7 +948,7 @@ $.xheditor=function(textarea,options)
 						url=aUrl[i];
 						if(url!='')
 						{
-							url=url.split(',');
+							url=url.split('||');
 							sLink=sTemplate;
 							sLink=sLink.replace('xhe_tmpurl',url[0]);
 							sLink=sLink.replace('xhe_tmptext',url[1]?url[1]:sText);
@@ -1035,7 +959,7 @@ $.xheditor=function(textarea,options)
 				}
 				else
 				{//单url模式
-					url=aUrl[0].split(',');
+					url=aUrl[0].split('||');
 					if(!sText)sText=url[0];
 					sText=url[1]?url[1]:(selHtml!='')?'':sText?sText:url[0];
 					if(jParent.length==0)
@@ -1044,7 +968,7 @@ $.xheditor=function(textarea,options)
 						else _this._exec('createlink','#xhe_tmpurl');
 						jParent=$('a[href$="#xhe_tmpurl"]',_doc);
 					}
-					_this.attr(jParent,'href',url[0]);
+					xheAttr(jParent,'href',url[0]);
 					if(sTarget!='')jParent.attr('target',sTarget);
 					else jParent.removeAttr('target');
 					if(sText&&!isSafari)jParent.text(sText);//safari改写文本会导致光标丢失
@@ -1060,7 +984,7 @@ $.xheditor=function(textarea,options)
 		var jImg=$(htmlImg),jParent=_this.getParent('img'),jSrc=$('#xheImgSrc',jImg),jAlt=$('#xheImgAlt',jImg),jAlign=$('#xheImgAlign',jImg),jWidth=$('#xheImgWidth',jImg),jHeight=$('#xheImgHeight',jImg),jBorder=$('#xheImgBorder',jImg),jVspace=$('#xheImgVspace',jImg),jHspace=$('#xheImgHspace',jImg),jSave=$('#xheSave',jImg);
 		if(jParent.length==1)
 		{
-			jSrc.val(_this.attr(jParent,'src'));
+			jSrc.val(xheAttr(jParent,'src'));
 			jAlt.val(jParent.attr('alt'));
 			jAlign.val(jParent.attr('align'));
 			jWidth.val(jParent.attr('width'));
@@ -1093,7 +1017,7 @@ $.xheditor=function(textarea,options)
 						url=aUrl[i];
 						if(url!='')
 						{
-							url=url.split(',');
+							url=url.split('||');
 							sImg=sTemplate;
 							sImg=sImg.replace('xhe_tmpurl',url[0]);
 							if(url[1])sImg='<a href="'+url[1]+'" target="_blank">'+sImg+'</a>'
@@ -1107,13 +1031,13 @@ $.xheditor=function(textarea,options)
 					url=aUrl[0];
 					if(url!='')
 					{
-						url=url.split(',');
+						url=url.split('||');
 						if(jParent.length==0)
 						{
 							_this.pasteHTML('<img src="'+url[0]+'#xhe_tmpurl" />');
 							jParent=$('img[src$="#xhe_tmpurl"]',_doc);
 						}
-						_this.attr(jParent,'src',url[0])
+						xheAttr(jParent,'src',url[0])
 						if(sAlt!='')jParent.attr('alt',sAlt);
 						if(sAlign!='')jParent.attr('align',sAlign);
 						else jParent.removeAttr('align');
@@ -1135,7 +1059,7 @@ $.xheditor=function(textarea,options)
 								jParent.wrap('<a></a>');
 								jLink=jParent.parent('a');
 							}
-							_this.attr(jLink,'href',url[1]);
+							xheAttr(jLink,'href',url[1]);
 							jLink.attr('target','_blank');
 						}
 					}
@@ -1154,7 +1078,7 @@ $.xheditor=function(textarea,options)
 		_this.showDialog(jEmbed);
 		if(jParent.length==1)
 		{
-			jSrc.val(_this.attr(jParent,'src'));
+			jSrc.val(xheAttr(jParent,'src'));
 			jWidth.val(jParent.attr('width'));
 			jHeight.val(jParent.attr('height'));
 		}
@@ -1173,7 +1097,7 @@ $.xheditor=function(textarea,options)
 					sTemplate+=' width="xhe_width" height="xhe_height" />';
 					for(var i in aUrl)
 					{
-						url=aUrl[i].split(',');
+						url=aUrl[i].split('||');
 						sEmbed=sTemplate;
 						sEmbed=sEmbed.replace('xhe_tmpurl',url[0])
 						sEmbed=sEmbed.replace('xhe_width',url[1]?url[1]:w)
@@ -1184,13 +1108,13 @@ $.xheditor=function(textarea,options)
 				}
 				else if(aUrl.length==1)
 				{//单URL模式
-					url=aUrl[0].split(',');
+					url=aUrl[0].split('||');
 					if(jParent.length==0)
 					{
 						_this.pasteHTML(sBaseCode.replace('xhe_tmpurl',url[0]+'#xhe_tmpurl')+' />');
 						jParent=$('embed[src$="#xhe_tmpurl"]',_doc);
 					}
-					_this.attr(jParent,'src',url[0]);
+					xheAttr(jParent,'src',url[0]);
 					jParent.attr('width',url[1]?url[1]:w);
 					jParent.attr('height',url[2]?url[2]:h);
 				}
@@ -1214,7 +1138,7 @@ $.xheditor=function(textarea,options)
 			for(var i=1;i<=count;i++)
 			{
 				n++;
-				arrList.push('<a href="javascript:void(0);" style="background-image:url('+sEmotPath+i+'.gif);" emot="'+group+','+i+'" title='+i+'>&nbsp;</a>');
+				arrList.push('<a href="javascript:void(0);" style="background-image:url('+sEmotPath+i+'.gif);" emot="'+group+','+i+'" xhev="">&nbsp;</a>');
 				if(n%line==0)arrList.push('<br />');
 			}
 		}
@@ -1223,13 +1147,13 @@ $.xheditor=function(textarea,options)
 			$.each(list,function(id,title)
 			{
 				n++;
-				arrList.push('<a href="javascript:void(0);" style="background-image:url('+sEmotPath+id+'.gif);" emot="'+group+','+id+'" title="'+title+'">&nbsp;</a>');
+				arrList.push('<a href="javascript:void(0);" style="background-image:url('+sEmotPath+id+'.gif);" emot="'+group+','+id+'" title="'+title+'" xhev="'+title+'">&nbsp;</a>');
 				if(n%line==0)arrList.push('<br />');
 			});
 		}
 		var w=line*(ew+12),h=Math.ceil(n/line)*(eh+12),mh=w*0.75;
 		if(h<=mh)mh='';
-		jList=$('<style>'+(mh?'.xheEmot div{width:'+(w+20)+'px;height:'+mh+'px;}':'')+'.xheEmot div a{width:'+ew+'px;height:'+eh+'px;}</style><div>'+arrList.join('')+'</div>').click(function(ev){ev=ev.target;var jA=$(ev);if(!$.nodeName(ev,'A'))return;_this.pasteHTML('<img emot="'+jA.attr('emot')+'" alt="'+jA.attr('title')+'">');_this.hidePanel();return false;}).mousedown(function(){return false;});
+		jList=$('<style>'+(mh?'.xheEmot div{width:'+(w+20)+'px;height:'+mh+'px;}':'')+'.xheEmot div a{width:'+ew+'px;height:'+eh+'px;}</style><div>'+arrList.join('')+'</div>').click(function(ev){ev=ev.target;var jA=$(ev);if(!$.nodeName(ev,'A'))return;_this.pasteHTML('<img emot="'+jA.attr('emot')+'" alt="'+jA.attr('xhev')+'">');_this.hidePanel();return false;}).mousedown(returnFalse);
 		jEmot.append(jList);
 
 		var gcount=0,arrGroup=['<ul>'],jGroup;//表情分类
@@ -1240,7 +1164,7 @@ $.xheditor=function(textarea,options)
 		if(gcount>1)
 		{
 			arrGroup.push('</ul><br style="clear:both;" />');
-			jGroup=$(arrGroup.join('')).click(function(ev){selEmotGroup=$(ev.target).attr('group');_this.exec('Emot');return false;}).mousedown(function(){return false;});
+			jGroup=$(arrGroup.join('')).click(function(ev){selEmotGroup=$(ev.target).attr('group');_this.exec('Emot');return false;}).mousedown(returnFalse);
 			jEmot.append(jGroup);
 		}
 
@@ -1284,38 +1208,17 @@ $.xheditor=function(textarea,options)
 		var jAbout=$(htmlAbout);
 		_this.showDialog(jAbout);
 	}
-	this.attr=function(jObj,n,v)
-	{
-		if(!n)return false;
-		var kn='_xhe_'+n;
-		if(v)jObj.attr(n,v).removeAttr(kn).attr(kn,v);//设置属性
-		return jObj.attr(kn)||jObj.attr(n);
-	}
 	this.addShortcuts=function(key,cmd)
 	{
 		key=key.toLowerCase();
 		if(arrShortCuts[key]==undefined)arrShortCuts[key]=Array();
 		arrShortCuts[key].push(cmd);
 	}
-	this.checkShortcuts=function(event)
-	{
-		if(bSource)return true;
-		var code=event.which,special=specialKeys[code],sChar=special?special:String.fromCharCode(code).toLowerCase();
-		sKey='';
-		sKey+=event.ctrlKey?'ctrl+':'';sKey+=event.altKey?'alt+':'';sKey+=event.shiftKey?'shift+':'';sKey+=sChar;
-
-		var cmd=arrShortCuts[sKey],c;
-		for(c in cmd)
-		{
-			c=cmd[c];
-			if($.isFunction(c)){if(c.call(_this)===false)return false;}
-			else{_this.exec(c);return false;}//按钮独占快捷键
-		}
-	}
+	this.delShortcuts=function(key){delete arrShortCuts[key];}
 	this.uploadInit=function(jText,tourl,upext)
 	{
 		var inputname='filedata',jUpload=$('<span class="xheUpload"><input type="text" style="visibility:hidden;" tabindex="-1" /><input type="button" value="'+_this.settings.upBtnText+'" class="xheBtn" tabindex="-1" /></span>'),jUpBtn=$('.xheBtn',jUpload);
-		var upMultiple=_this.settings.upMultiple;
+		var bHtml5Upload=_this.settings.html5Upload,upMultiple=bHtml5Upload?_this.settings.upMultiple:1;
 		jText.after(jUpload);jUpBtn.before(jText);
 		tourl=tourl.replace(/{editorRoot}/ig,editorRoot);
 		if(tourl.substr(0,1)=='!')//自定义上传管理页
@@ -1327,24 +1230,24 @@ $.xheditor=function(textarea,options)
 		}
 		else
 		{//系统默认ajax上传
-			jUpload.append('<input type="file"'+(upMultiple?' multiple=""':'')+' class="xheFile" size="13" name="'+inputname+'" tabindex="-1" />');
+			jUpload.append('<input type="file"'+(upMultiple>1?' multiple=""':'')+' class="xheFile" size="13" name="'+inputname+'" tabindex="-1" />');
 			var jFile=$('.xheFile',jUpload),arrMsg=[];
 			jFile.change(function(){startUpload(jFile[0]);});
 			setTimeout(bindDrag,10);
 		}
 		function bindDrag()//拖放上传
 		{
-			jText.closest('.xheDialog').bind('dragenter dragover',function(){return false;}).bind('drop',function(ev){
+			jText.closest('.xheDialog').bind('dragenter dragover',returnFalse).bind('drop',function(ev){
 				var dataTransfer=ev.originalEvent.dataTransfer,fileList;
-				if(dataTransfer&&(fileList=dataTransfer.files)&&fileList.length>0)startUpload(fileList);
+				if(bHtml5Upload&&dataTransfer&&(fileList=dataTransfer.files)&&fileList.length>0)startUpload(fileList);
 				return false;
 			});
 		}
 		function startUpload(fromfiles)
 		{
 			arrMsg=[];//重置消息队列
-			var upload,fileList,filename,jUploadTip=$('<div style="margin:22px 0;text-align:center;line-height:30px;">File uploading,please wait...<br /></div>'),sLoading='<img src="'+skinPath+'img/loading.gif">';
-			if(fromfiles.nodeType&&!((fileList=fromfiles.files)&&fileList[0]))
+			var upload,fileList,filename,jUploadTip=$('<div style="padding:22px 0;text-align:center;line-height:30px;">File uploading,please wait...<br /></div>'),sLoading='<img src="'+skinPath+'img/loading.gif">';
+			if(!bHtml5Upload||(fromfiles.nodeType&&!((fileList=fromfiles.files)&&fileList[0])))
 			{
 				if(!checkFileExt(fromfiles.value))return;
 				jUploadTip.append(sLoading);
@@ -1354,7 +1257,7 @@ $.xheditor=function(textarea,options)
 			{
 				if(!fileList)fileList=fromfiles;//拖放文件列表
 				var i,len=fileList.length;
-				if(!upMultiple&&len>1){alert("Please do not upload multiple files.");return;}
+				if(len>upMultiple){alert('Please do not upload more then '+upMultiple+' files.');return;}
 				for(i=0;i<len;i++)if(!checkFileExt(fileList[i].fileName))return;
 				var jProgress=$('<div class="xheProgress"><div><span>0%</span></div></div>');
 				jUploadTip.append(jProgress);
@@ -1434,7 +1337,7 @@ $.xheditor=function(textarea,options)
 				_this=null;
 			}
 		}
-		this.onLoad=function(){callback($(jIO[0].contentWindow.document.body).text(),true);}		
+		this.onLoad=function(){callback($(jIO[0].contentWindow.document.body).text(),true);}
 		this.start=function(){jForm.submit();jIO.load(_this.onLoad);}
 		return this;
 	}
@@ -1512,7 +1415,7 @@ $.xheditor=function(textarea,options)
 			if(!_this.settings.clickCancelDialog)
 			{
 				bClickCancel=false;//关闭点击隐藏
-				var jFixCancel=$('<div class="xheFixCancel"></div>').appendTo('body').mousedown(function(){return false;});
+				var jFixCancel=$('<div class="xheFixCancel"></div>').appendTo('body').mousedown(returnFalse);
 				var xy=_jArea.offset();
 				jFixCancel.css({'left':xy.left,'top':xy.top,width:_jArea.outerWidth(),height:_jArea.outerHeight()})
 			}
@@ -1522,7 +1425,6 @@ $.xheditor=function(textarea,options)
 		_this.showPanel(jDialog);
 		if(!isIE)setTimeout(function(){jDialog.find('input[type=text],textarea').filter(':visible').filter(function(){return $(this).css('visibility')!='hidden';}).eq(0).focus();},10);//定位首个可见输入表单项,延迟解决opera无法设置焦点
 	}
-	this.clickCancelPanel=function(){if(bClickCancel)_this.hidePanel();}
 	this.showPanel=function(content)
 	{
 		if(!ev.target)return false;
@@ -1541,7 +1443,6 @@ $.xheditor=function(textarea,options)
 	this.exec=function(cmd)
 	{
 		_this.hidePanel();
-		_this.focus();
 		_this.saveBookmark();
 		var tool=arrTools[cmd];
 		if(!tool)return false;//无效命令
@@ -1592,7 +1493,7 @@ $.xheditor=function(textarea,options)
 					_this.showColor(function(v){_this._exec('forecolor',v);});
 					break;
 				case 'backcolor':
-					_this.showColor(function(v){if(isIE)_this._exec('backcolor',v);else{_this.setCSS(true);_this._exec('hilitecolor',v);_this.setCSS(false);}});
+					_this.showColor(function(v){if(isIE)_this._exec('backcolor',v);else{setCSS(true);_this._exec('hilitecolor',v);setCSS(false);}});
 					break;
 				case 'align':
 					_this.showMenu(menuAlign,function(v){_this._exec(v);});
@@ -1607,7 +1508,7 @@ $.xheditor=function(textarea,options)
 					_this.showImg();
 					break;
 				case 'flash':
-					_this.showEmbed('Flash',htmlFlash,'application/x-shockwave-flash','clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000',' wmode="opaque" quality="high" menu="false" play="true" loop="true"',_this.settings.upFlashUrl,_this.settings.upFlashExt);
+					_this.showEmbed('Flash',htmlFlash,'application/x-shockwave-flash','clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000',' wmode="opaque" quality="high" menu="false" play="true" loop="true" allowfullscreen="true"',_this.settings.upFlashUrl,_this.settings.upFlashExt);
 					break;
 				case 'media':
 					_this.showEmbed('Media',htmlMedia,'application/x-mplayer2','clsid:6bf52a52-394a-11d3-b153-00c04f79faa6',' enablecontextmenu="false" autostart="false"',_this.settings.upMediaUrl,_this.settings.upMediaExt);
@@ -1645,6 +1546,95 @@ $.xheditor=function(textarea,options)
 		else state=_doc.execCommand(cmd,false,null);
 		return state;
 	}
+	function loadReset(){setTimeout(_this.setSource,10);}
+	function saveResult(){_this.getSource();};
+	function cleanWordPaste()//清理粘贴内容中的Word代码
+	{
+		if(isIE&&!bSource)
+		{
+			var sHtml,tbody=_jTempIframe[0].contentWindow.document.body;
+			tbody.innerHTML = '';
+			tbody.createTextRange().execCommand("Paste");
+			sHtml=tbody.innerHTML;
+			if(!sHtml.match(/mso-|MsoNormal/i))return true;
+			if(sHtml.indexOf('&nbsp;')==0)sHtml=sHtml.substring(6);
+			sHtml=_this.cleanHTML(sHtml);
+			sHtml=_this.formatXHTML(sHtml);
+			sHtml=_this.cleanWord(sHtml);
+			_this.pasteHTML(sHtml);
+			return false;
+		}
+	}
+	function setCSS(css)
+	{
+		try{_this._exec('styleWithCSS',css,true);}
+		catch(e)
+		{try{_this._exec('useCSS',!css,true);}catch(e){}}
+	}
+	function setOpts()
+	{
+		if(bInit&&!bSource)
+		{
+			setCSS(false);
+			try{_this._exec('enableObjectResizing',true,true);}catch(e){}
+			//try{_this._exec('enableInlineTableEditing',false,true);}catch(e){}
+			if(isIE)try{_this._exec('BackgroundImageCache',true,true);}catch(e){}
+		}
+	}
+	function forcePtag(ev)
+	{
+		if(bSource||ev.which!=13||ev.shiftKey||ev.ctrlKey||ev.altKey)return true;
+		var pNode=_this.getParent('p,h1,h2,h3,h4,h5,h6,pre,address,div,li');
+		if(pNode.is('li'))return true;
+		if(_this.settings.forcePtag){if(pNode.length==0)_this._exec('formatblock','<p>');}
+		else
+		{
+			_this.pasteHTML('<br />');
+			return false;
+		}
+	}
+	function fixFullHeight()
+	{
+		if(!isMozilla&&!isSafari)
+		{
+			if(bFullscreen)_jArea.height('100%').css('height',_jArea.outerHeight()-_jTools.outerHeight());
+			if(isIE)_jTools.hide().show();
+		}
+	}
+	function fixAppleSel(e)
+	{
+		e=e.target;
+		if(e.tagName.match(/(img|embed)/i))
+		{
+			var sel=_this.getSel(),rng=_this.getRng();
+			rng.selectNode(e);
+			sel.removeAllRanges();
+			sel.addRange(rng);
+		}
+	}
+	function xheAttr(jObj,n,v)
+	{
+		if(!n)return false;
+		var kn='_xhe_'+n;
+		if(v)jObj.attr(n,v).removeAttr(kn).attr(kn,v);//设置属性
+		return jObj.attr(kn)||jObj.attr(n);
+	}
+	function clickCancelPanel(){if(bClickCancel)_this.hidePanel();}
+	function checkShortcuts(event)
+	{
+		if(bSource)return true;
+		var code=event.which,special=specialKeys[code],sChar=special?special:String.fromCharCode(code).toLowerCase();
+		sKey='';
+		sKey+=event.ctrlKey?'ctrl+':'';sKey+=event.altKey?'alt+':'';sKey+=event.shiftKey?'shift+':'';sKey+=sChar;
+
+		var cmd=arrShortCuts[sKey],c;
+		for(c in cmd)
+		{
+			c=cmd[c];
+			if($.isFunction(c)){if(c.call(_this)===false)return false;}
+			else{_this.exec(c);return false;}//按钮独占快捷键
+		}
+	}
 	function is(o,t)
 	{
 		var n = typeof(o);
@@ -1670,19 +1660,20 @@ $.xheditor=function(textarea,options)
 		var e = Math.floor(Math.log(bytes)/Math.log(1024));
 		return (bytes/Math.pow(1024, Math.floor(e))).toFixed(2)+s[e];
 	}
+	function returnFalse(){return false;}
 }
 $(function(){
-$.fn.oldVal=$.fn.val;
-$.fn.val=function(value)
-{
-	var _this=this,editor;
-	if(value===undefined)if(this[0]&&(editor=this[0].xheditor))return editor.getSource();else return _this.oldVal(value);//读
-	return this.each(function(){if(editor=this.xheditor)editor.setSource(value);else _this.oldVal(value);});//写
-}
-$('textarea').each(function(){
-	var self=$(this),xhClass=self.attr('class').match(/(?:^|\s)xheditor(?:\-(m?full|simple|mini))?(?:\s|$)/i);
-	if(xhClass)self.xheditor(xhClass[1]?{tools:xhClass[1]}:null);
-});
+	$.fn.oldVal=$.fn.val;
+	$.fn.val=function(value)
+	{
+		var _this=this,editor;
+		if(value===undefined)if(this[0]&&(editor=this[0].xheditor))return editor.getSource();else return _this.oldVal(value);//读
+		return this.each(function(){if(editor=this.xheditor)editor.setSource(value);else _this.oldVal(value);});//写
+	}
+	$('textarea').each(function(){
+		var self=$(this),xhClass=self.attr('class').match(/(?:^|\s)xheditor(?:\-(m?full|simple|mini))?(?:\s|$)/i);
+		if(xhClass)self.xheditor(xhClass[1]?{tools:xhClass[1]}:null);
+	});
 });
 
 })(jQuery);

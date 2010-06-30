@@ -7,7 +7,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.3 (build 100504)
+ * @Version: 0.9.4 (build 100520)
  * 
  * 注1：本程序仅为演示用，请您务必根据自己需求进行相应修改，或者重开发
  * 注2：本程序特别针对HTML5上传，在程序开头加入了特殊处理
@@ -34,10 +34,11 @@ if(isset($_SERVER['HTTP_CONTENT_DISPOSITION']))//HTML5上传
 }
 
 $err = "";
-$msg = "";
-if(!isset($_FILES[$inputname]))return array('err'=>'文件域的name错误或者没选择文件','msg'=>$msg);
-$upfile=$_FILES[$inputname];
-if(!empty($upfile['error']))
+$msg = "''";
+
+$upfile=@$_FILES[$inputname];
+if(!isset($upfile))$err='文件域的name错误';
+elseif(!empty($upfile['error']))
 {
 	switch($upfile['error'])
 	{
@@ -96,17 +97,23 @@ else
 			$target = $attach_dir.'/'.$filename;
 			
 			rename($upfile['tmp_name'],$target);
+			@chmod($target,0755);
+			$target=jsonString($target);
 			if($immediate=='1')$target='!'.$target;
-			if($msgtype==1)$msg=$target;
-			else $msg=array('url'=>$target,'localname'=>$upfile['name'],'id'=>'1');//id参数固定不变，仅供演示，实际项目中可以是数据库ID
+			if($msgtype==1)$msg="'$target'";
+			else $msg="{'url':'".$target."','localname':'".jsonString($upfile['name'])."','id':'1'}";//id参数固定不变，仅供演示，实际项目中可以是数据库ID
 		}
 	}
 	else $err='上传文件扩展名必需为：'.$upext;
 
 	@unlink($temppath);
 }
-echo json_encode(array('err'=>$err,'msg'=>$msg));
+echo "{'err':'".jsonString($err)."','msg':".$msg."}";
 
+function jsonString($str)
+{
+	return preg_replace("/([\\\\\/'])/",'\\\$1',$str);
+}
 function formatBytes($bytes) {
 	if($bytes >= 1073741824) {
 		$bytes = round($bytes / 1073741824 * 100) / 100 . 'GB';

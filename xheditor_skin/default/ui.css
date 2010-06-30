@@ -91,7 +91,7 @@
 	margin:0;border-width:1px;border-style:solid;font-size:12px;
 	*padding:expression((type=="text")?'1px':'auto');*width:expression((type=="text")?'160px':'auto');*border-color:expression((type=="text")?'#ABADB3':'#fff #888 #888 #fff');*background:expression((type=="button")?'#F0F0F0':'#FFFFFF');*cursor:expression((type=="button")?'pointer':'');*font-size:expression((type=="button")?'13px':'12px');
 }
-.xheDialog textarea{font-size:12px;}
+.xheDialog textarea{font-size:12px;resize:none;}
 .xheDialog input[type=text]{padding:1px;width:160px;border-color:#ABADB3;}
 .xheDialog input[type=button]{margin:0;border-color:#fff #888 #888 #fff;background:#F0F0F0;cursor:pointer;font-size:13px;}
 .xheDialog input[type=file]{font-size:13px;}

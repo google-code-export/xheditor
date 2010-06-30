@@ -7,17 +7,17 @@
 <style type="text/css">
 <!--
 .btnCode {
-	background:transparent url(syntaxhighlighter/code.gif) no-repeat 20px 20px;
-	background-position:3px 3px;
+	background:transparent url(syntaxhighlighter/code.gif) no-repeat 16px 16px;
+	background-position:2px 2px;
 }
 .btnFlv {
-	background:transparent url(mediaplayer/flv.gif) no-repeat 20px 20px;
-	background-position:3px 3px;
+	background:transparent url(mediaplayer/flv.gif) no-repeat 16px 16px;
+	background-position:2px 2px;
 }
 -->
 </style>
 <script type="text/javascript" src="../jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="../xheditor-zh-cn.js"></script>
+<script type="text/javascript" src="../xheditor-zh-cn.js?v=1.0.0-rc3"></script>
 <script type="text/javascript" src="../xheditor_plugins/ubb.js"></script>
 <script type="text/javascript">
 $(pageInit);
@@ -45,7 +45,7 @@ function pageInit()
 			});
 			_this.showDialog(jFlv);
 		}}},
-		tools:'full',showBlocktag:false,forcePtag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb,emots:{qq:{name:'QQ',count:55,width:25,height:25,line:11},msn:{name:'MSN',count:40,width:22,height:22,line:8}},emotMark:true,shortcuts:{'ctrl+enter':submitForm}});
+		tools:'full',showBlocktag:false,forcePtag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb,emots:{msn:{name:'MSN',count:40,width:22,height:22,line:8}},emotMark:true,shortcuts:{'ctrl+enter':submitForm}});
 }
 function submitForm(){$('#frmDemo').submit();}
 </script>
