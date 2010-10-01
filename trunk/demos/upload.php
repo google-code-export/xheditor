@@ -21,6 +21,7 @@ $maxattachsize=2097152;//最大上传大小，默认是2M
 $upext='txt,rar,zip,jpg,jpeg,gif,png,swf,wmv,avi,wma,mp3,mid';//上传扩展名
 $msgtype=2;//返回上传参数的格式：1，只返回url，2，返回参数数组
 $immediate=isset($_GET['immediate'])?$_GET['immediate']:0;//立即上传模式，仅为演示用
+ini_set('date.timezone','Asia/Shanghai');//时区
 
 if(isset($_SERVER['HTTP_CONTENT_DISPOSITION']))//HTML5上传
 {
