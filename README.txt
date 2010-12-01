@@ -15,6 +15,8 @@
 <script type="text/javascript" src="http://static.xxx.com/js/jquery.js"></script>
 <script type="text/javascript" src="http://static.xxx.com/js/xheditor.js"></script>
 
+注：如果jQuery之前已经在项目页面中使用，请勿重复添加引用代码
+
 4. 
 方法1：在textarea上添加属性： class="xheditor {skin:'default'}"，前面主参数也可以是xheditor-mfull、xheditor-mini和xheditor-simple，分别加载多行完全、迷你和简单工具栏，后面详细参数可以省略
 方法2：在您的页面初始JS代码里加上： $('#elm1').xheditor();
