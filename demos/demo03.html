@@ -5,7 +5,7 @@
 <title>xhEditor demo3 : 皮肤选择</title>
 <link rel="stylesheet" href="common.css" type="text/css" media="screen" />
 <script type="text/javascript" src="../jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="../xheditor-zh-cn.js?v=1.1.0"></script>
+<script type="text/javascript" src="../xheditor-zh-cn.js?v=1.0.0-rc3"></script>
 <script type="text/javascript">
 $(pageInit);
 function pageInit()
@@ -14,7 +14,6 @@ function pageInit()
 	$('#elm2').xheditor({skin:'o2007blue',shortcuts:{'ctrl+enter':submitForm}});
 	$('#elm3').xheditor({skin:'o2007silver',shortcuts:{'ctrl+enter':submitForm}});
 	$('#elm4').xheditor({skin:'vista',shortcuts:{'ctrl+enter':submitForm}});
-	$('#elm5').xheditor({skin:'nostyle',shortcuts:{'ctrl+enter':submitForm}});
 }
 function submitForm(){$('#frmDemo').submit();}
 </script>
@@ -53,10 +52,6 @@ function submitForm(){$('#frmDemo').submit();}
 	4,Vista:<br />
 	<textarea id="elm4" name="elm4" rows="12" cols="80" style="width: 80%">
 &lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm4').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;skin:'vista'&lt;/span&gt;});&lt;/p&gt;
-	</textarea><br /><br />
-	5,NoStyle:<br />
-	<textarea id="elm5" name="elm5" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;$('#elm5').xheditor({&lt;span style=&quot;color:#ff0000;&quot;&gt;skin:'nostyle'&lt;/span&gt;});&lt;/p&gt;&lt;p&gt;皮肤作者：&lt;strong&gt;shiny&lt;/strong&gt; (dev.meettea.com)&lt;/p&gt;
 	</textarea>
 	<br/><br />注：为了保持项目精简，同一个页面只能调用一个皮肤，当同一界面同时调用多个皮肤时，最后一个皮肤的按钮面板样式会影响之前的<br /><br />
 	<input type="submit" name="save" value="Submit" />

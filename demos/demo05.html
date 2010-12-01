@@ -5,7 +5,7 @@
 <title>xhEditor demo5 : Javascript API交互</title>
 <link rel="stylesheet" href="common.css" type="text/css" media="screen" />
 <script type="text/javascript" src="../jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="../xheditor-zh-cn.js?v=1.1.0"></script>
+<script type="text/javascript" src="../xheditor-zh-cn.js?v=1.0.0-rc3"></script>
 <script type="text/javascript">
 $(pageInit);
 var editor;
@@ -37,7 +37,7 @@ function submitForm(){$('#frmDemo').submit();}
 <form id="frmDemo" method="post" action="show.php">
 	<h3>xhEditor demo5 : Javascript API交互</h3>
 	<textarea id="elm1" name="elm1" rows="12" cols="80" style="width: 80%">
-&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;var editor;&lt;br /&gt;editor=$('#elm1').xheditor();//方式1&lt;br /&gt;editor=$('#elm1')[0].xheditor;//方式2&lt;br /&gt;editor.pasteHTML('&amp;lt;strong&amp;gt;粘贴的内容&amp;lt;/strong&amp;gt;');&lt;/p&gt;&lt;p&gt;&lt;br /&gt;注：本页面演示大部分外部调用的API接口，更多详细帮助信息请查看：&lt;a href=&quot;http://xheditor.com/manual/2#chapter3&quot;&gt;http://xheditor.com/manual/2#chapter3&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;当前实例调用的Javascript源代码为：&lt;/p&gt;&lt;p&gt;var editor;&lt;br /&gt;editor=$('#elm1').xheditor();//方式1&lt;br /&gt;editor=$('#elm1')[0].xheditor;//方式2&lt;br /&gt;editor.pasteHTML('&amp;lt;strong&amp;gt;粘贴的内容&amp;lt;/strong&amp;gt;');&lt;/p&gt;&lt;p&gt;&lt;br /&gt;注：本页面演示大部分外部调用的API接口，更多详细帮助信息请查看：&lt;a href=&quot;http://code.google.com/p/xheditor/wiki/Help&quot;&gt;http://code.google.com/p/xheditor/wiki/Help&lt;/a&gt;&lt;/p&gt;
 	</textarea>
 	<br /><br />
 	<input type="submit" name="save" value="Submit" />

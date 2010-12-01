@@ -14,21 +14,16 @@
 	background:transparent url(mediaplayer/flv.gif) no-repeat 16px 16px;
 	background-position:2px 2px;
 }
-.btnMap {
-	width:50px !important;
-	background:transparent url(googlemap/map.gif) no-repeat center center;
-}
 -->
 </style>
 <script type="text/javascript" src="../jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="../xheditor-zh-cn.js?v=1.1.0"></script>
+<script type="text/javascript" src="../xheditor-zh-cn.js?v=1.0.0-rc3"></script>
 <script type="text/javascript" src="../xheditor_plugins/ubb.js"></script>
 <script type="text/javascript">
 $(pageInit);
 function pageInit()
 {
-	var plugins={
-		Code:{c:'btnCode',t:'插入代码',h:1,e:function(){
+	$('#elm1').xheditor({plugins:{Code:{c:'btnCode',t:'插入代码',h:1,e:function(){
 			var _this=this;
 			var htmlCode='<div><select id="xheCodeType"><option value="html">HTML/XML</option><option value="javascript">JavaScript</option><option value="css">CSS</option><option value="php">PHP</option><option value="csharp">C#</option><option value="cpp">C++</option><option value="java">Java</option><option value="python">Python</option><option value="ruby">Ruby</option><option value="vb">Visual Basic</option><option value="delphi">Delphi</option><option value="sql">SQL</option><option value="plain">其它</option></select></div><div><textarea id="xheCodeValue" wrap="soft" spellcheck="false" style="width:300px;height:100px;" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="确定" /></div>';			var jCode=$(htmlCode),jType=$('#xheCodeType',jCode),jValue=$('#xheCodeValue',jCode),jSave=$('#xheSave',jCode);
 			jSave.click(function(){
@@ -38,8 +33,7 @@ function pageInit()
 				return false;	
 			});
 			_this.showDialog(jCode);
-		}},
-		Flv:{c:'btnFlv',t:'插入Flv视频',h:1,e:function(){
+		}},Flv:{c:'btnFlv',t:'插入Flv视频',h:1,e:function(){
 			var _this=this;
 			var htmlFlv='<div>Flv文件:&nbsp; <input type="text" id="xheFlvUrl" value="http://" class="xheText" /></div><div>宽度高度: <input type="text" id="xheFlvWidth" style="width:40px;" value="480" /> x <input type="text" id="xheFlvHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="确定" /></div>';
 			var jFlv=$(htmlFlv),jUrl=$('#xheFlvUrl',jFlv),jWidth=$('#xheFlvWidth',jFlv),jHeight=$('#xheFlvHeight',jFlv),jSave=$('#xheSave',jFlv);
@@ -50,17 +44,8 @@ function pageInit()
 				return false;	
 			});
 			_this.showDialog(jFlv);
-		}},
-		map:{c:'btnMap',t:'插入Google地图',e:function(){
-			var _this=this;
-			_this.showIframeModal('Google 地图','googlemap/googlemap.html',function(v){_this.pasteHTML('<img src="'+v+'" />');},538,404);
-		}}
-	},emots={
-		msn:{name:'MSN',count:40,width:22,height:22,line:8},
-		pidgin:{name:'Pidgin',width:22,height:25,line:8,list:{smile:'微笑',cute:'可爱',wink:'眨眼',laugh:'大笑',victory:'胜利',sad:'伤心',cry:'哭泣',angry:'生气',shout:'大骂',curse:'诅咒',devil:'魔鬼',blush:'害羞',tongue:'吐舌头',envy:'羡慕',cool:'耍酷',kiss:'吻',shocked:'惊讶',sweat:'汗',sick:'生病',bye:'再见',tired:'累',sleepy:'睡了',question:'疑问',rose:'玫瑰',gift:'礼物',coffee:'咖啡',music:'音乐',soccer:'足球',good:'赞同',bad:'反对',love:'心',brokenheart:'伤心'}},
-		ipb:{name:'IPB',width:20,height:25,line:8,list:{smile:'微笑',joyful:'开心',laugh:'笑',biglaugh:'大笑',w00t:'欢呼',wub:'欢喜',depres:'沮丧',sad:'悲伤',cry:'哭泣',angry:'生气',devil:'魔鬼',blush:'脸红',kiss:'吻',surprised:'惊讶',wondering:'疑惑',unsure:'不确定',tongue:'吐舌头',cool:'耍酷',blink:'眨眼',whistling:'吹口哨',glare:'轻视',pinch:'捏',sideways:'侧身',sleep:'睡了',sick:'生病',ninja:'忍者',bandit:'强盗',police:'警察',angel:'天使',magician:'魔法师',alien:'外星人',heart:'心动'}}
-	};
-	$('#elm1').xheditor({plugins:plugins,tools:'full',showBlocktag:false,forcePtag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb,emots:emots,emotMark:true,shortcuts:{'ctrl+enter':submitForm}});
+		}}},
+		tools:'full',showBlocktag:false,forcePtag:false,beforeSetSource:ubb2html,beforeGetSource:html2ubb,emots:{msn:{name:'MSN',count:40,width:22,height:22,line:8}},emotMark:true,shortcuts:{'ctrl+enter':submitForm}});
 }
 function submitForm(){$('#frmDemo').submit();}
 </script>
@@ -84,7 +69,7 @@ function submitForm(){$('#frmDemo').submit();}
 </div>
 <form id="frmDemo" method="post" action="showubb.php">
 	<h3>xhEditor demo7 : UBB可视化编辑</h3>
-	<textarea id="elm1" name="elm1" rows="12" cols="80" style="width: 90%">[b]粗体文字 Abc[/b]
+	<textarea id="elm1" name="elm1" rows="12" cols="80" style="width: 80%">[b]粗体文字 Abc[/b]
 [u]下划线文字 Abc[/u]
 [i]斜体文字 Abc[/i]
 [s]删除线 Abc[/s]

@@ -5,7 +5,7 @@
 <title>xhEditor demo8 : Ajax文件上传</title>
 <link rel="stylesheet" href="common.css" type="text/css" media="screen" />
 <script type="text/javascript" src="../jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="../xheditor-zh-cn.js?v=1.1.0"></script>
+<script type="text/javascript" src="../xheditor-zh-cn.js?v=1.0.0-rc3"></script>
 <script type="text/javascript">
 $(pageInit);
 function pageInit()
@@ -17,14 +17,10 @@ function pageInit()
 	$('#elm5').xheditor({upFlashUrl:"uploadembed.php",upFlashExt:"swf",upMediaUrl:"uploadembed.php",upMediaExt:"wmv,avi,wma,mp3,mid",shortcuts:{'ctrl+enter':submitForm}});
 	$('#elm6').xheditor({upLinkUrl:"upload.php",upLinkExt:"zip,rar,txt",upImgUrl:"upload.php",upImgExt:"jpg,jpeg,gif,png",onUpload:insertUpload,shortcuts:{'ctrl+enter':submitForm}});
 }
-function insertUpload(arrMsg)
+function insertUpload(msg)
 {
-	var i,msg;
-	for(i=0;i<arrMsg.length;i++)
-	{
-		msg=arrMsg[i];
-		$("#uploadList").append('<option value="'+msg.id+'">'+msg.localname+'</option>');
-	}
+	msg=msg[0];
+	 $("#uploadList").append('<option value="'+msg.id+'">'+msg.localname+'</option>');
 }
 function submitForm(){$('#frmDemo').submit();}
 </script>

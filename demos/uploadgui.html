@@ -15,14 +15,10 @@ function upload()
 {
 	callback('http://xheditor.com/test');
 }
-function closewindow()
-{
-	unloadme();
-}
 </script>
 </head> 
 <body> 
-<a href="javascript:void(0);" onclick="upload();">点击这里完成文件上传</a> | <a href="javascript:void(0);" onclick="closewindow();">点击这里关闭模式窗口</a><br />
-<p style="color:#999;">注：此页面仅供演示用，您可以在此页面的基础上实现文件上传和用户文件浏览功能<br />本页面提供两个接口用来和编辑器进行互动：callback和unloadme，callback的唯一返回参数就是返回值,unloadme方法无任何参数</p>
+<a href="javascript:void(0);" onclick="upload();">点击这里完成文件上传</a><br />
+<p style="color:#999;">注：此页面仅供演示用，您可以在此页面的基础上实现文件上传和用户文件浏览功能<br />本页面提供唯一接口用来和编辑器进行互动：callback，callback的唯一返回参数就是返回值</p>
 </body> 
 </html>
