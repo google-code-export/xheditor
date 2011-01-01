@@ -4,8 +4,7 @@ body{background-color: #FFFFFF;word-break:break-word;word-wrap:break-word;}
 
 .editMode{margin:5px;padding:0px;overflow-y:auto;}
 .editMode img:-moz-broken {-moz-force-broken-image-icon:1;height:24px;width:24px;}
-.editMode table:not([border]){border-collapse:collapse;border:1px dotted #d3d3d3;}
-.editMode table:not([border]) th,.editMode table:not([border]) td{border:1px dotted #d3d3d3;}
+.editMode table.xhe-border,.editMode table.xhe-border th,.editMode table.xhe-border td{border:1px dotted #d3d3d3;}
 .editMode embed{display:inline-block;border:1px dashed #FF4E4E;}
 .editMode embed[type="application/x-shockwave-flash"]{background:url(img/flash.gif) center center no-repeat;}
 .editMode embed[type="application/x-mplayer2"]{background:url(img/wmp.gif) center center no-repeat;}
