@@ -6,7 +6,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://xheditor.com/license/lgpl.txt)
  *
- * @Version: 1.1.3 (build 110101)
+ * @Version: 1.1.4 (build 110201)
  */
 (function($){
 if($.xheditor)return false;//防止JS重複加載
@@ -72,7 +72,7 @@ var htmlImg='<div>圖片文件: <input type="text" id="xheImgUrl" value="http://
 var htmlFlash='<div>動畫文件: <input type="text" id="xheFlashUrl" value="http://" class="xheText" /></div><div>寬度高度: <input type="text" id="xheFlashWidth" style="width:40px;" value="480" /> x <input type="text" id="xheFlashHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="確定" /></div>';
 var htmlMedia='<div>媒體文件: <input type="text" id="xheMediaUrl" value="http://" class="xheText" /></div><div>寬度高度: <input type="text" id="xheMediaWidth" style="width:40px;" value="480" /> x <input type="text" id="xheMediaHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="確定" /></div>';
 var htmlTable='<div>行數列數: <input type="text" id="xheTableRows" style="width:40px;" value="3" /> x <input type="text" id="xheTableColumns" style="width:40px;" value="2" /></div><div>標題單元: <select id="xheTableHeaders"><option selected="selected" value="">無</option><option value="row">第一行</option><option value="col">第一列</option><option value="both">第一行和第一列</option></select></div><div>寬度高度: <input type="text" id="xheTableWidth" style="width:40px;" value="200" /> x <input type="text" id="xheTableHeight" style="width:40px;" value="" /></div><div>邊框大小: <input type="text" id="xheTableBorder" style="width:40px;" value="1" /></div><div>表格間距: <input type="text" id="xheTableCellSpacing" style="width:40px;" value="1" /> 表格填充: <input type="text" id="xheTableCellPadding" style="width:40px;" value="1" /></div><div>對齊方式: <select id="xheTableAlign"><option selected="selected" value="">預設</option><option value="left">靠左對齊</option><option value="center">置中</option><option value="right">靠右對齊</option></select></div><div>表格標題: <input type="text" id="xheTableCaption" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="確定" /></div>';
-var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.1.3 (build 110101)</p><p>xhEditor是基於jQuery開發的跨平台輕量XHTML編輯器，基於<a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>開源協議發佈。</p><p>Copyright c <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
+var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.1.4 (build 110201)</p><p>xhEditor是基於jQuery開發的跨平台輕量XHTML編輯器，基於<a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>開源協議發佈。</p><p>Copyright c <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
 var itemEmots={'default':{name:'預設',width:24,height:24,line:7,list:{'smile':'微笑','tongue':'吐舌頭','titter':'偷笑','laugh':'大笑','sad':'難過','wronged':'委屈','fastcry':'快哭了','cry':'哭','wail':'大哭','mad':'生氣','knock':'敲打','curse':'罵人','crazy':'抓狂','angry':'發火','ohmy':'驚訝','awkward':'尷尬','panic':'驚恐','shy':'害羞','cute':'可憐','envy':'羨慕','proud':'得意','struggle':'奮鬥','quiet':'安靜','shutup':'閉嘴','doubt':'疑問','despise':'鄙視','sleep':'睡覺','bye':'再見'}}};
 var arrTools={Cut:{t:'剪下 (Ctrl+X)'},Copy:{t:'複製 (Ctrl+C)'},Paste:{t:'貼上 (Ctrl+V)'},Pastetext:{t:'貼上文本',h:isIE?0:1},Blocktag:{t:'段落標籤',h:1},Fontface:{t:'字型',h:1},FontSize:{t:'字型大小',h:1},Bold:{t:'粗體 (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'斜體 (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'底線 (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'刪除線'},FontColor:{t:'字型顏色',h:1},BackColor:{t:'背景顏色',h:1},SelectAll:{t:'全選 (Ctrl+A)'},Removeformat:{t:'刪除文字格式'},Align:{t:'對齊',h:1},List:{t:'列表',h:1},Outdent:{t:'減少縮排 (Shift+Tab)',s:'Shift+Tab'},Indent:{t:'增加縮排 (Tab)',s:'Tab'},Link:{t:'超連結 (Ctrl+K)',s:'Ctrl+K',h:1},Unlink:{t:'取消超連結'},Img:{t:'圖片',h:1},Flash:{t:'Flash動畫',h:1},Media:{t:'多媒體文件',h:1},Emot:{t:'表情',s:'ctrl+e',h:1},Table:{t:'表格',h:1},Source:{t:'原始碼'},Preview:{t:'預覽'},Print:{t:'打印 (Ctrl+P)',s:'Ctrl+P'},Fullscreen:{t:'全螢幕編輯 (Esc)',s:'Esc'},About:{t:'關於 xhEditor'}};
 var toolsThemes={
@@ -86,7 +86,7 @@ var regEntities=/[<>"Rc]/g;
 
 $.xheditor=function(textarea,options)
 {
-	var defaults={skin:'default',tools:'full',clickCancelDialog:true,linkTag:false,internalScript:false,inlineScript:false,internalStyle:true,inlineStyle:true,showBlocktag:false,forcePtag:true,upLinkExt:"zip,rar,txt",upImgExt:"jpg,jpeg,gif,png",upFlashExt:"swf",upMediaExt:"wmv,avi,wma,mp3,mid",modalWidth:350,modalHeight:220,modalTitle:true,defLinkText:'點擊打開鏈接',layerShadow:3,emotMark:false,upBtnText:'上傳',wordDeepClean:true,hoverExecDelay:100,html5Upload:true,upMultiple:99};
+	var defaults={skin:'default',tools:'full',clickCancelDialog:true,linkTag:false,internalScript:false,inlineScript:false,internalStyle:true,inlineStyle:true,showBlocktag:false,forcePtag:true,upLinkExt:"zip,rar,txt",upImgExt:"jpg,jpeg,gif,png",upFlashExt:"swf",upMediaExt:"wmv,avi,wma,mp3,mid",modalWidth:350,modalHeight:220,modalTitle:true,defLinkText:'點擊打開鏈接',layerShadow:3,emotMark:false,upBtnText:'上傳',cleanPaste:2,hoverExecDelay:100,html5Upload:true,upMultiple:99};
 	var _this=this,_text=textarea,_jText=$(_text),_jForm=_jText.closest('form'),_jTools,_jArea,_win,_jWin,_doc,_jDoc;
 	var bookmark;
 	var bInit=false,bSource=false,bFullscreen=false,bCleanPaste=false,outerScroll,bShowBlocktag=false,sLayoutStyle='',ev=null,timer,bDisableHoverExec=false,bQuickHoverExec=false;
@@ -259,7 +259,7 @@ $.xheditor=function(textarea,options)
 		$('#'+idContainer).show();
 		_jText.hide();
 		_jArea.css('height',editorHeight-_jTools.outerHeight());
-		setTimeout(function(){_jArea.css('height',editorHeight-_jTools.outerHeight());},100);
+		//setTimeout(function(){_jArea.css('height',editorHeight-_jTools.outerHeight());},100);
 
 		//綁定內核事件
 		_jText.focus(_this.focus);
@@ -738,7 +738,7 @@ $.xheditor=function(textarea,options)
 		else
 		{
 			sHtml=_this.processHTML(_doc.body.innerHTML,'read');
-			sHtml=sHtml.replace(/^\s*(?:<(p|div)(?:\s+[^>]*?)?>)?\s*(<br(?:\s+[^>]*?)?>)*\s*(?:<\/\1>)?\s*$/i, '');//修正Firefox在空內容情況下多出來的代碼
+			sHtml=sHtml.replace(/^\s*(?:<(p|div)(?:\s+[^>]*?)?>)?\s*(<br(?:\s+[^>]*?)?>|&nbsp;)*\s*(?:<\/\1>)?\s*$/i, '');//修正Firefox在空內容情況下多出來的代碼
 			sHtml=_this.cleanHTML(sHtml);
 			sHtml=_this.formatXHTML(sHtml,bFormat);
 			if(beforeGetSource)sHtml=beforeGetSource(sHtml);
@@ -748,10 +748,9 @@ $.xheditor=function(textarea,options)
 	}
 	this.cleanWord=function(sHtml)
 	{
-		if(sHtml.match(/mso(-|normal)|WordDocument|<td\s+class="xl[23]\d"/i))
+		var cleanPaste=settings.cleanPaste;
+		if(cleanPaste>0&&cleanPaste<3&&sHtml.match(/mso(-|normal)|WordDocument|<td\s+class="xl[23]\d"/i))
 		{
-			var deepClean=settings.wordDeepClean;
-
 			//區塊標籤清理
 			sHtml = sHtml.replace(/<!--[\s\S]*?-->|<!(--)?\[[\s\S]+?\](--)?>|<style(\s+[^>]*?)?>[\s\S]*?<\/style>/ig, '');
 			
@@ -759,7 +758,7 @@ $.xheditor=function(textarea,options)
 
 			sHtml=sHtml.replace(/(<(\/?)([\w:]+))((?:\s[\w-:]+="[^"]*")*)\s*(\/?>)/ig,function(all,left,end,tag,attr,right){
 				tag=tag.toLowerCase();
-				if((tag.match(/^(link|img)$/)&&attr.match(/file:\/\//i))||tag.match(/:/)||(tag==='span'&&deepClean))return '';
+				if((tag.match(/^(link|img)$/)&&attr.match(/file:\/\//i))||tag.match(/:/)||(tag==='span'&&cleanPaste===2))return '';
 				if(!end){
 					attr=attr.replace(/\s([\w-:]+)="\s*([^"]*)\s*"/ig,function(all,n,v){
 						n=n.toLowerCase();
@@ -767,13 +766,13 @@ $.xheditor=function(textarea,options)
 						else if(n.match(/^(class|lang|language|span)$/))return '';
 						else if(tag==='td'&&(n==='height'||(n==='width'&&!attr.match(/\scolspan="\d+"/i))))return '';
 						else if(n==='style'){
-							if(deepClean)return '';
+							if(cleanPaste===2)return '';
 							v=$.trim(v.replace(/\s*(mso-[^:]+:.+?|margin\s*:\s*0cm 0cm 0pt\s*|(text-align|font-variant|line-height)\s*:\s*.+?)(;|$)\s*/ig,''));
 							return v?' '+n+'="'+v+'"':'';
 						}
 						return all;
 					})
-					if((tag==='span'&&attr.match(/^\s*$/))||(tag==='a'&&!attr.match(/\s+href\s*=/)))return '';
+					if((tag==='a'&&!attr.match(/\s+href\s*=/)))return '';
 				}
 				return left+attr+right;
 			});
@@ -876,7 +875,7 @@ $.xheditor=function(textarea,options)
 		function onStartTag(tagName,rest,unary)
 		{
 			if(blockTags[tagName])while(stack.last()&&inlineTags[stack.last()])onEndTag(stack.last());
-			if(closeSelfTags[tagName]&&stack.last()===tagName)parseEndTag(tagName);
+			if(closeSelfTags[tagName]&&stack.last()===tagName)onEndTag(tagName);
 			unary = emptyTags[ tagName ] || !!unary;
 			if (!unary)stack.push(tagName);
 			var all=Array();
@@ -1035,15 +1034,18 @@ $.xheditor=function(textarea,options)
 	this.toggleFullscreen=function(state)
 	{
 		if(bFullscreen===state)return;
-		var jLayout=$('#'+idContainer).find('.xheLayout'),jContainer=$('#'+idContainer);
+		var jLayout=$('#'+idContainer).find('.xheLayout'),jContainer=$('#'+idContainer),browserVer=jQuery.browser.version,isIE67=(isIE&&(browserVer==6||browserVer==7));
 		if(bFullscreen)
 		{//取消全屏
+			if(isIE67)_jText.after(jContainer);
 			jLayout.attr('style',sLayoutStyle);
 			_jArea.height(editorHeight-_jTools.outerHeight());
-			setTimeout(function(){$(window).scrollTop(outerScroll);},10);
+			$(window).scrollTop(outerScroll);
+			setTimeout(function(){$(window).scrollTop(outerScroll);},10);//Firefox需要延遲設置
 		}
 		else
 		{//顯示全屏
+			if(isIE67)$('body').append(jContainer);
 			outerScroll=$(window).scrollTop();
 			sLayoutStyle=jLayout.attr('style');
 			jLayout.removeAttr('style');
@@ -1055,6 +1057,7 @@ $.xheditor=function(textarea,options)
 			$('#'+idFixFFCursor).show().focus().hide();
 			setTimeout(_this.focus,1);
 		}
+		else if(isIE67)_this.setCursorFirst();
 		bFullscreen=!bFullscreen;
 		jContainer.toggleClass('xhe_Fullscreen');
 		$('html').toggleClass('xhe_Fullfix');
@@ -1737,10 +1740,11 @@ $.xheditor=function(textarea,options)
 	function loadReset(){setTimeout(_this.setSource,10);}
 	function saveResult(){_this.getSource();};
 	function cleanPaste(ev){
-		if(bSource||bCleanPaste)return true;
+		var cleanPaste=settings.cleanPaste;
+		if(cleanPaste===0||bSource||bCleanPaste)return true;
 		bCleanPaste=true;//解決IE右鍵貼上重複產生paste的問題
 		_this.saveBookmark();
-		var jDiv=$('<div style="position:absolute;left:-1000px;top:'+_jWin.scrollTop()+'px;overflow:hidden;width:1px;height:1px;" />',_doc),div=jDiv[0],sel=_this.getSel(),rng=_this.getRng(true);
+		var jDiv=$('<div class="xhe-paste" style="top:'+_jWin.scrollTop()+'px;" />',_doc),div=jDiv[0],sel=_this.getSel(),rng=_this.getRng(true);
 		$(_doc.body).append(jDiv);
 		if(isIE){
 			rng.moveToElementText(div);
@@ -1754,8 +1758,14 @@ $.xheditor=function(textarea,options)
 		}
 
 		setTimeout(function(){
-			var bText=settings.forcePasteText,sPaste;
-			sPaste=bText?jDiv.text():div.innerHTML;
+			var bText=(cleanPaste===3),sPaste;
+			if(bText)sPaste=jDiv.text();
+			else{
+				var jTDiv=$('.xhe-paste',jDiv),arrHtml=[];
+				if(jTDiv.length===0)jTDiv=jDiv;
+				jTDiv.each(function(i,n){arrHtml.push(n.innerHTML);});
+				sPaste=arrHtml.join('<br />');
+			}
 			jDiv.remove();
 			_this.loadBookmark();
 			if(bText)_this.pasteText(sPaste);
