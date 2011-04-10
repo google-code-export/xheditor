@@ -24,7 +24,7 @@ function loadJS(url,callback,charset)
 }
 function initEditor()
 {
-	loadJS('../xheditor-zh-cn.js?v=1.1.4',function(){$('#elm1').xheditor({shortcuts:{'ctrl+enter':submitForm}});$('#btnInit').hide();});
+	loadJS('../xheditor-zh-cn.js',function(){$('#elm1').xheditor({shortcuts:{'ctrl+enter':submitForm}});$('#btnInit').hide();});
 }
 function submitForm(){$('#frmDemo').submit();}
 </script>
