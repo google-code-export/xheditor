@@ -7,7 +7,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.7 (build 100513)
+ * @Version: 0.9.8 (build 110331)
  */
 function ubb2html(sUBB)
 {
@@ -20,8 +20,7 @@ function ubb2html(sUBB)
 		return "[\tubbcodeplace_"+cnum+"\t]";
 	});
 	
-	sHtml=sHtml.replace(/&/ig, '&amp;');
-	sHtml=sHtml.replace(/[<>]/g,function(c){return {'<':'&lt;','>':'&gt;'}[c];});
+	sHtml=sHtml.replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});
 	sHtml=sHtml.replace(/\r?\n/g,"<br />");
 	
 	sHtml=sHtml.replace(/\[(\/?)(b|u|i|s|sup|sub)\]/ig,'<$1$2>');
@@ -163,14 +162,14 @@ function html2ubb(sHtml)
 		return str;
 	});
 	sUBB=sUBB.replace(/<blockquote(?:\s+[^>]*?)?>([\s\S]+?)<\/blockquote>/ig,'[quote]$1[/quote]');
-	sUBB=sUBB.replace(/<embed((?:\s+[^>]*?)?(?:\s+type\s*=\s*"\s*application\/x-shockwave-flash\s*"|\s+classid\s*=\s*"\s*clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000\s*")[^>]*?)\/>/ig,function(all,attr){
+	sUBB=sUBB.replace(/<embed((?:\s+[^>]*?)?(?:\s+type\s*=\s*"\s*application\/x-shockwave-flash\s*"|\s+classid\s*=\s*"\s*clsid:d27cdb6e-ae6d-11cf-96b8-4445535400000\s*")[^>]*?)\/?>/ig,function(all,attr){
 		var url=attr.match(regSrc),w=attr.match(regWidth),h=attr.match(regHeight),str='[flash';
 		if(!url)return '';
 		if(w&&h)str+='='+w[2]+','+h[2];
 		str+=']'+url[2];
 		return str+'[/flash]';
 	});
-	sUBB=sUBB.replace(/<embed((?:\s+[^>]*?)?(?:\s+type\s*=\s*"\s*application\/x-mplayer2\s*"|\s+classid\s*=\s*"\s*clsid:6bf52a52-394a-11d3-b153-00c04f79faa6\s*")[^>]*?)\/>/ig,function(all,attr){
+	sUBB=sUBB.replace(/<embed((?:\s+[^>]*?)?(?:\s+type\s*=\s*"\s*application\/x-mplayer2\s*"|\s+classid\s*=\s*"\s*clsid:6bf52a52-394a-11d3-b153-00c04f79faa6\s*")[^>]*?)\/?>/ig,function(all,attr){
 		var url=attr.match(regSrc),w=attr.match(regWidth),h=attr.match(regHeight),p=attr.match(/\s+autostart\s*=\s*(["']?)\s*(.+?)\s*\1(\s|$)/i),str='[media',auto='0';
 		if(!url)return '';
 		if(p)if(p[2]=='true')auto='1';
@@ -238,10 +237,8 @@ function html2ubb(sHtml)
 	for(i=1;i<=cnum;i++)sUBB=sUBB.replace("[\tubbcodeplace_"+i+"\t]", arrcode[i]);
 
 	sUBB=sUBB.replace(/<[^<>]+?>/g,'');//É¾³ýËùÓÐHTML±êÇ©
-	sUBB=sUBB.replace(/&lt;/ig, '<');
-	sUBB=sUBB.replace(/&gt;/ig, '>');
-	sUBB=sUBB.replace(/&nbsp;/ig, ' ');
-	sUBB=sUBB.replace(/&amp;/ig, '&');
+	var arrEntities={'lt':'<','gt':'>','nbsp':' ','amp':'&','quot':'"'};
+	sUBB=sUBB.replace(/&(lt|gt|nbsp|amp|quot);/ig,function(all,t){return arrEntities[t];});
 	
 	return sUBB;
 }
