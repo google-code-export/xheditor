@@ -11,20 +11,39 @@ body{
 }	
 </style>
 <script type="text/javascript">
+//----------------跨域支持代码开始(非跨域环境请删除这段代码)----------------
+var JSON = JSON || {};
+JSON.stringify = JSON.stringify || function (obj) {
+	var t = typeof (obj);
+	if (t != "object" || obj === null) {
+		if (t == "string")obj = '"'+obj+'"';
+		return String(obj);
+	}
+	else { 
+		var n, v, json = [], arr = (obj && obj.constructor == Array);
+		for (n in obj) {
+			v = obj[n]; t = typeof(v);
+			if (t == "string") v = '"'+v+'"';
+			else if (t == "object" && v !== null) v = JSON.stringify(v);
+			json.push((arr ? "" : '"' + n + '":') + String(v));
+		}
+		return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+	}  
+};
+var callback = callback || function(v){
+	v=JSON.stringify(v);
+	window.name=escape(v);
+	window.location='http://'+location.search.match(/[\?&]editorhost=(.*?)(&|$)/i)[1]+'/xheditorproxy.html';//这个文件最好是一个0字节文件，如果无此文件也会正常工作	
+}
+var unloadme =  unloadme || function(){
+	callback(null);//返回null，直接关闭当前窗口
+}
+//----------------跨域支持代码结束----------------
+
+
 function upload(){
 	callback('test1.zip');//非跨域允许直接传输JSON对象
-	//callback('"test.zip"');//跨域情况只能传输JSON格式的字符串
 }
-//跨域情况下请去掉下面两个函数的注释
-/*
-function callback(v){
-	window.name=escape(v);
-	window.location='http://'+location.search.match(/[\?&]editorhost=(.*)(&|$)/i)[1]+'/xheditorproxy.html';//这个文件最好是一个0字节文件，如果无此文件也会正常工作
-}
-function unloadme(){
-	callback('null');//返回null，直接关闭当前窗口
-}
-*/
 </script>
 </head> 
 <body> 

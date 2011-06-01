@@ -1,22 +1,34 @@
 <script type="text/javascript">
-var url;
-
-//下面两个代码流程，请根据具体项目情况选择其中一个并删除另外一个
-
-//非跨域流程
-url='test2.zip';//非跨域允许直接传输JSON对象
-callbackDelay();
-function callbackDelay(){
-	if(window.callback)callback(url);
-	else setTimeout(callbackDelay,1);
-}
-//跨域流程
-/*
-url='"test.zip"';//跨域只能传输JSON格式的字符串
-callback(url);
-function callback(v){
+//----------------跨域支持代码开始(非跨域环境请删除这段代码)----------------
+var JSON = JSON || {}; 
+JSON.stringify = JSON.stringify || function (obj) {  	 
+	var t = typeof (obj);  
+	if (t != "object" || obj === null) {
+		if (t == "string")obj = '"'+obj+'"';  
+		return String(obj);  
+	}  
+	else {  	
+		var n, v, json = [], arr = (obj && obj.constructor == Array);  
+		for (n in obj) {  
+			v = obj[n]; t = typeof(v);  
+			if (t == "string") v = '"'+v+'"';  
+			else if (t == "object" && v !== null) v = JSON.stringify(v);  
+			json.push((arr ? "" : '"' + n + '":') + String(v));  
+		}
+		return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");  
+	}  
+};
+var callback = callback || function(v){
+	v=JSON.stringify(v);
 	window.name=escape(v);
-	window.location='http://<?php echo $_POST['editorhost'];?>/xheditorproxy.html';//这个文件最好是一个0字节文件，如果无此文件也会正常工作
+	window.location='http://<?php echo $_POST['editorhost'];?>/xheditorproxy.html';//这个文件最好是一个0字节文件，如果无此文件也会正常工作	
 }
-*/
+//----------------跨域支持代码结束----------------
+
+var url='test2.zip';
+
+setTimeout(function(){callback(url);},100);
+//跨域模式下可直接调用callback，不需要setTimeout延迟
+//callback(url);
+
 </script>
