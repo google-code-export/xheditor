@@ -6,7 +6,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://xheditor.com/license/lgpl.txt)
  *
- * @Version: 1.1.6 (build 110410)
+ * @Version: 1.1.7 (build 110601)
  */
 (function($,undefined){
 if($.xheditor)return false;//防止JS重复加载
@@ -64,7 +64,7 @@ var specialKeys={ 27: 'esc', 9: 'tab', 32:'space', 13: 'enter', 8:'backspace', 1
 var itemColors=['#FFFFFF','#CCCCCC','#C0C0C0','#999999','#666666','#333333','#000000','#FFCCCC','#FF6666','#FF0000','#CC0000','#990000','#660000','#330000','#FFCC99','#FF9966','#FF9900','#FF6600','#CC6600','#993300','#663300','#FFFF99','#FFFF66','#FFCC66','#FFCC33','#CC9933','#996633','#663333','#FFFFCC','#FFFF33','#FFFF00','#FFCC00','#999900','#666600','#333300','#99FF99','#66FF99','#33FF33','#33CC00','#009900','#006600','#003300','#99FFFF','#33FFFF','#66CCCC','#00CCCC','#339999','#336666','#003333','#CCFFFF','#66FFFF','#33CCFF','#3366FF','#3333FF','#000099','#000066','#CCCCFF','#9999FF','#6666CC','#6633FF','#6600CC','#333399','#330099','#FFCCFF','#FF99FF','#CC66CC','#CC33CC','#993399','#663366','#330033'];
 var arrBlocktag=[{n:'p',t:'Paragraph'},{n:'h1',t:'Heading 1'},{n:'h2',t:'Heading 2'},{n:'h3',t:'Heading 3'},{n:'h4',t:'Heading 4'},{n:'h5',t:'Heading 5'},{n:'h6',t:'Heading 6'},{n:'pre',t:'Preformatted'},{n:'address',t:'Address'}];
 var arrFontname=[{n:'Arial'},{n:'Arial Narrow'},{n:'Arial Black'},{n:'Comic Sans MS'},{n:'Courier New'},{n:'System'},{n:'Times New Roman'},{n:'Tahoma'},{n:'Verdana'}];
-var arrFontsize=[{n:'xx-small',wkn:'x-small',s:'8pt',t:'xx-small'},{n:'x-small',wkn:'small',s:'10pt',t:'x-small'},{n:'small',wkn:'medium',s:'12pt',t:'small'},{n:'medium',wkn:'large',s:'14pt',t:'medium'},{n:'large',wkn:'x-large',s:'18pt',t:'large'},{n:'x-large',wkn:'xx-large',s:'24pt',t:'x-large'},{n:'xx-large',wkn:'-webkit-xxx-large',s:'36pt',t:'xx-large'}];
+var arrFontsize=[{n:'x-small',s:'10px',t:'1'},{n:'small',s:'13px',t:'2'},{n:'medium',s:'16px',t:'3'},{n:'large',s:'18px',t:'4'},{n:'x-large',s:'24px',t:'5'},{n:'xx-large',s:'32px',t:'6'},{n:'-webkit-xxx-large',s:'48px',t:'7'}];
 var menuAlign=[{s:'Align left',v:'justifyleft',t:'Align left'},{s:'Align center',v:'justifycenter',t:'Align center'},{s:'Align right',v:'justifyright',t:'Align right'},{s:'Align full',v:'justifyfull',t:'Align full'}],menuList=[{s:'Ordered list',v:'insertOrderedList',t:'Ordered list'},{s:'Unordered list',v:'insertUnorderedList',t:'Unordered list'}];
 var htmlPastetext='<div>Use Ctrl+V on your keyboard to paste the text.</div><div><textarea id="xhePastetextValue" wrap="soft" spellcheck="false" style="width:300px;height:100px;" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
 var htmlLink='<div>Link URL: <input type="text" id="xheLinkUrl" value="http://" class="xheText" /></div><div>Target:&nbsp;&nbsp; <select id="xheLinkTarget"><option selected="selected" value="">Default</option><option value="_blank">New window</option><option value="_self">Same window</option><option value="_parent">Parent window</option></select></div><div style="display:none">Link Text:<input type="text" id="xheLinkText" value="" class="xheText" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
@@ -72,7 +72,7 @@ var htmlImg='<div>Img URL:&nbsp; <input type="text" id="xheImgUrl" value="http:/
 var htmlFlash='<div>Flash URL:<input type="text" id="xheFlashUrl" value="http://" class="xheText" /></div><div>Dimension:<input type="text" id="xheFlashWidth" style="width:40px;" value="480" /> x <input type="text" id="xheFlashHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
 var htmlMedia='<div>Media URL:<input type="text" id="xheMediaUrl" value="http://" class="xheText" /></div><div>Dimension:<input type="text" id="xheMediaWidth" style="width:40px;" value="480" /> x <input type="text" id="xheMediaHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
 var htmlTable='<div>Rows&Cols:&nbsp;&nbsp;<input type="text" id="xheTableRows" style="width:40px;" value="3" /> x <input type="text" id="xheTableColumns" style="width:40px;" value="2" /></div><div>Headers:&nbsp;&nbsp;&nbsp;&nbsp;<select id="xheTableHeaders"><option selected="selected" value="">None</option><option value="row">First row</option><option value="col">First column</option><option value="both">Both</option></select></div><div>Dimension:&nbsp;&nbsp;<input type="text" id="xheTableWidth" style="width:40px;" value="200" /> x <input type="text" id="xheTableHeight" style="width:40px;" value="" /></div><div>Border:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="xheTableBorder" style="width:40px;" value="1" /></div><div>CellSpacing:<input type="text" id="xheTableCellSpacing" style="width:40px;" value="1" /> CellPadding:<input type="text" id="xheTableCellPadding" style="width:40px;" value="1" /></div><div>Align:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="xheTableAlign"><option selected="selected" value="">Default</option><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></div><div>Caption:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="xheTableCaption" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
-var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.1.6 (build 110410)</p><p>xhEditor is a platform independent WYSWYG XHTML editor based by jQuery,released as Open Source under <a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>.</p><p>Copyright &copy; <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
+var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.1.7 (build 110601)</p><p>xhEditor is a platform independent WYSWYG XHTML editor based by jQuery,released as Open Source under <a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>.</p><p>Copyright &copy; <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
 var itemEmots={'default':{name:'Default',width:24,height:24,line:7,list:{'smile':'Smile','tongue':'Tongue','titter':'Titter','laugh':'Laugh','sad':'Sad','wronged':'Wronged','fastcry':'Fast cry','cry':'Cry','wail':'Wail','mad':'Mad','knock':'Knock','curse':'Curse','crazy':'Crazy','angry':'Angry','ohmy':'Oh my','awkward':'Awkward','panic':'Panic','shy':'Shy','cute':'Cute','envy':'Envy','proud':'Proud','struggle':'Struggle','quiet':'Quiet','shutup':'Shut up','doubt':'Doubt','despise':'Despise','sleep':'Sleep','bye':'Bye'}}};
 var arrTools={Cut:{t:'Cut (Ctrl+X)'},Copy:{t:'Copy (Ctrl+C)'},Paste:{t:'Paste (Ctrl+V)'},Pastetext:{t:'Paste as plain text',h:isIE?0:1},Blocktag:{t:'Block tag',h:1},Fontface:{t:'Font family',h:1},FontSize:{t:'Font size',h:1},Bold:{t:'Bold (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'Italic (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'Underline (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'Strikethrough'},FontColor:{t:'Select text color',h:1},BackColor:{t:'Select background color',h:1},SelectAll:{t:'SelectAll (Ctrl+A)'},Removeformat:{t:'Remove formatting'},Align:{t:'Align',h:1},List:{t:'List',h:1},Outdent:{t:'Outdent (Shift+Tab)',s:'Shift+Tab'},Indent:{t:'Indent (Tab)',s:'Tab'},Link:{t:'Insert/edit link (Ctrl+K)',s:'Ctrl+K',h:1},Unlink:{t:'Unlink'},Img:{t:'Insert/edit image',h:1},Flash:{t:'Insert/edit flash',h:1},Media:{t:'Insert/edit media',h:1},Emot:{t:'Emotions',s:'ctrl+e',h:1},Table:{t:'Insert a new table',h:1},Source:{t:'Edit source code'},Preview:{t:'Preview'},Print:{t:'Print (Ctrl+P)',s:'Ctrl+P'},Fullscreen:{t:'Toggle fullscreen (Esc)',s:'Esc'},About:{t:'About xhEditor'}};
 var toolsThemes={
@@ -263,7 +263,8 @@ $.xheditor=function(textarea,options)
 
 		//绑定内核事件
 		_jText.focus(_this.focus);
-		_jForm.submit(saveResult).bind('reset', loadReset);
+		_jForm.submit(saveResult).bind('reset', loadReset);//绑定表单的提交和重置事件
+		if(settings.submitID)$('#'+settings.submitID).click(saveResult);//自定义绑定submit按钮
 		$(window).bind('unload beforeunload',saveResult).bind('resize',fixFullHeight);
 		$(document).mousedown(clickCancelPanel);
 		if(!bCheckEscInit){$(document).keydown(checkEsc);bCheckEscInit=true;}
@@ -356,6 +357,7 @@ $.xheditor=function(textarea,options)
 		//取消绑定事件
 		_jText.unbind('focus',_this.focus);
 		_jForm.unbind('submit',saveResult).unbind('reset', loadReset);
+		if(settings.submitID)$('#'+settings.submitID).unbind('mousedown',saveResult);
 		$(window).unbind('unload beforeunload',saveResult).unbind('resize',fixFullHeight);
 		$(document).unbind('mousedown',clickCancelPanel);
 
@@ -389,7 +391,7 @@ $.xheditor=function(textarea,options)
 	}
 	this.focus=function()
 	{
-		if(!bSource)(isIE?_jDoc:_jWin).focus();
+		if(!bSource)_jWin.focus();
 		else $('#sourceCode',_doc).focus();
 		if(isIE){
 			var rng=_this.getRng();
@@ -544,7 +546,6 @@ $.xheditor=function(textarea,options)
 		{//write
 			sHtml=sHtml.replace(/(<(\/?)(\w+))((?:\s+[\w-:]+\s*=\s*(?:"[^"]*"|'[^']*'|[^>\s]+))*)\s*((\/?)>)/g,function(all,left,end1,tag,attr,right,end2){
 				tag=tag.toLowerCase();
-				//编辑状态统一转为strike
 				if(isMozilla){
 					if(tag==='strong')tag='b';
 					else if(tag==='em')tag='i';
@@ -556,7 +557,7 @@ $.xheditor=function(textarea,options)
 					else if(tag==='strike'){tag='span';if(!end1)attr+=appleClass+' style="text-decoration: line-through;"';}
 				}
 				var emot,tableBorder;
-				if(tag==='del')tag='strike';
+				if(tag==='del')tag='strike';//编辑状态统一转为strike
 				else if(tag==='img'){
 					//恢复emot
 					attr=attr.replace(/\s+emot\s*=\s*("[^"]*"|'[^']*'|[^>\s]+)/i,function(all,v){
@@ -593,15 +594,6 @@ $.xheditor=function(textarea,options)
 					}
 					//处理Safari style值
 					if(isSafari&&n==='style'){
-						v=v.replace(/(^|;)\s*(font-size)\s*:\s*([a-z-]+)\s*(;|$)/i,function(all,left,n,v,right){
-							var t,s;
-							for(var i=0;i<arrFontsize.length;i++)
-							{
-								t=arrFontsize[i];
-								if(v===t.n){s=t.wkn;break;}
-							}
-							return left+n+':'+s+right;
-						});
 						if(tag==='span'&&v.match(/(^|;)\s*(font-family|font-size|color|background-color)\s*:\s*[^;]+\s*(;|$)/i))bAppleClass=true;
 					}
 					return ' '+n+'="'+v+'"'+aft;
@@ -655,11 +647,11 @@ $.xheditor=function(textarea,options)
 					}
 					else return all;
 				}
-				sHtml = sHtml.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]*)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,style2font);//第3层
-				sHtml = sHtml.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]*)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,style2font);//第2层
-				sHtml = sHtml.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)*\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]*)?>(((?!<\1(\s+[^>]*?)?>)[\s\S])*?)<\/\1>/ig,style2font);//最里层
+				sHtml = sHtml.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)?\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]*)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,style2font);//第3层
+				sHtml = sHtml.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)?\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]*)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,style2font);//第2层
+				sHtml = sHtml.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)?\s*(?:font-family|font-size|color)\s*:[^"]*)"(?: [^>]*)?>(((?!<\1(\s+[^>]*?)?>)[\s\S])*?)<\/\1>/ig,style2font);//最里层
 			}
-			
+
 			//表格单元格处理
 			sHtml = sHtml.replace(/<(td|th)(\s+[^>]*?)?>(\s|&nbsp;)*<\/\1>/ig,'<$1$2>'+(isIE?'':'<br />')+'</$1>');
 		}
@@ -710,13 +702,13 @@ $.xheditor=function(textarea,options)
 					}
 					else if(n.match(/^((_xhe_|_moz_|_webkit_)|jquery\d+)/i))return '';//清理临时属性					
 					else if(saveValue&&n.match(/^(src|href)$/i))return ' '+n+'="'+saveValue+'"';//恢复属性值src,href
-					else if(isSafari&&n==='style'){//转换webkit的font-size
+					else if(n==='style'){//转换font-size的keyword到px单位
 						v=v.replace(/(^|;)\s*(font-size)\s*:\s*([a-z-]+)\s*(;|$)/i,function(all,left,n,v,right){
 							var t,s;
 							for(var i=0;i<arrFontsize.length;i++)
 							{
 								t=arrFontsize[i];
-								if(v===t.wkn){s=t.n;break;}
+								if(v===t.n){s=t.s;break;}
 							}
 							return left+n+':'+s+right;
 						});
@@ -780,7 +772,7 @@ $.xheditor=function(textarea,options)
 						else if(n==='style'){
 							if(cleanPaste===2)return '';
 							v=$.trim(v.replace(/\s*(mso-[^:]+:.+?|margin\s*:\s*0cm 0cm 0pt\s*|(text-align|font-variant|line-height)\s*:\s*.+?)(;|$)\s*/ig,''));
-							return v?' '+n+'="'+v+'"':'';
+							return v?' '+n+'="'+v.replace(/"/g,"'")+'"':'';
 						}
 						return all;
 					})
@@ -822,7 +814,7 @@ $.xheditor=function(textarea,options)
 		var cdataTags = makeMap("script,style");
 		var tagReplac={'b':'strong','i':'em','s':'del','strike':'del'};
 		
-		var regTag=/<(?:\/([\w:]+)|!--([^>]*?)--|([\w:]+)((?:\s+[\w-:]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^>\s]+))?)*)\s*(\/?))>/g;
+		var regTag=/<(?:\/([^\s>]+)|!--([^>]*?)--|([^\s\/>]+)((?:"[^"]*"|'[^']*'|[^"'>]+)*)\s*(\/?))>/g;
 		var regAttr = /\s+([\w-:]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s]+)))?/g;
 		var results=[],stack=[];
 		stack.last = function(){return this[ this.length - 1 ];};
@@ -899,7 +891,7 @@ $.xheditor=function(textarea,options)
 						arguments[3] ? arguments[3] :
 						arguments[4] ? arguments[4] :
 						fillAttrsTags[name] ? name : "";
-				all.push(' '+name+'="'+value+'"');
+				all.push(' '+name+'="'+value.replace(/"/g,"'")+'"');
 			});
 			all.push((unary ? " /" : "") + ">");
 			addHtmlFrag(all.join(''),tagName,true);
@@ -961,7 +953,7 @@ $.xheditor=function(textarea,options)
 			f=attrs.match(/ face\s*=\s*"\s*([^"]+)\s*"/i);
 			if(f)styles+='font-family:'+f[1]+';';
 			s=attrs.match(/ size\s*=\s*"\s*(\d+)\s*"/i);
-			if(s)styles+='font-size:'+arrFontsize[(s[1]>7?7:(s[1]<1?1:s[1]))-1].n+';';
+			if(s)styles+='font-size:'+arrFontsize[(s[1]>7?7:(s[1]<1?1:s[1]))-1].s+';';
 			c=attrs.match(/ color\s*=\s*"\s*([^"]+)\s*"/i);
 			if(c)styles+='color:'+c[1]+';';
 			style=attrs.match(/ style\s*=\s*"\s*([^"]+)\s*"/i);
@@ -1564,20 +1556,14 @@ $.xheditor=function(textarea,options)
 	{
 		var jContent=$('<iframe frameborder="0" src="'+url.replace(/{editorRoot}/ig,editorRoot)+(/\?/.test(url)?'&':'?')+'editorhost='+location.hostname+'" style="width:100%;height:100%;display:none;" /><div class="xheModalIfmWait"></div>'),jIframe=$(jContent[0]),jWait=$(jContent[1]);
 		_this.showModal(title,jContent,w,h,onRemove);
-		var modalWin=jIframe[0].contentWindow,result;
+		var modalWin=jIframe[0].contentWindow,result,bCross=false;
 		initModalWin();
 		jIframe.load(function(){
-			try{
-				if(result=modalWin.name){//跨域
-					modalWin.document.write('');
-					result=eval('('+unescape(result)+')');
-					return callbackModal(result);
-				}
-				else{//非跨域
-					initModalWin();
-					$(modalWin.document).keydown(checkEsc);
-				}
-			}catch(ex){};
+			initModalWin();//初始化接口
+			if(bCross&&result){//跨域，取返回值
+				result=eval('('+unescape(result)+')');
+				return callbackModal(result);	
+			}
 			if(jWait.is(':visible')){//显示内页
 				jIframe.show();
 				jWait.remove();
@@ -1588,10 +1574,15 @@ $.xheditor=function(textarea,options)
 			try{
 				modalWin.callback=callbackModal;
 				modalWin.unloadme=_this.removeModal;
-			}catch(ex){}
+				$(modalWin.document).keydown(checkEsc);
+				if((result=modalWin.name)===undefined)bCross=true;
+			}catch(ex){
+				bCross=true;
+			}
 		}
 		//模式窗口回调
 		function callbackModal(v){
+			modalWin.document.write('');
 			_this.removeModal();
 			if(v!=null)callback(v);
 		}
@@ -1645,7 +1636,8 @@ $.xheditor=function(textarea,options)
 		var xy=_jPanelButton.offset();
 		var x=xy.left,y=xy.top;y+=_jPanelButton.outerHeight()-1;
 		_jCntLine.css({'left':x+1,'top':y,'width':_jPanelButton.width()}).show();
-		if((x+_jPanel.outerWidth())>document.body.clientWidth)x-=(_jPanel.outerWidth()-_jPanelButton.outerWidth());//向左显示面板
+		var _docElem=document.documentElement,body=document.body;
+		if((x+_jPanel.outerWidth())>((window.pageXOffset||_docElem.scrollLeft||body.scrollLeft)+(_docElem.clientWidth||body.clientWidth)))x-=(_jPanel.outerWidth()-_jPanelButton.outerWidth());//向左显示面板
 		var layerShadow=settings.layerShadow;
 		if(layerShadow>0)_jShadow.css({'left':x+layerShadow,'top':y+layerShadow,'width':_jPanel.outerWidth(),'height':_jPanel.outerHeight()}).show();
 		_jPanel.css({'left':x,'top':y}).show();
@@ -1968,8 +1960,8 @@ $(function(){
 		return _this.each(function(){if(editor=this.xheditor)editor.setSource(value);else _this.oldVal(value);});//写
 	}
 	$('textarea').each(function(){
-		var self=$(this),xhClass=self.attr('class').match(/(?:^|\s)xheditor(?:\-(m?full|simple|mini))?(?:\s|$)/i);
-		if(xhClass)self.xheditor(xhClass[1]?{tools:xhClass[1]}:null);
+		var $this=$(this),xhClass=$this.attr('class');
+		if(xhClass&&(xhClass=xhClass.match(/(?:^|\s)xheditor(?:\-(m?full|simple|mini))?(?:\s|$)/i)))$this.xheditor(xhClass[1]?{tools:xhClass[1]}:null);
 	});
 });
 
