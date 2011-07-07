@@ -41,18 +41,20 @@
 
 .xhe_o2007blue span.xheBtnLink {background-position:-380px 0}
 .xhe_o2007blue span.xheBtnUnlink {background-position:-400px 0}
-.xhe_o2007blue span.xheBtnImg {background-position:-420px 0}
-.xhe_o2007blue span.xheBtnFlash {background-position:-440px 0}
-.xhe_o2007blue span.xheBtnMedia {background-position:-460px 0}
-.xhe_o2007blue span.xheBtnEmot {background-position:-480px 0}
-.xhe_o2007blue span.xheBtnTable {background-position:-500px 0}
+.xhe_o2007blue span.xheBtnAnchor {background-position:-420px 0}
+.xhe_o2007blue span.xheBtnImg {background-position:-440px 0}
+.xhe_o2007blue span.xheBtnFlash {background-position:-460px 0}
+.xhe_o2007blue span.xheBtnMedia {background-position:-480px 0}
+.xhe_o2007blue span.xheBtnHr {background-position:-500px 0}
+.xhe_o2007blue span.xheBtnEmot {background-position:-520px 0}
+.xhe_o2007blue span.xheBtnTable {background-position:-540px 0}
 
-.xhe_o2007blue span.xheBtnSource {background-position:-520px 0}
-.xhe_o2007blue span.xheBtnPreview {background-position:-540px 0}
-.xhe_o2007blue span.xheBtnPrint {background-position:-560px 0}
-.xhe_o2007blue span.xheBtnFullscreen {background-position:-580px 0}
+.xhe_o2007blue span.xheBtnSource {background-position:-560px 0}
+.xhe_o2007blue span.xheBtnPreview {background-position:-580px 0}
+.xhe_o2007blue span.xheBtnPrint {background-position:-600px 0}
+.xhe_o2007blue span.xheBtnFullscreen {background-position:-620px 0}
 
-.xhe_o2007blue span.xheBtnAbout {background-position:-600px 0}
+.xhe_o2007blue span.xheBtnAbout {background-position:-640px 0}
 
 .xhe_o2007blue .xheIframeArea{height:100%;}
 .xhe_o2007blue iframe {display:block;background:#fff;width:100%;height:100%;}
@@ -104,18 +106,22 @@
 
 .xheModal{
 	position: fixed;z-index: 1000010;text-align:left;top:50%;left:50%;background:#FFF;border:1px solid #ABC6DD;font-size:12px;
-	*position:absolute;*margin-top:expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
+	_position:absolute;_margin-top:expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 'px');
 }
 .xheModalTitle{padding:5px;background:#D1DEEF;border-bottom:1px solid #ABC6DD;}
 .xheModalClose{float:right;width:16px;height:16px;background:url(img/close.gif);cursor:pointer;}
 .xheModalIfmWait{width:100%;height:100%;background:url(img/waiting.gif) no-repeat 50% 50%;margin:-16 0 0 -16;}
 .xheModalShadow{
 	position:fixed;z-index:1000009;top:50%;left:50%;background:#000;opacity:0.2; -ms-filter:'alpha(opacity=20)'; filter:alpha(opacity=20);
-	*position:absolute;*margin-top:expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 5 + 'px');
+	_position:absolute;_margin-top:expression(0 - parseInt(this.offsetHeight / 2) + (TBWindowMargin = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop) + 5 + 'px');
 }
 .xheModalOverlay{
 	position: fixed;z-index:1000008;top: 0px;left: 0px;height:100%;width:100%;background-color:#000;opacity:0.2; -ms-filter:'alpha(opacity=20)'; filter:alpha(opacity=20);
-	*position:absolute;*height:expression(Math.max(document.documentElement.clientHeight,document.documentElement.scrollHeight)+'px');*width:expression(Math.max(document.documentElement.clientWidth,document.documentElement.scrollWidth)+'px');
+	_position:absolute;_height:expression(Math.max(document.documentElement.clientHeight,document.documentElement.scrollHeight)+'px');_width:expression(Math.max(document.documentElement.clientWidth,document.documentElement.scrollWidth)+'px');
+}
+*html{
+	background-image:url(about:blank);
+	background-attachment:fixed;
 }
 
 .xheProgress{position:relative;width:280px;margin:auto;border:1px solid #C1C1C1;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;background:url(img/progressbg.gif) #E9E9E9;}
@@ -126,7 +132,7 @@
 .xhe_Fullfix body{width:100%;height:100%;}
 .xhe_Fullscreen{
 	top:0px;left:0px;position:fixed;z-index:100000;width:100%;height:100%;background:#fff;
-	*position:absolute;_top:expression((document.compatMode?documentElement.scrollTop:document.body.scrollTop)+'px');*width:expression((document.compatMode?documentElement.offsetWidth:document.body.offsetWidth) + 'px');*height:expression((document.compatMode?documentElement.offsetHeight:document.body.offsetHeight) + 'px');
+	_position:absolute;_top:expression((document.compatMode?documentElement.scrollTop:document.body.scrollTop)+'px');_width:expression((document.compatMode?documentElement.offsetWidth:document.body.offsetWidth) + 'px');_height:expression((document.compatMode?documentElement.offsetHeight:document.body.offsetHeight) + 'px');
 }
 
 .xheHideArea{position:absolute;top:-1000px;left:-1000px;visibility:hidden;}

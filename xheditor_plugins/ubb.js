@@ -6,11 +6,12 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.7 (build 110331)
+ * @Version: 0.9.8 (build 110619)
  */
 function ubb2html(sUBB)
 {
 	var i,sHtml=String(sUBB),arrcode=new Array(),cnum=0;
+	var arrFontsize=['10px','13px','16px','18px','24px','32px','48px'];
 
 	sHtml=sHtml.replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});
 	sHtml=sHtml.replace(/\r?\n/g,"<br />");
@@ -22,11 +23,14 @@ function ubb2html(sUBB)
 
 	sHtml=sHtml.replace(/\[(\/?)(b|u|i|s|sup|sub)\]/ig,'<$1$2>');
 	sHtml=sHtml.replace(/\[color\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,'<font color="$1">');
-	sHtml=sHtml.replace(/\[size\s*=\s*(\d+?)\s*\]/ig,'<font size="$1">');
 	sHtml=sHtml.replace(/\[font\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,'<font face="$1">');
-	sHtml=sHtml.replace(/\[\/(color|size|font)\]/ig,'</font>');
+	sHtml=sHtml.replace(/\[\/(color|font)\]/ig,'</font>');
+	sHtml=sHtml.replace(/\[size\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,function(all,size){
+		if(size.match(/^\d+$/))size=arrFontsize[size-1];
+		return '<span style="font-size:'+size+';">';
+	});
 	sHtml=sHtml.replace(/\[back\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\]/ig,'<span style="background-color:$1;">');
-	sHtml=sHtml.replace(/\[\/back\]/ig,'</span>');
+	sHtml=sHtml.replace(/\[\/(size|back)\]/ig,'</span>');
 	for(i=0;i<3;i++)sHtml=sHtml.replace(/\[align\s*=\s*([^\]"]+?)(?:"[^\]]*?)?\s*\](((?!\[align(?:\s+[^\]]+)?\])[\s\S])*?)\[\/align\]/ig,'<p align="$1">$2</p>');
 	sHtml=sHtml.replace(/\[img\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*?)?\s*\[\/img\]/ig,'<img src="$1" alt="" />');
 	sHtml=sHtml.replace(/\[img\s*=([^,\]]*)(?:\s*,\s*(\d*%?)\s*,\s*(\d*%?)\s*)?(?:,?\s*(\w+))?\s*\]\s*(((?!")[\s\S])+?)(?:"[\s\S]*)?\s*\[\/img\]/ig,function(all,alt,p1,p2,p3,src){
@@ -85,7 +89,6 @@ function ubb2html(sUBB)
 
 function html2ubb(sHtml)
 {
-	var mapSize={'xx-small':1,'8pt':1,'x-small':2,'10pt':2,'small':3,'12pt':3,'medium':4,'14pt':4,'large':5,'18pt':5,'x-large':6,'24pt':6,'xx-large':7,'36pt':7};
 	var regSrc=/\s+src\s*=\s*(["']?)\s*(.+?)\s*\1(\s|$)/i,regWidth=/\s+width\s*=\s*(["']?)\s*(\d+(?:\.\d+)?%?)\s*\1(\s|$)/i,regHeight=/\s+height\s*=\s*(["']?)\s*(\d+(?:\.\d+)?%?)\s*\1(\s|$)/i,regBg=/(?:background|background-color|bgcolor)\s*[:=]\s*(["']?)\s*((rgb\s*\(\s*\d{1,3}%?,\s*\d{1,3}%?\s*,\s*\d{1,3}%?\s*\))|(#[0-9a-f]{3,6})|([a-z]{1,20}))\s*\1/i
 	var i,sUBB=String(sHtml),arrcode=new Array(),cnum=0;
 
@@ -109,11 +112,7 @@ function html2ubb(sHtml)
 	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)*\s*(?:font-family|font-size|color|background|background-color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,style,content){
 		var face=style.match(/(?:^|;)\s*font-family\s*:\s*([^;]+)/i),size=style.match(/(?:^|;)\s*font-size\s*:\s*([^;]+)/i),color=style.match(/(?:^|;)\s*color\s*:\s*([^;]+)/i),back=style.match(/(?:^|;)\s*(?:background|background-color)\s*:\s*([^;]+)/i),str=content;
 		if(face)str='[font='+face[1]+']'+str+'[/font]';
-		if(size)
-		{
-			size=mapSize[size[1].toLowerCase()];
-			if(size)str='[size='+size+']'+str+'[/size]';
-		}
+		if(size)str='[size='+size[1]+']'+str+'[/size]';
 		if(color)str='[color='+formatColor(color[1])+']'+str+'[/color]';
 		if(back)str='[back='+formatColor(back[1])+']'+str+'[/back]';
 		return str;
