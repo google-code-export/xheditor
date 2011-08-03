@@ -9,13 +9,13 @@
 .xhe_default span.xheGEnd{display:none;}
 .xhe_default span.xheSeparator{display:block;height:22px;width:4px;margin:2px 2px !important;background:url(img/icons.gif) no-repeat -660px 0;}
 
-.xhe_default a.xheButton{display:inline-block;margin:1px;border:0px;cursor:pointer;}
+.xhe_default a.xheButton{display:inline-block;margin:1px;border:0px;cursor:pointer;text-decoration:none;}
 .xhe_default a.xheButton span{opacity:0.3; -ms-filter:'alpha(opacity=30)'; filter:alpha(opacity=30);}
 .xhe_default a.xheEnabled span{opacity:1; -ms-filter:'alpha(opacity=100)'; filter:alpha(opacity=100);}
 .xhe_default a.xheEnabled:hover {margin:0px;border:1px solid #999;background:#fff;}
 .xhe_default a.xheActive{margin:0px;border:1px solid #999; background:#fff;}
 
-.xhe_default a.xheButton span{display:block;margin:0px;height:20px;width:20px;}
+.xhe_default a.xheButton span{display:block;margin:0px;height:20px;width:20px;overflow:hidden;}
 .xhe_default span.xheIcon{background:url(img/icons.gif) no-repeat 20px 20px}
 
 .xhe_default span.xheBtnCut {background-position:0 0}

@@ -38,6 +38,7 @@ function pageInit()
 				_this.hidePanel();
 				return false;	
 			});
+			_this.saveBookmark();
 			_this.showDialog(jTest);
 		}},
 		test3:{c:'testClassName',t:'测试3：需要转移焦点的对话框 (Ctrl+3)',s:'ctrl+3',h:1,e:function(){
@@ -50,6 +51,7 @@ function pageInit()
 				_this.hidePanel();
 				return false;	
 			});
+			_this.saveBookmark();
 			_this.showDialog(jTest);
 		}},
 		test4:{c:'testClassName',t:'测试4：面板界面 (Ctrl+4)',s:'ctrl+4',h:1,e:function(){
@@ -60,14 +62,17 @@ function pageInit()
 		test5:{c:'testClassName',t:'测试5：菜单调用 (Ctrl+5)',s:'ctrl+5',h:1,e:function(){
 			var _this=this;
 			var arrMenu=[{s:'菜单1',v:'menu1',t:'这是菜单1'},{s:'菜单2',v:'menu2',t:'这是菜单2'},{s:'菜单3',v:'menu3',t:'这是菜单3'}];
+			_this.saveBookmark();
 			_this.showMenu(arrMenu,function(v){_this.pasteHTML(v);});
 		}},
 		test6:{c:'testClassName',t:'测试6：showModal (Ctrl+6)',s:'ctrl+6',e:function(){
 			var _this=this;
+			_this.saveBookmark();
 			_this.showModal('测试showModal接口','<div style="padding:5px;">模式窗口主体内容</div>',500,300);
 		}},
 		test7:{c:'testClassName',t:'测试7：showIframeModal (Ctrl+7)',s:'ctrl+7',e:function(){
 			var _this=this;
+			_this.saveBookmark();
 			_this.showIframeModal('测试showIframeModal接口','uploadgui.php',function(v){_this.loadBookmark();_this.pasteText('返回值：\r\n'+v);},500,300);
 		}},
 		Code:{c:'btnCode',t:'插入代码',h:1,e:function(){
@@ -79,6 +84,7 @@ function pageInit()
 				_this.hidePanel();
 				return false;	
 			});
+			_this.saveBookmark();
 			_this.showDialog(jCode);
 		}}
 	};
