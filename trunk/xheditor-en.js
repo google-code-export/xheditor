@@ -6,12 +6,14 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://xheditor.com/license/lgpl.txt)
  *
- * @Version: 1.1.8 (build 110707)
+ * @Version: 1.1.9 (build 110803)
  */
 (function($,undefined){
 if($.xheditor)return false;//防止JS重复加载
+var isTouch=('ontouchend' in document);
 $.fn.xheditor=function(options)
 {
+	if(isTouch)return false;
 	var arrSuccess=[];
 	this.each(function(){
 		if(!$.nodeName(this,'TEXTAREA'))return;
@@ -56,6 +58,11 @@ $('script[src*=xheditor]').each(function(){
 	var s=this.src;
 	if(s.match(/xheditor[^\/]*\.js/i)){editorRoot=s.replace(/[\?#].*$/, '').replace(/(^|[\/\\])[^\/]*$/, '$1');return false;}
 });
+//ie6 缓存背景图片
+if(isIE){
+	try{document.execCommand( 'BackgroundImageCache', false, true );}
+	catch(e){}
+}
 
 var specialKeys={ 27: 'esc', 9: 'tab', 32:'space', 13: 'enter', 8:'backspace', 145: 'scroll',
           20: 'capslock', 144: 'numlock', 19:'pause', 45:'insert', 36:'home', 46:'del',
@@ -63,19 +70,19 @@ var specialKeys={ 27: 'esc', 9: 'tab', 32:'space', 13: 'enter', 8:'backspace', 1
           112:'f1',113:'f2', 114:'f3', 115:'f4', 116:'f5', 117:'f6', 118:'f7', 119:'f8', 120:'f9', 121:'f10', 122:'f11', 123:'f12' };
 var itemColors=['#FFFFFF','#CCCCCC','#C0C0C0','#999999','#666666','#333333','#000000','#FFCCCC','#FF6666','#FF0000','#CC0000','#990000','#660000','#330000','#FFCC99','#FF9966','#FF9900','#FF6600','#CC6600','#993300','#663300','#FFFF99','#FFFF66','#FFCC66','#FFCC33','#CC9933','#996633','#663333','#FFFFCC','#FFFF33','#FFFF00','#FFCC00','#999900','#666600','#333300','#99FF99','#66FF99','#33FF33','#33CC00','#009900','#006600','#003300','#99FFFF','#33FFFF','#66CCCC','#00CCCC','#339999','#336666','#003333','#CCFFFF','#66FFFF','#33CCFF','#3366FF','#3333FF','#000099','#000066','#CCCCFF','#9999FF','#6666CC','#6633FF','#6600CC','#333399','#330099','#FFCCFF','#FF99FF','#CC66CC','#CC33CC','#993399','#663366','#330033'];
 var arrBlocktag=[{n:'p',t:'Paragraph'},{n:'h1',t:'Heading 1'},{n:'h2',t:'Heading 2'},{n:'h3',t:'Heading 3'},{n:'h4',t:'Heading 4'},{n:'h5',t:'Heading 5'},{n:'h6',t:'Heading 6'},{n:'pre',t:'Preformatted'},{n:'address',t:'Address'}];
-var arrFontname=[{n:'Arial'},{n:'Arial Narrow'},{n:'Arial Black'},{n:'Comic Sans MS'},{n:'Courier New'},{n:'System'},{n:'Times New Roman'},{n:'Tahoma'},{n:'Verdana'}];
+var arrFontname=[{n:'Arial'},{n:'Arial Black'},{n:'Comic Sans MS'},{n:'Courier New'},{n:'System'},{n:'Times New Roman'},{n:'Tahoma'},{n:'Verdana'}];
 var arrFontsize=[{n:'x-small',s:'10px',t:'1'},{n:'small',s:'13px',t:'2'},{n:'medium',s:'16px',t:'3'},{n:'large',s:'18px',t:'4'},{n:'x-large',s:'24px',t:'5'},{n:'xx-large',s:'32px',t:'6'},{n:'-webkit-xxx-large',s:'48px',t:'7'}];
-var menuAlign=[{s:'Align left',v:'justifyleft',t:'Align left'},{s:'Align center',v:'justifycenter',t:'Align center'},{s:'Align right',v:'justifyright',t:'Align right'},{s:'Align full',v:'justifyfull',t:'Align full'}],menuList=[{s:'Ordered list',v:'insertOrderedList',t:'Ordered list'},{s:'Unordered list',v:'insertUnorderedList',t:'Unordered list'}];
-var htmlPastetext='<div>Use Ctrl+V on your keyboard to paste the text.</div><div><textarea id="xhePastetextValue" wrap="soft" spellcheck="false" style="width:300px;height:100px;" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
-var htmlLink='<div>Link URL: <input type="text" id="xheLinkUrl" value="http://" class="xheText" /></div><div>Target:&nbsp;&nbsp; <select id="xheLinkTarget"><option selected="selected" value="">Default</option><option value="_blank">New window</option><option value="_self">Same window</option><option value="_parent">Parent window</option></select></div><div style="display:none">Link Text:<input type="text" id="xheLinkText" value="" class="xheText" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
-var htmlAnchor='<div>Anchor name: <input type="text" id="xheAnchorName" value="" class="xheText" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="Ok" /></div>';
-var htmlImg='<div>Img URL:&nbsp; <input type="text" id="xheImgUrl" value="http://" class="xheText" /></div><div>Alt text: <input type="text" id="xheImgAlt" /></div><div>Alignment:<select id="xheImgAlign"><option selected="selected" value="">Default</option><option value="left">Left</option><option value="right">Right</option><option value="top">Top</option><option value="middle">Middle</option><option value="baseline">Baseline</option><option value="bottom">Bottom</option></select></div><div>Dimension:<input type="text" id="xheImgWidth" style="width:40px;" /> x <input type="text" id="xheImgHeight" style="width:40px;" /></div><div>Border:&nbsp;&nbsp;&nbsp;<input type="text" id="xheImgBorder" style="width:40px;" /></div><div>Hspace:&nbsp;&nbsp;&nbsp;<input type="text" id="xheImgHspace" style="width:40px;" /> Vspace:<input type="text" id="xheImgVspace" style="width:40px;" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
-var htmlFlash='<div>Flash URL:<input type="text" id="xheFlashUrl" value="http://" class="xheText" /></div><div>Dimension:<input type="text" id="xheFlashWidth" style="width:40px;" value="480" /> x <input type="text" id="xheFlashHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
-var htmlMedia='<div>Media URL:<input type="text" id="xheMediaUrl" value="http://" class="xheText" /></div><div>Dimension:<input type="text" id="xheMediaWidth" style="width:40px;" value="480" /> x <input type="text" id="xheMediaHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
-var htmlTable='<div>Rows&Cols:&nbsp;&nbsp;<input type="text" id="xheTableRows" style="width:40px;" value="3" /> x <input type="text" id="xheTableColumns" style="width:40px;" value="2" /></div><div>Headers:&nbsp;&nbsp;&nbsp;&nbsp;<select id="xheTableHeaders"><option selected="selected" value="">None</option><option value="row">First row</option><option value="col">First column</option><option value="both">Both</option></select></div><div>Dimension:&nbsp;&nbsp;<input type="text" id="xheTableWidth" style="width:40px;" value="200" /> x <input type="text" id="xheTableHeight" style="width:40px;" value="" /></div><div>Border:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="xheTableBorder" style="width:40px;" value="1" /></div><div>CellSpacing:<input type="text" id="xheTableCellSpacing" style="width:40px;" value="1" /> CellPadding:<input type="text" id="xheTableCellPadding" style="width:40px;" value="1" /></div><div>Align:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="xheTableAlign"><option selected="selected" value="">Default</option><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></div><div>Caption:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="xheTableCaption" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="OK" /></div>';
-var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.1.8 (build 110707)</p><p>xhEditor is a platform independent WYSWYG XHTML editor based by jQuery,released as Open Source under <a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>.</p><p>Copyright &copy; <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
+var menuAlign=[{s:'Align left',v:'justifyleft'},{s:'Align center',v:'justifycenter'},{s:'Align right',v:'justifyright'},{s:'Align full',v:'justifyfull'}],menuList=[{s:'Ordered list',v:'insertOrderedList'},{s:'Unordered list',v:'insertUnorderedList'}];
+var htmlPastetext='<div><label for="xhePastetextValue">Use Ctrl+V on your keyboard to paste the text.</label></div><div><textarea id="xhePastetextValue" wrap="soft" spellcheck="false" style="width:300px;height:100px;" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="Ok" /></div>';
+var htmlLink='<div><label for="xheLinkUrl">Link URL: </label><input type="text" id="xheLinkUrl" value="http://" class="xheText" /></div><div><label for="xheLinkTarget">Target:&nbsp;&nbsp; </label><select id="xheLinkTarget"><option selected="selected" value="">Default</option><option value="_blank">New window</option><option value="_self">Same window</option><option value="_parent">Parent window</option></select></div><div style="display:none"><label for="xheLinkText">Link Text:</label><input type="text" id="xheLinkText" value="" class="xheText" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="Ok" /></div>';
+var htmlAnchor='<div><label for="xheAnchorName">Anchor name: </label><input type="text" id="xheAnchorName" value="" class="xheText" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="Ok" /></div>';
+var htmlImg='<div><label for="xheImgUrl">Img URL:&nbsp; </label><input type="text" id="xheImgUrl" value="http://" class="xheText" /></div><div><div><label for="xheImgAlt">Alt text: </label><input type="text" id="xheImgAlt" /></div><div><label for="xheImgAlign">Alignment:</label><select id="xheImgAlign"><option selected="selected" value="">Default</option><option value="left">Left</option><option value="right">Right</option><option value="top">Top</option><option value="middle">Middle</option><option value="baseline">Baseline</option><option value="bottom">Bottom</option></select></div><div><label for="xheImgWidth">Width:&nbsp; &nbsp; </label><input type="text" id="xheImgWidth" style="width:40px;" /> <label for="xheImgHeight">Height:&nbsp; &nbsp;</label><input type="text" id="xheImgHeight" style="width:40px;" /></div><div><label for="xheImgBorder">Border:&nbsp; &nbsp;</label><input type="text" id="xheImgBorder" style="width:40px;" /></div><div><label for="xheImgHspace">Hspace:&nbsp;&nbsp;&nbsp;</label><input type="text" id="xheImgHspace" style="width:40px;" /> <label for="xheImgVspace">Vspace:&nbsp; &nbsp;</label><input type="text" id="xheImgVspace" style="width:40px;" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="Ok" /></div>';
+var htmlFlash='<div><label for="xheFlashUrl">Flash URL:</label><input type="text" id="xheFlashUrl" value="http://" class="xheText" /></div><div><label for="xheFlashWidth">Width:&nbsp; &nbsp; </label><input type="text" id="xheFlashWidth" style="width:40px;" value="480" /> <label for="xheFlashHeight">Height:&nbsp; &nbsp;</label><input type="text" id="xheFlashHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="Ok" /></div>';
+var htmlMedia='<div><label for="xheMediaUrl">Media URL:</label><input type="text" id="xheMediaUrl" value="http://" class="xheText" /></div><div><label for="xheMediaWidth">Width:&nbsp; &nbsp; </label><input type="text" id="xheMediaWidth" style="width:40px;" value="480" /> <label for="xheMediaHeight">Height:&nbsp; &nbsp;</label><input type="text" id="xheMediaHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="Ok" /></div>';
+var htmlTable='<div><label for="xheTableRows">Rows:&nbsp; &nbsp; &nbsp; &nbsp;</label><input type="text" id="xheTableRows" style="width:40px;" value="3" /> <label for="xheTableColumns">Cols:&nbsp; &nbsp; &nbsp; &nbsp;</label><input type="text" id="xheTableColumns" style="width:40px;" value="2" /></div><div><label for="xheTableHeaders">Headers:&nbsp; &nbsp;&nbsp;</label><select id="xheTableHeaders"><option selected="selected" value="">None</option><option value="row">First row</option><option value="col">First column</option><option value="both">Both</option></select></div><div><label for="xheTableWidth">Width: &nbsp; &nbsp; &nbsp;</label><input type="text" id="xheTableWidth" style="width:40px;" value="200" /> <label for="xheTableHeight">Height:&nbsp; &nbsp; &nbsp;</label><input type="text" id="xheTableHeight" style="width:40px;" value="" /></div><div><label for="xheTableBorder">Border:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="text" id="xheTableBorder" style="width:40px;" value="1" /></div><div><label for="xheTableCellSpacing">CellSpacing:</label><input type="text" id="xheTableCellSpacing" style="width:40px;" value="1" /> <label for="xheTableCellPadding">CellPadding:</label><input type="text" id="xheTableCellPadding" style="width:40px;" value="1" /></div><div><label for="xheTableAlign">Align:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><select id="xheTableAlign"><option selected="selected" value="">Default</option><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></div><div><label for="xheTableCaption">Caption:&nbsp;&nbsp;&nbsp;&nbsp;</label><input type="text" id="xheTableCaption" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="Ok" /></div>';
+var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;outline:none;" role="dialog" tabindex="-1"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.1.9 (build 110803)</p><p>xhEditor is a platform independent WYSWYG XHTML editor based by jQuery,released as Open Source under <a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>.</p><p>Copyright &copy; <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
 var itemEmots={'default':{name:'Default',width:24,height:24,line:7,list:{'smile':'Smile','tongue':'Tongue','titter':'Titter','laugh':'Laugh','sad':'Sad','wronged':'Wronged','fastcry':'Fast cry','cry':'Cry','wail':'Wail','mad':'Mad','knock':'Knock','curse':'Curse','crazy':'Crazy','angry':'Angry','ohmy':'Oh my','awkward':'Awkward','panic':'Panic','shy':'Shy','cute':'Cute','envy':'Envy','proud':'Proud','struggle':'Struggle','quiet':'Quiet','shutup':'Shut up','doubt':'Doubt','despise':'Despise','sleep':'Sleep','bye':'Bye'}}};
-var arrTools={Cut:{t:'Cut (Ctrl+X)'},Copy:{t:'Copy (Ctrl+C)'},Paste:{t:'Paste (Ctrl+V)'},Pastetext:{t:'Paste as plain text',h:isIE?0:1},Blocktag:{t:'Block tag',h:1},Fontface:{t:'Font family',h:1},FontSize:{t:'Font size',h:1},Bold:{t:'Bold (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'Italic (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'Underline (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'Strikethrough'},FontColor:{t:'Select text color',h:1},BackColor:{t:'Select background color',h:1},SelectAll:{t:'SelectAll (Ctrl+A)'},Removeformat:{t:'Remove formatting'},Align:{t:'Align',h:1},List:{t:'List',h:1},Outdent:{t:'Outdent (Shift+Tab)',s:'Shift+Tab'},Indent:{t:'Indent (Tab)',s:'Tab'},Link:{t:'Insert/edit link (Ctrl+K)',s:'Ctrl+K',h:1},Unlink:{t:'Unlink'},Anchor:{t:'Anchor',h:1},Img:{t:'Insert/edit image',h:1},Flash:{t:'Insert/edit flash',h:1},Media:{t:'Insert/edit media',h:1},Hr:{t:'Horizontal rule'},Emot:{t:'Emotions',s:'ctrl+e',h:1},Table:{t:'Insert a new table',h:1},Source:{t:'Edit source code'},Preview:{t:'Preview'},Print:{t:'Print (Ctrl+P)',s:'Ctrl+P'},Fullscreen:{t:'Toggle fullscreen (Esc)',s:'Esc'},About:{t:'About xhEditor'}};
+var arrTools={Cut:{t:'Cut (Ctrl+X)'},Copy:{t:'Copy (Ctrl+C)'},Paste:{t:'Paste (Ctrl+V)'},Pastetext:{t:'Paste as plain text',h:isIE?0:1},Blocktag:{t:'Block tag',h:1},Fontface:{t:'Font family',h:1},FontSize:{t:'Font size',h:1},Bold:{t:'Bold (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'Italic (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'Underline (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'Strikethrough'},FontColor:{t:'Select text color',h:1},BackColor:{t:'Select background color',h:1},SelectAll:{t:'SelectAll (Ctrl+A)'},Removeformat:{t:'Remove formatting'},Align:{t:'Align',h:1},List:{t:'List',h:1},Outdent:{t:'Outdent'},Indent:{t:'Indent'},Link:{t:'Insert/edit link (Ctrl+L)',s:'Ctrl+L',h:1},Unlink:{t:'Unlink'},Anchor:{t:'Anchor',h:1},Img:{t:'Insert/edit image',h:1},Flash:{t:'Insert/edit flash',h:1},Media:{t:'Insert/edit media',h:1},Hr:{t:'Horizontal rule'},Emot:{t:'Emotions',s:'ctrl+e',h:1},Table:{t:'Insert a new table',h:1},Source:{t:'Edit source code'},Preview:{t:'Preview'},Print:{t:'Print (Ctrl+P)',s:'Ctrl+P'},Fullscreen:{t:'Toggle fullscreen (Esc)',s:'Esc'},About:{t:'About xhEditor'}};
 var toolsThemes={
 	mini:'Bold,Italic,Underline,Strikethrough,|,Align,List,|,Link,Img',
 	simple:'Blocktag,Fontface,FontSize,Bold,Italic,Underline,Strikethrough,FontColor,BackColor,|,Align,List,Outdent,Indent,|,Link,Img,Emot',
@@ -150,14 +157,14 @@ $.xheditor=function(textarea,options)
 				if(!tool)return;
 				if(tool.c)cn=tool.c;
 				else cn='xheIcon xheBtn'+n;
-				arrToolsHtml.push('<span><a href="javascript:void(0);" title="'+tool.t+'" name="'+n+'" class="xheButton xheEnabled" tabindex="-1"><span class="'+cn+'" unselectable="on" /></a></span>');
+				arrToolsHtml.push('<span><a href="#" title="'+tool.t+'" cmd="'+n+'" class="xheButton xheEnabled" tabindex="-1" role="button"><span class="'+cn+'" unselectable="on" style="font-size:0;color:transparent;text-indent:-999px;">'+tool.t+'</span></a></span>');
 				if(tool.s)_this.addShortcuts(tool.s,n);
 			}
 			if(n.match(regSeparator))arrToolsHtml.push('<span class="xheGStart"/>');
 		});
 		arrToolsHtml.push('<span class="xheGEnd"/><br />');
 
-		_jText.after($('<input type="text" id="'+idFixFFCursor+'" style="position:absolute;display:none;" /><span id="'+idContainer+'" class="xhe_'+settings.skin+'" style="display:none"><table cellspacing="0" cellpadding="0" class="xheLayout" style="'+(editorWidth!='0px'?'width:'+editorWidth+';':'')+'height:'+editorHeight+'px;"><tbody><tr><td id="'+idTools+'" class="xheTool" unselectable="on" style="height:1px;"></td></tr><tr><td id="'+idIframeArea+'" class="xheIframeArea"><iframe frameborder="0" id="'+idIframe+'" src="javascript:;" style="width:100%;"></iframe></td></tr></tbody></table></span>'));
+		_jText.after($('<input type="text" id="'+idFixFFCursor+'" style="position:absolute;display:none;" /><span id="'+idContainer+'" class="xhe_'+settings.skin+'" style="display:none"><table cellspacing="0" cellpadding="0" class="xheLayout" style="'+(editorWidth!='0px'?'width:'+editorWidth+';':'')+'height:'+editorHeight+'px;" role="presentation"><tr><td id="'+idTools+'" class="xheTool" unselectable="on" style="height:1px;" role="presentation"></td></tr><tr><td id="'+idIframeArea+'" class="xheIframeArea" role="presentation"><iframe frameborder="0" id="'+idIframe+'" src="javascript:;" style="width:100%;"></iframe></td></tr></table></span>'));
 		_jTools=$('#'+idTools);_jArea=$('#'+idIframeArea);
 		
 		headHTML='<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/><link rel="stylesheet" href="'+skinPath+'iframe.css"/>';
@@ -172,7 +179,7 @@ $.xheditor=function(textarea,options)
 			}
 		}
 		
-		var iframeHTML='<html><head>'+headHTML;
+		var iframeHTML='<html><head>'+headHTML+'<title>WYSIWYG Editor,press alt+1-9,toogle to tool area,press tab,select button,press esc,return editor '+(settings.readTip?settings.readTip:'')+'</title>';
 		if(editorBackground)iframeHTML+='<style>body{background:'+editorBackground+';}</style>';
 		iframeHTML+='</head><body spellcheck="0" class="editMode'+bodyClass+'"></body></html>';
 		_this.win=_win=$('#'+idIframe)[0].contentWindow;
@@ -195,8 +202,10 @@ $.xheditor=function(textarea,options)
 			var jButton=$(event.target).closest('a');
 			if(jButton.is('.xheEnabled'))
 			{
+				clearTimeout(timer);//取消悬停执行
+				_jTools.find('a').attr('tabindex','-1');//无障碍支持
 				ev=event;
-				_this.exec(jButton.attr('name'));
+				_this.exec(jButton.attr('cmd'));
 			}
 			return false;
 		});
@@ -210,7 +219,7 @@ $.xheditor=function(textarea,options)
 				setTimeout(function(){bDisableHoverExec=false;},100);
 				return false;
 			}
-			var cmd=jButton.attr('name'),bHover=arrTools[cmd].h===1;
+			var cmd=jButton.attr('cmd'),bHover=arrTools[cmd].h===1;
 			if(!bHover)
 			{
 				_this.hidePanel();//移到非悬停按钮上隐藏面板
@@ -285,8 +294,31 @@ $.xheditor=function(textarea,options)
 				$(ev).unbind('resizeend',fixResize).bind('resizeend',fixResize);
 			});	
 		}
-		var jBody=$(_doc.documentElement);
+		//无障碍支持
+		_jDoc.keydown(function(e){
+			var which=e.which;
+			if(e.altKey&&which>=49&&which<=57){
+				_jTools.find('a').attr('tabindex','0');
+				_jTools.find('.xheGStart').eq(which-49).next().find('a').focus();
+				_doc.title='\uFEFF\uFEFF';
+				return false;
+			}
+		}).click(function(){
+			_jTools.find('a').attr('tabindex','-1');
+		});
+		_jTools.keydown(function(e){
+			var which=e.which;
+			if(which==27){
+				_jTools.find('a').attr('tabindex','-1');
+				_this.focus();
+			}
+			else if(e.altKey&&which>=49&&which<=57){
+				_jTools.find('.xheGStart').eq(which-49).next().find('a').focus();
+				return false;
+			}
+		});
 		
+		var jBody=$(_doc.documentElement);
 		//自动清理粘贴内容
 		if(isOpera)jBody.bind('keydown',function(e){if(e.ctrlKey&&e.which===86)cleanPaste();});
 		else jBody.bind('paste',cleanPaste);
@@ -369,6 +401,7 @@ $.xheditor=function(textarea,options)
 	}
 	this.saveBookmark=function(){
 		if(!bSource){
+			_this.focus();
 			var rng=_this.getRng();
 			rng=rng.cloneRange?rng.cloneRange():rng;
 			bookmark={'top':_jWin.scrollTop(),'rng':rng};
@@ -479,8 +512,10 @@ $.xheditor=function(textarea,options)
 			rng.collapse(bStart);
 		}
 		sHtml+='<'+(isIE?'img':'span')+' id="_xhe_temp" width="0" height="0" />';
+		
 		if(rng.insertNode)
 		{
+			if($(rng.startContainer).closest('style,script').length>0)return false;//防止粘贴在style和script内部
 			rng.deleteContents();
 			rng.insertNode(rng.createContextualFragment(sHtml));
 		}
@@ -569,7 +604,7 @@ $.xheditor=function(textarea,options)
 					});
 				}
 				else if(tag==='a'){
-					if(attr.match(/ name=[^ ]/i))addClass+=' xhe-anchor';
+					if(!attr.match(/ href=[^ ]/i)&&attr.match(/ name=[^ ]/i))addClass+=' xhe-anchor';
 					if(end2)right='></a>';
 				}
 				else if(tag==='table'&&!end1){
@@ -810,21 +845,21 @@ $.xheditor=function(textarea,options)
 	}
 	this.formatXHTML=function(sHtml,bFormat){
 
-		var emptyTags = makeMap("area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param");//HTML 4.01
-		var blockTags = makeMap("address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,h1,h2,h3,h4,h5,h6,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,script,table,tbody,td,tfoot,th,thead,tr,ul");//HTML 4.01
+		var emptyTags = makeMap("area,base,basefont,br,col,frame,hr,img,input,isindex,link,meta,param,embed");//HTML 4.01
+		var blockTags = makeMap("address,applet,blockquote,button,center,dd,del,dir,div,dl,dt,fieldset,form,frameset,h1,h2,h3,h4,h5,h6,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,p,pre,table,tbody,td,tfoot,th,thead,tr,ul,script");//HTML 4.01
 		var inlineTags = makeMap("a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,code,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var");//HTML 4.01
 		var closeSelfTags = makeMap("colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr");
 		var fillAttrsTags = makeMap("checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected");
 		var cdataTags = makeMap("script,style");
 		var tagReplac={'b':'strong','i':'em','s':'del','strike':'del'};
 		
-		var regTag=/<(?:\/([^\s>]+)|!--([^>]*?)--|([^\s\/>]+)((?:"[^"]*"|'[^']*'|[^"'>]+)*)\s*(\/?))>/g;
+		var regTag=/<(?:\/([^\s>]+)|!--([^>]*?)--|([\w-:]+)((?:"[^"]*"|'[^']*'|[^"'<>])*)\s*(\/?))>/g;
 		var regAttr = /\s*([\w-:]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s]+)))?/g;
 		var results=[],stack=[];
 		stack.last = function(){return this[ this.length - 1 ];};
 		var match,tagIndex,nextIndex=0,tagName,tagCDATA,arrCDATA,text;
 		var lvl=-1,lastTag='body',lastTagStart,stopFormat=false;
-		
+
 		while(match=regTag.exec(sHtml)){
 			tagIndex = match.index;
 			if(tagIndex>nextIndex){//保存前面的文本或者CDATA
@@ -863,7 +898,6 @@ $.xheditor=function(textarea,options)
 		}
 		if(sHtml.length>nextIndex)onText(sHtml.substring(nextIndex,sHtml.length ));//结尾文本
 		onEndTag();//封闭未结束的标签
-		
 		sHtml=results.join('');
 		results=null;
 		
@@ -919,7 +953,7 @@ $.xheditor=function(textarea,options)
 			addHtmlFrag(_this.domEncode(text));
 		}
 		function onCDATA(text){
-			results.push(text);
+			results.push(text.replace(/^[\s\r\n]+|[\s\r\n]+$/g,''));
 		}
 		function onComment(text){
 			results.push(text);
@@ -990,20 +1024,24 @@ $.xheditor=function(textarea,options)
 	this.toggleSource=function(state)
 	{
 		if(bSource===state)return;
-		_jTools.find('[name=Source]').toggleClass('xheEnabled').toggleClass('xheActive');
+		_jTools.find('[cmd=Source]').toggleClass('xheEnabled').toggleClass('xheActive');
 		var _body=_doc.body,jBody=$(_body),sHtml;
 		var sourceCode,cursorMark='<span id="_xhe_cursor"></span>',cursorPos=0;
+		var txtSourceTitle='';
 		if(!bSource)
 		{//转为源代码模式
 			_this.pasteHTML(cursorMark,true);//标记当前位置
 			sHtml=_this.getSource(true);
 			cursorPos=sHtml.indexOf(cursorMark);
 			if(!isOpera)cursorPos=sHtml.substring(0,cursorPos).replace(/\r/g,'').length;//修正非opera光标定位点
-			sHtml=sHtml.replace(cursorMark,'');
+			sHtml=sHtml.replace(/(\r?\n\s*|)<span id="_xhe_cursor"><\/span>(\s*\r?\n|)/,function(all,left,right){
+				return left&&right?'\r\n':left+right;//只有定位符的空行删除当前行
+			});
 			if(isIE)_body.contentEditable='false';
 			else _doc.designMode = 'Off';
 			jBody.attr('scroll','no').attr('class','sourceMode').html('<textarea id="sourceCode" wrap="soft" spellcheck="false" height="100%" />');
 			sourceCode=$('#sourceCode',jBody).blur(_this.getSource)[0];
+			txtSourceTitle='WYSIWYG mode';
 		}
 		else
 		{//转为编辑模式
@@ -1016,6 +1054,7 @@ $.xheditor=function(textarea,options)
 				_this._exec("inserthtml","-");//修正firefox源代码切换回来无法删除文字的问题
 				$('#'+idFixFFCursor).show().focus().hide();//临时修正Firefox 3.6光标丢失问题
 			}
+			txtSourceTitle='Edit source code';
 		}
 		bSource=!bSource;
 		_this.setSource(sHtml);
@@ -1031,8 +1070,9 @@ $.xheditor=function(textarea,options)
 			}
 		}
 		else _this.setCursorFirst(true);//定位最前面
-		_jTools.find('[name=Source],[name=Preview]').toggleClass('xheEnabled');
-		_jTools.find('.xheButton').not('[name=Source],[name=Fullscreen],[name=About]').toggleClass('xheEnabled');
+		_jTools.find('[cmd=Source]').attr('title',txtSourceTitle).find('span').text(txtSourceTitle);
+		_jTools.find('[cmd=Source],[cmd=Preview]').toggleClass('xheEnabled');
+		_jTools.find('.xheButton').not('[cmd=Source],[cmd=Fullscreen],[cmd=About]').toggleClass('xheEnabled').attr('aria-disabled',bSource?true:false);//无障碍支持
 		setTimeout(setOpts,300);
 	}
 	this.showPreview=function()
@@ -1076,24 +1116,24 @@ $.xheditor=function(textarea,options)
 		bFullscreen=!bFullscreen;
 		jContainer.toggleClass('xhe_Fullscreen');
 		$('html').toggleClass('xhe_Fullfix');
-		_jTools.find('[name=Fullscreen]').toggleClass('xheActive');
+		_jTools.find('[cmd=Fullscreen]').toggleClass('xheActive');
 		setTimeout(setOpts,300);
 	}
 	this.showMenu=function(menuitems,callback)
 	{
-		var jMenu=$('<div class="xheMenu"></div>'),arrItem=[];
-		$.each(menuitems,function(n,v){arrItem.push('<a href="javascript:void(0);" title="'+(v.t?v.t:v.s)+'" v="'+v.v+'">'+v.s+'</a>');});
+		var jMenu=$('<div class="xheMenu"></div>'),menuSize=menuitems.length,arrItem=[];
+		$.each(menuitems,function(n,v){arrItem.push('<a href="javascript:void(\''+v.v+'\')" title="'+(v.t?v.t:v.s)+'" v="'+v.v+'" role="option" aria-setsize="'+menuSize+'" aria-posinset="'+(n+1)+'" tabindex="0">'+v.s+'</a>');});
 		jMenu.append(arrItem.join(''));
 		jMenu.click(function(ev){callback($(ev.target).closest('a').attr('v'));_this.hidePanel();return false;}).mousedown(returnFalse);
 		_this.showPanel(jMenu);
 	}
 	this.showColor=function(callback)
 	{
-		var jColor=$('<div class="xheColor"></div>'),arrItem=[],count=0;
+		var jColor=$('<div class="xheColor"></div>'),arrItem=[],colorSize=itemColors.length,count=0;
 		$.each(itemColors,function(n,v)
 		{
 			if(count%7===0)arrItem.push((count>0?'</div>':'')+'<div>');
-			arrItem.push('<a href="javascript:void(0);" xhev="'+v+'" title="'+v+'" style="background:'+v+'"></a>');
+			arrItem.push('<a href="javascript:void(\''+v+'\')" xhev="'+v+'" title="'+v+'" style="background:'+v+'" role="option" aria-setsize="'+colorSize+'" aria-posinset="'+(count+1)+'"></a>');
 			count++;
 		});
 		arrItem.push('</div>');
@@ -1112,13 +1152,29 @@ $.xheditor=function(textarea,options)
 			return false;
 		});
 		_this.showDialog(jPastetext);
+		_this.saveBookmark();
 	}
 	this.showLink=function()
 	{
-		var jLink=$(htmlLink),jParent=_this.getParent('a'),jText=$('#xheLinkText',jLink),jUrl=$('#xheLinkUrl',jLink),jTarget=$('#xheLinkTarget',jLink),jSave=$('#xheSave',jLink),selHtml=_this.getSelect();
+		var htmlTemp=htmlLink,$arrAnchor=_jDoc.find('a[name]').not('[href]'),haveAnchor=$arrAnchor.length>0;
+		if(haveAnchor){//页内有锚点
+			var arrAnchorOptions=[];
+			$arrAnchor.each(function(){
+				var name=$(this).attr('name');
+				arrAnchorOptions.push('<option value="#'+name+'">'+name+'</option>');
+			});
+			htmlTemp=htmlTemp.replace(/(<div><label for="xheLinkTarget)/,'<div><label for="xheLinkAnchor">Anchor: &nbsp;&nbsp;</label><select id="xheLinkAnchor"><option value="">None selected</option>'+arrAnchorOptions.join('')+'</select></div>$1');
+		}
+		var jLink=$(htmlTemp),jParent=_this.getParent('a'),jText=$('#xheLinkText',jLink),jUrl=$('#xheLinkUrl',jLink),jTarget=$('#xheLinkTarget',jLink),jSave=$('#xheSave',jLink),selHtml=_this.getSelect();
+		if(haveAnchor){
+			jLink.find('#xheLinkAnchor').change(function(){
+				var anchor=$(this).val();
+				if(anchor!='')jUrl.val(anchor);
+			});
+		}
 		if(jParent.length===1)
 		{
-			if(jParent.attr('name')){//锚点
+			if(!jParent.attr('href')){//锚点
 				ev=null;
 				return _this.exec('Anchor');
 			}
@@ -1177,21 +1233,20 @@ $.xheditor=function(textarea,options)
 			return false;
 		});
 		_this.showDialog(jLink);
+		_this.saveBookmark();
 	}
 	this.showAnchor=function(){
 		var jAnchor=$(htmlAnchor),jParent=_this.getParent('a'),jName=$('#xheAnchorName',jAnchor),jSave=$('#xheSave',jAnchor);
-		var name;
 		if(jParent.length===1){
-			name=jParent.attr('name');
-			if(!name){//超链接
+			if(jParent.attr('href')){//超链接
 				ev=null;
 				return _this.exec('Link');
 			}
-			jName.val(name);
+			jName.val(jParent.attr('name'));
 		}
 		jSave.click(function(){
 			_this.loadBookmark();
-			name=jName.val();
+			var name=jName.val();
 			if(name){
 				if(jParent.length===0)_this.pasteHTML('<a name="'+name+'"></a>');
 				else jParent.attr('name',name);
@@ -1201,6 +1256,7 @@ $.xheditor=function(textarea,options)
 			return false;			
 		});
 		_this.showDialog(jAnchor);
+		_this.saveBookmark();
 	}
 	this.showImg=function()
 	{
@@ -1293,12 +1349,12 @@ $.xheditor=function(textarea,options)
 			return false;
 		});
 		_this.showDialog(jImg);
+		_this.saveBookmark();
 	}
 	this.showEmbed=function(sType,sHtml,sMime,sClsID,sBaseAttrs,sUploadUrl,sUploadExt)
 	{
 		var jEmbed=$(sHtml),jParent=_this.getParent('embed[type="'+sMime+'"],embed[classid="'+sClsID+'"]'),jUrl=$('#xhe'+sType+'Url',jEmbed),jWidth=$('#xhe'+sType+'Width',jEmbed),jHeight=$('#xhe'+sType+'Height',jEmbed),jSave=$('#xheSave',jEmbed);
 		if(sUploadUrl)_this.uploadInit(jUrl,sUploadUrl,sUploadExt);
-		_this.showDialog(jEmbed);
 		if(jParent.length===1)
 		{
 			jUrl.val(xheAttr(jParent,'src'));
@@ -1346,6 +1402,8 @@ $.xheditor=function(textarea,options)
 			_this.hidePanel();
 			return false;
 		});
+		_this.showDialog(jEmbed);
+		_this.saveBookmark();
 	}
 	this.showEmot=function(group)
 	{
@@ -1361,7 +1419,7 @@ $.xheditor=function(textarea,options)
 			for(var i=1;i<=count;i++)
 			{
 				n++;
-				arrList.push('<a href="javascript:void(0);" style="background-image:url('+sEmotPath+i+'.gif);" emot="'+group+','+i+'" xhev="">&nbsp;</a>');
+				arrList.push('<a href="javascript:void(\''+i+'\')" style="background-image:url('+sEmotPath+i+'.gif);" emot="'+group+','+i+'" xhev="" title="'+i+'" role="option">&nbsp;</a>');
 				if(n%line===0)arrList.push('<br />');
 			}
 		}
@@ -1370,7 +1428,7 @@ $.xheditor=function(textarea,options)
 			$.each(list,function(id,title)
 			{
 				n++;
-				arrList.push('<a href="javascript:void(0);" style="background-image:url('+sEmotPath+id+'.gif);" emot="'+group+','+id+'" title="'+title+'" xhev="'+title+'">&nbsp;</a>');
+				arrList.push('<a href="javascript:void(\''+title+'\')" style="background-image:url('+sEmotPath+id+'.gif);" emot="'+group+','+id+'" title="'+title+'" xhev="'+title+'" role="option">&nbsp;</a>');
 				if(n%line===0)arrList.push('<br />');
 			});
 		}
@@ -1379,10 +1437,10 @@ $.xheditor=function(textarea,options)
 		jList=$('<style>'+(mh?'.xheEmot div{width:'+(w+20)+'px;height:'+mh+'px;}':'')+'.xheEmot div a{width:'+ew+'px;height:'+eh+'px;}</style><div>'+arrList.join('')+'</div>').click(function(ev){ev=ev.target;var jA=$(ev);if(!$.nodeName(ev,'A'))return;_this.pasteHTML('<img emot="'+jA.attr('emot')+'" alt="'+jA.attr('xhev')+'">');_this.hidePanel();return false;}).mousedown(returnFalse);
 		jEmot.append(jList);
 
-		var gcount=0,arrGroup=['<ul>'],jGroup;//表情分类
+		var gcount=0,arrGroup=['<ul role="tablist">'],jGroup;//表情分类
 		$.each(arrEmots,function(g,v){
 			gcount++;
-			arrGroup.push('<li'+(group===g?' class="cur"':'')+'><a href="javascript:void(0);" group="'+g+'">'+v.name+'</a></li>');
+			arrGroup.push('<li'+(group===g?' class="cur"':'')+' role="presentation"><a href="javascript:void(\''+v.name+'\')" group="'+g+'" role="tab" tabindex="0">'+v.name+'</a></li>');
 		});
 		if(gcount>1)
 		{
@@ -1425,11 +1483,14 @@ $.xheditor=function(textarea,options)
 			return false;
 		});
 		_this.showDialog(jTable);
+		_this.saveBookmark();
 	}
 	this.showAbout=function()
 	{
 		var jAbout=$(htmlAbout);
-		_this.showDialog(jAbout);
+		jAbout.find('p').attr('role','presentation');//无障碍支持
+		_this.showDialog(jAbout,true);
+		setTimeout(function(){jAbout.focus();},100);
 	}
 	this.addShortcuts=function(key,cmd)
 	{
@@ -1484,7 +1545,7 @@ $.xheditor=function(textarea,options)
 	{
 		var arrMsg=[],bHtml5Upload=settings.html5Upload,upMultiple=bHtml5Upload?settings.upMultiple:1;
 		var upload,fileList,filename,jUploadTip=$('<div style="padding:22px 0;text-align:center;line-height:30px;">File uploading,please wait...<br /></div>'),sLoading='<img src="'+skinPath+'img/loading.gif">';
-		if(!bHtml5Upload||(fromFiles.nodeType&&!((fileList=fromFiles.files)&&fileList[0])))
+		if(!bHtml5Upload||(fromFiles.nodeType&&!((fileList=fromFiles.files)&&fileList[0].fileName)))
 		{
 			if(!checkFileExt(fromFiles.value,limitExt))return;
 			jUploadTip.append(sLoading);
@@ -1587,7 +1648,7 @@ $.xheditor=function(textarea,options)
 	}
 	this.showIframeModal=function(title,url,callback,w,h,onRemove)
 	{
-		var jContent=$('<iframe frameborder="0" src="'+url.replace(/{editorRoot}/ig,editorRoot)+(/\?/.test(url)?'&':'?')+'editorhost='+location.hostname+'" style="width:100%;height:100%;display:none;" /><div class="xheModalIfmWait"></div>'),jIframe=$(jContent[0]),jWait=$(jContent[1]);
+		var jContent=$('<iframe frameborder="0" src="'+url.replace(/{editorRoot}/ig,editorRoot)+(/\?/.test(url)?'&':'?')+'editorhost='+location.hostname+'" style="width:100%;height:100%;display:none;" /><div class="xheModalIfmWait"></div>'),jIframe=jContent.eq(0),jWait=jContent.eq(1);
 		_this.showModal(title,jContent,w,h,onRemove);
 		var modalWin=jIframe[0].contentWindow,result,bCross=false;
 		initModalWin();
@@ -1598,7 +1659,7 @@ $.xheditor=function(textarea,options)
 				return callbackModal(result);	
 			}
 			if(jWait.is(':visible')){//显示内页
-				jIframe.show();
+				jIframe.show().focus();
 				jWait.remove();
 			}
 		});
@@ -1625,7 +1686,7 @@ $.xheditor=function(textarea,options)
 		if(bShowModal)return false;//只能弹出一个模式窗口
 		layerShadow=settings.layerShadow;
 		w=w?w:settings.modalWidth;h=h?h:settings.modalHeight;
-		jModal=$('<div class="xheModal" style="width:'+(w-1)+'px;height:'+h+'px;margin-left:-'+Math.ceil(w/2)+'px;'+(isIE&&browerVer<7.0?'':'margin-top:-'+Math.ceil(h/2)+'px')+'">'+(settings.modalTitle?'<div class="xheModalTitle"><span class="xheModalClose" title="Close (Esc)"></span>'+title+'</div>':'')+'<div class="xheModalContent"></div></div>').appendTo('body');
+		jModal=$('<div class="xheModal" style="width:'+(w-1)+'px;height:'+h+'px;margin-left:-'+Math.ceil(w/2)+'px;'+(isIE&&browerVer<7.0?'':'margin-top:-'+Math.ceil(h/2)+'px')+'">'+(settings.modalTitle?'<div class="xheModalTitle"><span class="xheModalClose" title="Close (Esc)" tabindex="0" role="button"></span>'+title+'</div>':'')+'<div class="xheModalContent"></div></div>').appendTo('body');
 		jOverlay=$('<div class="xheModalOverlay"></div>').appendTo('body');
 		if(layerShadow>0)jModalShadow=$('<div class="xheModalShadow" style="width:'+jModal.outerWidth()+'px;height:'+jModal.outerHeight()+'px;margin-left:-'+(Math.ceil(w/2)-layerShadow-2)+'px;'+(isIE&&browerVer<7.0?'':'margin-top:-'+(Math.ceil(h/2)-layerShadow-2)+'px')+'"></div>').appendTo('body');
 
@@ -1634,12 +1695,22 @@ $.xheditor=function(textarea,options)
 		if(isIE&&browerVer===6.0)jHideSelect=$('select:visible').css('visibility','hidden');//隐藏覆盖的select
 		$('.xheModalClose',jModal).click(_this.removeModal);
 
-		jOverlay.show();if(layerShadow>0)jModalShadow.show();jModal.show();
+		jOverlay.show();
+		if(layerShadow>0)jModalShadow.show();
+		jModal.show();
+		setTimeout(function(){jModal.find('a,input[type=text],textarea').filter(':visible').filter(function(){return $(this).css('visibility')!=='hidden';}).eq(0).focus();},10);//定位首个可见输入表单项,延迟解决opera无法设置焦点
 		bShowModal=true;
 		onModalRemove=onRemove;
 	}
-	this.removeModal=function(){if(jHideSelect)jHideSelect.css('visibility','visible');jModal.html('').remove();if(layerShadow>0)jModalShadow.remove();jOverlay.remove();if(onModalRemove)onModalRemove();bShowModal=false;};
-	this.showDialog=function(content)
+	this.removeModal=function(){
+		if(jHideSelect)jHideSelect.css('visibility','visible');
+		jModal.html('').remove();
+		if(layerShadow>0)jModalShadow.remove();
+		jOverlay.remove();
+		if(onModalRemove)onModalRemove();
+		bShowModal=false;
+	};
+	this.showDialog=function(content,bNoFocus)
 	{
 		var jDialog=$('<div class="xheDialog"></div>'),jContent=$(content),jSave=$('#xheSave',jContent);
 		if(jSave.length===1)
@@ -1658,10 +1729,9 @@ $.xheditor=function(textarea,options)
 			jDialog.mousedown(function(){bDisableHoverExec=true;})//点击对话框禁止悬停执行
 		}
 		jDialog.append(jContent);
-		_this.showPanel(jDialog);
-		if(!isIE)setTimeout(function(){jDialog.find('input[type=text],textarea').filter(':visible').filter(function(){return $(this).css('visibility')!=='hidden';}).eq(0).focus();},10);//定位首个可见输入表单项,延迟解决opera无法设置焦点
+		_this.showPanel(jDialog,bNoFocus);
 	}
-	this.showPanel=function(content)
+	this.showPanel=function(content,bNoFocus)
 	{
 		if(!ev.target)return false;
 		_jPanel.html('').append(content).css('left',-999).css('top',-999);
@@ -1674,20 +1744,35 @@ $.xheditor=function(textarea,options)
 		var layerShadow=settings.layerShadow;
 		if(layerShadow>0)_jShadow.css({'left':x+layerShadow,'top':y+layerShadow,'width':_jPanel.outerWidth(),'height':_jPanel.outerHeight()}).show();
 		_jPanel.css({'left':x,'top':y}).show();
+		if(!bNoFocus)setTimeout(function(){_jPanel.find('a,input[type=text],textarea').filter(':visible').filter(function(){return $(this).css('visibility')!=='hidden';}).eq(0).focus();},10);//定位首个可见输入表单项,延迟解决opera无法设置焦点
 		bQuickHoverExec=bShowPanel=true;
 	}
-	this.hidePanel=function(){if(bShowPanel){_jPanelButton.removeClass('xheActive');_jShadow.hide();_jCntLine.hide();_jPanel.hide();bShowPanel=false;if(!bClickCancel){$('.xheFixCancel').remove();bClickCancel=true;};bQuickHoverExec=bDisableHoverExec=false;lastAngle=null;}}
+	this.hidePanel=function(){
+		if(bShowPanel){
+			_jPanelButton.removeClass('xheActive');
+			_jShadow.hide();
+			_jCntLine.hide();
+			_jPanel.hide();
+			bShowPanel=false;
+			if(!bClickCancel){
+				$('.xheFixCancel').remove();
+				bClickCancel=true;
+			};
+			bQuickHoverExec=bDisableHoverExec=false;
+			lastAngle=null;
+			_this.focus();
+			_this.loadBookmark();
+		}
+	}
 	this.exec=function(cmd)
 	{
-		_this.focus();
 		_this.hidePanel();
-		_this.saveBookmark();
 		var tool=arrTools[cmd];
 		if(!tool)return false;//无效命令
 		if(ev===null)//非鼠标点击
 		{
 			ev={};
-			var btn=_jTools.find('.xheButton[name='+cmd+']');
+			var btn=_jTools.find('.xheButton[cmd='+cmd+']');
 			if(btn.length===1)ev.target=btn;//设置当前事件焦点
 		}
 		if(tool.e)tool.e.call(_this)//插件事件

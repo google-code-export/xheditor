@@ -7,7 +7,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.9 (build 110619)
+ * @Version: 0.9.10 (build 110801)
  */
 function ubb2html($sUBB)
 {	
@@ -111,6 +111,7 @@ function ubb2html($sUBB)
 	}}
 	$sHtml=preg_replace_callback('/\[list\s*(?:=\s*([^\]"]+))?(?:"[^\]]*?)?\s*\]/i','getUL',$sHtml);
 	$sHtml=preg_replace("/\[\/list\]/i",'</ul>',$sHtml);
+	$sHtml=preg_replace("/\[hr\/\]/i",'<hr />',$sHtml);
 
 	for($i=1;$i<=$cnum;$i++)$sHtml=str_replace("[\tubbcodeplace_".$i."\t]", $arrcode[$i],$sHtml);
 

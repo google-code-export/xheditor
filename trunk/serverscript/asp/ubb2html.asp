@@ -7,7 +7,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.9 (build 110619)
+ * @Version: 0.9.10 (build 110803)
  */
 function ubb2html(sUBB)
 {
@@ -83,6 +83,7 @@ function ubb2html(sUBB)
 		return str+'>';
 	});
 	sHtml=sHtml.replace(/\[\/list\]/ig,'</ul>');
+	sHtml=sHtml.replace(/\[hr\/\]/ig,'<hr />');
 	
 	for(i=1;i<=cnum;i++)sHtml=sHtml.replace("[\tubbcodeplace_"+i+"\t]", arrcode[i]);
 
@@ -226,6 +227,8 @@ function html2ubb(sHtml)
 	sUBB=sUBB.replace(/<\/h[1-6]>/ig,'[/b][/size]\r\n\r\n');
 	sUBB=sUBB.replace(/<address(\s+[^>]*?)?>/ig,'\r\n[i]');
 	sUBB=sUBB.replace(/<\/address>/ig,'[i]\r\n');
+	sUBB=sUBB.replace(/<hr(\s+[^>]*?)?\/>/ig,'[hr/]');
+	
 	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(p)(?:\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n\r\n$2\r\n\r\n");
 	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(div)(?:\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,"\r\n$2\r\n");
 	
