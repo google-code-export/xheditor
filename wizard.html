@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>xhEditor初始化代码生成向导 for xhEditor 1.1.8</title>
-<script type="text/javascript" src="jquery/jquery-1.4.2.min.js"></script>
+<title>xhEditor初始化代码生成向导 for xhEditor v1.1.10</title>
+<script type="text/javascript" src="jquery/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="xheditor-zh-cn.js"></script>
 <script type="text/javascript">
 $(pageInit);
@@ -63,7 +63,7 @@ body{
 </style>
 </head>
 <body>
-	<h1 class="top">xhEditor初始化代码生成向导 for xhEditor 1.1.8</h1>
+	<h1 class="top">xhEditor初始化代码生成向导 for xhEditor v1.1.10</h1>
 	<h2>1: 选择编辑器初始化模式</h2>
 	<div class="section"><select id="editorMode"><option value="1" selected="selected">Class初始化</option><option value="2">Javascript初始化</option></select></div>
 	<h2>2: 更改初始化参数</h2>
@@ -135,6 +135,7 @@ body{
 					<p><label><acronym title="showModal弹出窗口的默认宽度">modalWidth</acronym></label><input type="text" class="text" value="" name="modalWidth"> <span>showModal弹出窗口的默认宽度，例如：600</span></p>
 					<p><label><acronym title="showModal弹出窗口的默认高度">modalHeight</acronym></label><input type="text" class="text" value="" name="modalHeight"> <span>showModal弹出窗口的默认高度，例如：400</span></p>
 					<p><label><acronym title="showModal弹出窗口是否显示上方的标题栏">modalTitle</acronym></label><select name="modalTitle"><option value="" selected="selected">显示 (default)</option><option value="false">不显示</option></select> <span>showModal弹出窗口是否显示上方的标题栏</span></p>
+					<p><label><acronym title="无障碍读屏提示">readTip</acronym></label><input type="text" class="text" value="" name="readTip"> <span>无障碍读屏软件提示文字，可用来为残疾人士提示快捷键等信息</span></p>
 				</div>
 			</fieldset>
 			<br /><input type="button" id="update" value="更新预览和源代码"> <input type="reset" value="重置所有参数" />
