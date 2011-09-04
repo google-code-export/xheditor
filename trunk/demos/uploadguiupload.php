@@ -21,7 +21,7 @@ JSON.stringify = JSON.stringify || function (obj) {
 var callback = callback || function(v){
 	v=JSON.stringify(v);
 	window.name=escape(v);
-	window.location='http://<?php echo $_POST['editorhost'];?>/xheditorproxy.html';//这个文件最好是一个0字节文件，如果无此文件也会正常工作	
+	window.location='http://<?php echo $_POST['parenthost'];?>/xheditorproxy.html';//这个文件最好是一个0字节文件，如果无此文件也会正常工作	
 }
 //----------------跨域支持代码结束----------------
 
