@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * xhEditor - WYSIWYG XHTML Editor
  * @requires jQuery v1.4.4
  *
@@ -6,12 +6,13 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://xheditor.com/license/lgpl.txt)
  *
- * @Version: 1.1.10 (build 110904)
+ * @Version: 1.1.11 (build 111101)
  */
 (function($,undefined){
 if(window.xheditor)return false;//防止JS重複加載
 var agent=navigator.userAgent.toLowerCase();
-var bMobile=agent.indexOf('mobile')>-1,browser=$.browser,browerVer=parseFloat(browser.version),isIE=browser.msie,isMozilla=browser.mozilla,isSafari=browser.safari,isOpera=browser.opera;
+var bMobile=agent.indexOf('mobile')!==-1,browser=$.browser,browerVer=parseFloat(browser.version),isIE=browser.msie,isMozilla=browser.mozilla,isSafari=browser.safari,isOpera=browser.opera;
+var bAir=agent.indexOf(' adobeair/')>-1;
 $.fn.xheditor=function(options)
 {
 	if(bMobile)return false;//手機瀏覽器不初始化編輯器
@@ -81,7 +82,7 @@ var htmlImg='<div><label for="xheImgUrl">圖片文件: </label><input type="text
 var htmlFlash='<div><label for="xheFlashUrl">動畫文件: </label><input type="text" id="xheFlashUrl" value="http://" class="xheText" /></div><div><label for="xheFlashWidth">寬　　度: </label><input type="text" id="xheFlashWidth" style="width:40px;" value="480" /> <label for="xheFlashHeight">高　　度: </label><input type="text" id="xheFlashHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="確定" /></div>';
 var htmlMedia='<div><label for="xheMediaUrl">媒體文件: </label><input type="text" id="xheMediaUrl" value="http://" class="xheText" /></div><div><label for="xheMediaWidth">寬　　度: </label><input type="text" id="xheMediaWidth" style="width:40px;" value="480" /> <label for="xheMediaHeight">高　　度: </label><input type="text" id="xheMediaHeight" style="width:40px;" value="400" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="確定" /></div>';
 var htmlTable='<div><label for="xheTableRows">行　　數: </label><input type="text" id="xheTableRows" style="width:40px;" value="3" /> <label for="xheTableColumns">列　　數: </label><input type="text" id="xheTableColumns" style="width:40px;" value="2" /></div><div><label for="xheTableHeaders">標題單元: </label><select id="xheTableHeaders"><option selected="selected" value="">無</option><option value="row">第一行</option><option value="col">第一列</option><option value="both">第一行和第一列</option></select></div><div><label for="xheTableWidth">寬　　度: </label><input type="text" id="xheTableWidth" style="width:40px;" value="200" /> <label for="xheTableHeight">高　　度: </label><input type="text" id="xheTableHeight" style="width:40px;" value="" /></div><div><label for="xheTableBorder">邊框大小: </label><input type="text" id="xheTableBorder" style="width:40px;" value="1" /></div><div><label for="xheTableCellSpacing">表格間距: </label><input type="text" id="xheTableCellSpacing" style="width:40px;" value="1" /> <label for="xheTableCellPadding">表格填充: </label><input type="text" id="xheTableCellPadding" style="width:40px;" value="1" /></div><div><label for="xheTableAlign">對齊方式: </label><select id="xheTableAlign"><option selected="selected" value="">預設</option><option value="left">靠左對齊</option><option value="center">置中</option><option value="right">靠右對齊</option></select></div><div><label for="xheTableCaption">表格標題: </label><input type="text" id="xheTableCaption" /></div><div style="text-align:right;"><input type="button" id="xheSave" value="確定" /></div>';
-var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;outline:none;" role="dialog" tabindex="-1"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.1.10 (build 110904)</p><p>xhEditor是基於jQuery開發的跨平台輕量可視化XHTML編輯器，基於<a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>開源協議發佈。</p><p>Copyright &copy; <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
+var htmlAbout='<div style="font:12px Arial;width:245px;word-wrap:break-word;word-break:break-all;outline:none;" role="dialog" tabindex="-1"><p><span style="font-size:20px;color:#1997DF;">xhEditor</span><br />v1.1.11 (build 111101)</p><p>xhEditor是基於jQuery開發的跨平台輕量可視化XHTML編輯器，基於<a href="http://www.gnu.org/licenses/lgpl.html" target="_blank">LGPL</a>開源協議發佈。</p><p>Copyright &copy; <a href="http://xheditor.com/" target="_blank">xhEditor.com</a>. All rights reserved.</p></div>';
 var itemEmots={'default':{name:'預設',width:24,height:24,line:7,list:{'smile':'微笑','tongue':'吐舌頭','titter':'偷笑','laugh':'大笑','sad':'難過','wronged':'委屈','fastcry':'快哭了','cry':'哭','wail':'大哭','mad':'生氣','knock':'敲打','curse':'罵人','crazy':'抓狂','angry':'發火','ohmy':'驚訝','awkward':'尷尬','panic':'驚恐','shy':'害羞','cute':'可憐','envy':'羨慕','proud':'得意','struggle':'奮鬥','quiet':'安靜','shutup':'閉嘴','doubt':'疑問','despise':'鄙視','sleep':'睡覺','bye':'再見'}}};
 var arrTools={Cut:{t:'剪下 (Ctrl+X)'},Copy:{t:'複製 (Ctrl+C)'},Paste:{t:'貼上 (Ctrl+V)'},Pastetext:{t:'貼上文本',h:isIE?0:1},Blocktag:{t:'段落標籤',h:1},Fontface:{t:'字型',h:1},FontSize:{t:'字型大小',h:1},Bold:{t:'粗體 (Ctrl+B)',s:'Ctrl+B'},Italic:{t:'斜體 (Ctrl+I)',s:'Ctrl+I'},Underline:{t:'底線 (Ctrl+U)',s:'Ctrl+U'},Strikethrough:{t:'刪除線'},FontColor:{t:'字型顏色',h:1},BackColor:{t:'背景顏色',h:1},SelectAll:{t:'全選 (Ctrl+A)'},Removeformat:{t:'刪除文字格式'},Align:{t:'對齊',h:1},List:{t:'列表',h:1},Outdent:{t:'減少縮排'},Indent:{t:'增加縮排'},Link:{t:'超連結 (Ctrl+L)',s:'Ctrl+L',h:1},Unlink:{t:'取消超連結'},Anchor:{t:'錨點',h:1},Img:{t:'圖片',h:1},Flash:{t:'Flash動畫',h:1},Media:{t:'多媒體文件',h:1},Hr:{t:'插入水平線'},Emot:{t:'表情',s:'ctrl+e',h:1},Table:{t:'表格',h:1},Source:{t:'原始碼'},Preview:{t:'預覽'},Print:{t:'打印 (Ctrl+P)',s:'Ctrl+P'},Fullscreen:{t:'全螢幕編輯 (Esc)',s:'Esc'},About:{t:'關於 xhEditor'}};
 var toolsThemes={
@@ -114,10 +115,12 @@ var xheditor=function(textarea,options)
 		var toolsTheme=toolsThemes[$.trim(settings.tools)];
 		settings.tools=(settings.tools.match(/m?full/i)&&plugins)?toolsTheme.replace('Table','Table,'+strPlugins):toolsTheme;//插件接在full的Table後面
 	}
+	//如需刪除關於按鈕，請往官方網站購買商業授權：http://xheditor.com/service
+	//在未購買商業授權的情況下私自去除xhEditor的版權信息，您將得不到官方提供的任何技術支持和BUG反饋服務，並且我們將對您保留法律訴訟的權利
 	if(!settings.tools.match(/(^|,)\s*About\s*(,|$)/i))settings.tools+=',About';
 	settings.tools=settings.tools.split(',');
 	if(settings.editorRoot)editorRoot=settings.editorRoot;
-	editorRoot=getLocalUrl(editorRoot,'abs');
+	if(bAir===false)editorRoot=getLocalUrl(editorRoot,'abs');
 	if(settings.urlBase)settings.urlBase=getLocalUrl(settings.urlBase,'abs');
 
 	//基本控件名
@@ -167,7 +170,7 @@ var xheditor=function(textarea,options)
 		_jText.after($('<input type="text" id="'+idFixFFCursor+'" style="position:absolute;display:none;" /><span id="'+idContainer+'" class="xhe_'+settings.skin+'" style="display:none"><table cellspacing="0" cellpadding="0" class="xheLayout" style="'+(editorWidth!='0px'?'width:'+editorWidth+';':'')+'height:'+editorHeight+'px;" role="presentation"><tr><td id="'+idTools+'" class="xheTool" unselectable="on" style="height:1px;" role="presentation"></td></tr><tr><td id="'+idIframeArea+'" class="xheIframeArea" role="presentation"><iframe frameborder="0" id="'+idIframe+'" src="javascript:;" style="width:100%;"></iframe></td></tr></table></span>'));
 		_jTools=$('#'+idTools);_jArea=$('#'+idIframeArea);
 		
-		headHTML='<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/><link rel="stylesheet" href="'+skinPath+'iframe.css"/>';
+		headHTML='<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><link rel="stylesheet" href="'+skinPath+'iframe.css"/>';
 		var loadCSS=settings.loadCSS;
 		if(loadCSS)
 		{
@@ -321,7 +324,7 @@ var xheditor=function(textarea,options)
 		var jBody=$(_doc.documentElement);
 		//自動清理貼上內容
 		if(isOpera)jBody.bind('keydown',function(e){if(e.ctrlKey&&e.which===86)cleanPaste();});
-		else jBody.bind('paste',cleanPaste);
+		else jBody.bind(isIE?'beforepaste':'paste',cleanPaste);
 		
 		//禁用編輯區域的瀏覽器預設右鍵菜單
 		if(settings.disableContextmenu)jBody.bind('contextmenu',returnFalse);
@@ -339,7 +342,7 @@ var xheditor=function(textarea,options)
 				function getCmd(fileList){
 					var match,fileExt,cmd;
 					for(i=0;i<fileList.length;i++){
-						fileExt=fileList[i].fileName.replace(/.+\./,'');
+						fileExt=fileList[i].name.replace(/.+\./,'');
 						if(match=strExt.match(new RegExp('(\\w+):[^:]*,'+fileExt+'(?:,|$)','i'))){
 							if(!cmd)cmd=match[1];
 							else if(cmd!==match[1])return 2;
@@ -355,7 +358,7 @@ var xheditor=function(textarea,options)
 					_this.startUpload(fileList,settings['up'+cmd+'Url'],'*',function(arrMsg){
 						var arrUrl=[],msg,onUpload=settings.onUpload;
 						if(onUpload)onUpload(arrMsg);//用戶上傳回調
-						for(i in arrMsg){
+						for(var i=0,c=arrMsg.length;i<c;i++){
 							msg=arrMsg[i];
 							url=is(msg,'string')?msg:msg.url;
 							if(url.substr(0,1)==='!')url=url.substr(1);
@@ -857,7 +860,7 @@ var xheditor=function(textarea,options)
 		var cdataTags = makeMap("script,style");
 		var tagReplac={'b':'strong','i':'em','s':'del','strike':'del'};
 		
-		var regTag=/<(?:\/([^\s>]+)|!--([^>]*?)--|([\w\-:]+)((?:"[^"]*"|'[^']*'|[^"'<>])*)\s*(\/?))>/g;
+		var regTag=/<(?:\/([^\s>]+)|!([^>]*?)|([\w\-:]+)((?:"[^"]*"|'[^']*'|[^"'<>])*)\s*(\/?))>/g;
 		var regAttr = /\s*([\w\-:]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s]+)))?/g;
 		var results=[],stack=[];
 		stack.last = function(){return this[ this.length - 1 ];};
@@ -1043,7 +1046,7 @@ var xheditor=function(textarea,options)
 			});
 			if(isIE)_body.contentEditable='false';
 			else _doc.designMode = 'Off';
-			jBody.attr('scroll','no').attr('class','sourceMode').html('<textarea id="sourceCode" wrap="soft" spellcheck="false" height="100%" />');
+			jBody.attr('scroll','no').attr('class','sourceMode').html('<textarea id="sourceCode" wrap="soft" spellcheck="false" style="width:100%;height:100%" />');
 			sourceCode=$('#sourceCode',jBody).blur(_this.getSource)[0];
 			txtSourceTitle='可視化編輯';
 		}
@@ -1218,7 +1221,7 @@ var xheditor=function(textarea,options)
 					if(sTarget!=='')sTemplate+=' target="'+sTarget+'"';
 					sTemplate+='>xhe_tmptext</a>';
 					sText=(selHtml!==''?selHtml:(sText?sText:url));
-					for(var i in aUrl)
+					for(var i,c=aUrl.length;i<c;i++)
 					{
 						url=aUrl[i];
 						if(url!=='')
@@ -1562,7 +1565,7 @@ var xheditor=function(textarea,options)
 	{
 		var arrMsg=[],bHtml5Upload=settings.html5Upload,upMultiple=bHtml5Upload?settings.upMultiple:1;
 		var upload,fileList,filename,jUploadTip=$('<div style="padding:22px 0;text-align:center;line-height:30px;">文件上傳中，請稍候……<br /></div>'),sLoading='<img src="'+skinPath+'img/loading.gif">';
-		if(!bHtml5Upload||(fromFiles.nodeType&&!((fileList=fromFiles.files)&&fileList[0].fileName)))
+		if(!bHtml5Upload||(fromFiles.nodeType&&!((fileList=fromFiles.files)&&fileList[0].name)))
 		{
 			if(!checkFileExt(fromFiles.value,limitExt))return;
 			jUploadTip.append(sLoading);
@@ -1572,8 +1575,11 @@ var xheditor=function(textarea,options)
 		{
 			if(!fileList)fileList=fromFiles;//拖放文件列表
 			var i,len=fileList.length;
-			if(len>upMultiple){alert('請不要一次上傳超過'+upMultiple+'個文件');return;}
-			for(i=0;i<len;i++)if(!checkFileExt(fileList[i].fileName,limitExt))return;
+			if(len>upMultiple){
+				alert('請不要一次上傳超過'+upMultiple+'個文件');
+				return;
+			}
+			for(i=0;i<len;i++)if(!checkFileExt(fileList[i].name,limitExt))return;
 			var jProgress=$('<div class="xheProgress"><div><span>0%</span></div></div>');
 			jUploadTip.append(jProgress);
 			upload=new _this.html5Upload(uploadInputname,fileList,toUrl,onUploadCallback,function(ev){
@@ -1635,13 +1641,13 @@ var xheditor=function(textarea,options)
 	this.html5Upload=function(inputname,fromFiles,toUrl,callback,onProgress)
 	{
 		var xhr,i=0,count=fromFiles.length,allLoaded=0,allSize=0,_this=this;
-		for(var j=0;j<count;j++)allSize+=fromFiles[j].fileSize;
+		for(var j=0;j<count;j++)allSize+=fromFiles[j].size;
 		this.remove=function(){if(xhr){xhr.abort();xhr=null;}}
 		this.uploadNext=function(sText)
 		{
 			if(sText)//當前文件上傳完成
 			{
-				allLoaded+=fromFiles[i-1].fileSize;
+				allLoaded+=fromFiles[i-1].size;
 				returnProgress(0);
 			}
 			if((!sText||(sText&&callback(sText,i===count)===true))&&i<count)postFile(fromFiles[i++],toUrl,_this.uploadNext,function(loaded){returnProgress(loaded);});
@@ -1650,16 +1656,22 @@ var xheditor=function(textarea,options)
 		function postFile(fromfile,toUrl,callback,onProgress)
 		{
 			xhr = new XMLHttpRequest(),upload=xhr.upload;
-			xhr.onreadystatechange=function(){if(xhr.readyState===4)callback(xhr.responseText);};
-			if(upload)upload.onprogress=function(ev){onProgress(ev.loaded);};
+			xhr.onreadystatechange=function(){
+				if(xhr.readyState===4)callback(xhr.responseText);
+			};
+			if(upload)upload.onprogress=function(ev){
+				onProgress(ev.loaded);
+			};
 			else onProgress(-1);//不支持進度
 			xhr.open("POST", toUrl);
 			xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-			xhr.setRequestHeader('Content-Disposition', 'attachment; name="'+inputname+'"; filename="'+fromfile.fileName+'"');
-			if(xhr.sendAsBinary)xhr.sendAsBinary(fromfile.getAsBinary());
+			xhr.setRequestHeader('Content-Disposition', 'attachment; name="'+encodeURIComponent(inputname)+'"; filename="'+encodeURIComponent(fromfile.name)+'"');
+			if(xhr.sendAsBinary&&fromfile.getAsBinary)xhr.sendAsBinary(fromfile.getAsBinary());
 			else xhr.send(fromfile);
 		}
-		function returnProgress(loaded){if(onProgress)onProgress({'loaded':allLoaded+loaded,'total':allSize});}
+		function returnProgress(loaded){
+			if(onProgress)onProgress({'loaded':allLoaded+loaded,'total':allSize});
+		}
 	}
 	this.showIframeModal=function(title,url,callback,w,h,onRemove)
 	{
@@ -1670,8 +1682,14 @@ var xheditor=function(textarea,options)
 		jIframe.load(function(){
 			initModalWin();//初始化接口
 			if(result){//跨域，取返回值
-				result=eval('('+unescape(result)+')');
-				return callbackModal(result);	
+				var bResult=true;
+				try{
+					result=eval('('+unescape(result)+')');
+				}
+				catch(e){
+					bResult=false;
+				}
+				if(bResult)return callbackModal(result);	
 			}
 			if(jWait.is(':visible')){//顯示內頁
 				jIframe.show().focus();
@@ -1941,12 +1959,7 @@ var xheditor=function(textarea,options)
 		if(isIE){
 			rng.moveToElementText(div);
 			rng.select();
-			rng.execCommand('Paste');
-			if(div.innerHTML=='\uFEFF\uFEFF'){
-				jDiv.remove();
-				return;
-			}
-			ev.preventDefault();
+			//註：調用execommand:paste，會導致IE8,IE9目標路徑無法轉為絕對路徑
 		}
 		else{
 			rng.selectNodeContents(div);
@@ -2086,7 +2099,7 @@ var xheditor=function(textarea,options)
 	}
 	function getLocalUrl(url,urlType,urlBase)//絕對地址：abs,根地址：root,相對地址：rel
 	{
-		if( (url.match(/^(\w+):\/\//i) && !url.match(/^https?:/i)) || url.match(/^#/i) )return url;//非http和https協議，或者頁面錨點不轉換
+		if( (url.match(/^(\w+):\/\//i) && !url.match(/^https?:/i)) || /^#/i.test(url) || /^data:/i.test(url) )return url;//非http和https協議，或者頁面錨點不轉換，或者base64編碼的圖片等
 		var baseUrl=urlBase?$('<a href="'+urlBase+'" />')[0]:location,protocol=baseUrl.protocol,host=baseUrl.host,hostname=baseUrl.hostname,port=baseUrl.port,path=baseUrl.pathname.replace(/\\/g,'/').replace(/[^\/]+$/i,'');
 		if(port==='')port='80';
 		if(path==='')path='/';

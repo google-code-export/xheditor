@@ -7,7 +7,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.5 (build 110315)
+ * @Version: 0.9.6 (build 111027)
  * 
  * 注1：本程序仅为演示用，请您务必根据自己需求进行相应修改，或者重开发
  * 注2：本程序特别针对HTML5上传，加入了特殊处理
@@ -30,7 +30,7 @@ $localName='';
 
 if(isset($_SERVER['HTTP_CONTENT_DISPOSITION'])&&preg_match('/attachment;\s+name="(.+?)";\s+filename="(.+?)"/i',$_SERVER['HTTP_CONTENT_DISPOSITION'],$info)){//HTML5上传
 	file_put_contents($tempPath,file_get_contents("php://input"));
-	$localName=$info[2];
+	$localName=urldecode($info[2]);
 }
 else{//标准表单式上传
 	$upfile=@$_FILES[$inputName];
