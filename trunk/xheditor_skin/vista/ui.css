@@ -1,4 +1,4 @@
-.xhe_vista table, .xhe_vista tr, .xhe_vista td, .xhe_vista iframe {border:0; margin:0; padding:0; background:transparent; white-space:nowrap; text-decoration:none; font-weight:normal; color:#000}
+.xhe_vista table, .xhe_vista tr, .xhe_vista td, .xhe_vista iframe {border:0; margin:0; padding:0; background:transparent;text-decoration:none; font-weight:normal; color:#000}
 
 .xhe_vista table.xheLayout {display:inline-table;background:#E0E8F5; border:1px solid #99BBE8;width:100%;height:100%;}
 .xhe_vista td.xheTool {padding:1px 3px;border-bottom:1px solid #99BBE8;}
