@@ -6,7 +6,7 @@
  * @site http://xheditor.com/
  * @licence LGPL(http://www.opensource.org/licenses/lgpl-license.php)
  * 
- * @Version: 0.9.9 (build 110803)
+ * @Version: 0.9.11 (build 111201)
  */
 function ubb2html(sUBB)
 {
@@ -99,7 +99,7 @@ function html2ubb(sHtml)
 	sUBB = sUBB.replace(/<(script|style)(\s+[^>]*?)?>[\s\S]*?<\/\1>/ig, '');
 	sUBB = sUBB.replace(/<!--[\s\S]*?-->/ig,'');
 
-	sUBB=sUBB.replace(/<br\s*?\/?>/ig,"\r\n");
+	sUBB=sUBB.replace(/<br(\s+[^>]*)?\/?>/ig,"\r\n");
 	
 	sUBB=sUBB.replace(/\[code\s*(=\s*([^\]]+?))?\]([\s\S]*?)\[\/code\]/ig,function(all,t,c){//code特殊处理
 		cnum++;arrcode[cnum]=all;
@@ -111,13 +111,54 @@ function html2ubb(sHtml)
 	sUBB=sUBB.replace(/<(\/?)em(\s+[^>]*?)?>/ig,'[$1i]');
 	sUBB=sUBB.replace(/<(\/?)(strike|del)(\s+[^>]*?)?>/ig,'[$1s]');
 	sUBB=sUBB.replace(/<(\/?)(sup|sub)(\s+[^>]*?)?>/ig,'[$1$2]');
+	
+	//font转ubb
+	function font2ubb(all,tag,attrs,content)
+	{
+		if(!attrs)return content;
+		var arrStart=[],arrEnd=[];
+		var match;
+		match=attrs.match(/ face\s*=\s*"\s*([^"]+)\s*"/i);
+		if(match){
+			arrStart.push('[font='+match[1]+']');
+			arrEnd.push('[/font]');
+		}
+		match=attrs.match(/ size\s*=\s*"\s*(\d+)\s*"/i);
+		if(match){
+			arrStart.push('[size='+match[1]+']');
+			arrEnd.push('[/size]');
+		}
+		match=attrs.match(/ color\s*=\s*"\s*([^"]+)\s*"/i);
+		if(match){
+			arrStart.push('[color='+formatColor(match[1])+']');
+			arrEnd.push('[/color]');
+		}
+		return arrStart.join('')+content+arrEnd.join('');
+	}
+	sUBB = sUBB.replace(/<(font)(\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,font2ubb);//第3层
+	sUBB = sUBB.replace(/<(font)(\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?)<\/\1>/ig,font2ubb);//第2层
+	sUBB = sUBB.replace(/<(font)(\s+[^>]*?)?>(((?!<\1(\s+[^>]*?)?>)[\s\S])*?)<\/\1>/ig,font2ubb);//最里层
+
 	for(i=0;i<3;i++)sUBB=sUBB.replace(/<(span)(?:\s+[^>]*?)?\s+style\s*=\s*"((?:[^"]*?;)*\s*(?:font-family|font-size|color|background|background-color)\s*:[^"]*)"(?: [^>]+)?>(((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S]|<\1(\s+[^>]*?)?>((?!<\1(\s+[^>]*?)?>)[\s\S])*?<\/\1>)*?<\/\1>)*?)<\/\1>/ig,function(all,tag,style,content){
 		var face=style.match(/(?:^|;)\s*font-family\s*:\s*([^;]+)/i),size=style.match(/(?:^|;)\s*font-size\s*:\s*([^;]+)/i),color=style.match(/(?:^|;)\s*color\s*:\s*([^;]+)/i),back=style.match(/(?:^|;)\s*(?:background|background-color)\s*:\s*([^;]+)/i),str=content;
-		if(face)str='[font='+face[1]+']'+str+'[/font]';
-		if(size)str='[size='+size[1]+']'+str+'[/size]';
-		if(color)str='[color='+formatColor(color[1])+']'+str+'[/color]';
-		if(back)str='[back='+formatColor(back[1])+']'+str+'[/back]';
-		return str;
+		var arrStart=[],arrEnd=[];
+		if(face){
+			arrStart.push('[font='+face[1]+']');
+			arrEnd.push('[/font]');
+		}
+		if(size){
+			arrStart.push('[size='+size[1]+']');
+			arrEnd.push('[/size]');
+		}
+		if(color){
+			arrStart.push('[color='+formatColor(color[1])+']');
+			arrEnd.push('[/color]');
+		}
+		if(back){
+			arrStart.push('[back='+formatColor(back[1])+']');
+			arrEnd.push('[/back]');
+		}
+		return arrStart.join('')+str+arrEnd.join('');
 	});
 	function formatColor(c)
 	{
