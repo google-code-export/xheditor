@@ -1,21 +1,21 @@
 <script type="text/javascript">
 //----------------跨域支持代码开始(非跨域环境请删除这段代码)----------------
-var JSON = JSON || {}; 
-JSON.stringify = JSON.stringify || function (obj) {  	 
-	var t = typeof (obj);  
+var JSON = JSON || {};
+JSON.stringify = JSON.stringify || function (obj) {
+	var t = typeof (obj);
 	if (t != "object" || obj === null) {
-		if (t == "string")obj = '"'+obj+'"';  
-		return String(obj);  
-	}  
-	else {  	
-		var n, v, json = [], arr = (obj && obj.constructor == Array);  
-		for (n in obj) {  
-			v = obj[n]; t = typeof(v);  
-			if (t == "string") v = '"'+v+'"';  
-			else if (t == "object" && v !== null) v = JSON.stringify(v);  
-			json.push((arr ? "" : '"' + n + '":') + String(v));  
+		if (t == "string")obj = '"'+obj.replace(/(["\\])/g,'\\$1')+'"';
+		return String(obj);
+	}
+	else { 
+		var n, v, json = [], arr = (obj && obj.constructor == Array);
+		for (n in obj) {
+			v = obj[n]; t = typeof(v);
+			if (t == "string") v = '"'+v.replace(/(["\\])/g,'\\$1')+'"';
+			else if (t == "object" && v !== null) v = JSON.stringify(v);
+			json.push((arr ? "" : '"' + n + '":') + String(v));
 		}
-		return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");  
+		return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
 	}  
 };
 var callback = callback || function(v){

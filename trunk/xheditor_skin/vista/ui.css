@@ -65,6 +65,7 @@
 .xheFixCancel{position:absolute;z-index:999998;background-color:#FFF;opacity:0; -ms-filter:'alpha(opacity=0)'; filter:alpha(opacity=0);}
 
 .xheMenu{padding:2px;overflow-x:hidden;overflow-y:auto;max-height:230px;}
+.xheMenu .xheMenuSeparator{margin:3px 0;border-top:1px solid #D8D8D8;}
 .xheMenu a{display:block;padding:3px 20px 3px 3px;line-height:normal;font-size:12px;color:#000;text-decoration:none;white-space:nowrap;}
 .xheMenu a:hover{background:#B8CFEE;text-decoration:none;color:#000;}
 .xheMenu p,.xheMenu h1,.xheMenu h2,.xheMenu h3,.xheMenu h4,.xheMenu h5,.xheMenu h6,.xheMenu pre,.xheMenu address,.xheMenu div{margin:0}
